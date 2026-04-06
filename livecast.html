@@ -93,7 +93,7 @@ function pickEvent(i){
 function setAtt(id,l,r,val){const a=DATA.athletes.find(x=>x.id===id);if(!a)return;a.att[l][r].w=parseFloat(val)||0;save()}
 function setResult(id,l,r,res){
   const a=DATA.athletes.find(x=>x.id===id);if(!a)return;a.att[l][r].r=res;
-  if(res==='g'&&r<2){const key=id+'_'+l+'_'+(r+1);DATA.changeTimers[key]={remaining:60,expired:false};startCT(key)}
+  if(r<2){const key=id+'_'+l+'_'+(r+1);DATA.changeTimers[key]={remaining:60,expired:false};startCT(key)}
   if(a.att[l].every(x=>x.r==='n'))a.bombed=true;
   DATA.timer=60;DATA.timerOn=false;clearInterval(mainTI);save();R();
 }
@@ -101,17 +101,30 @@ function updA(id,k,v){const a=DATA.athletes.find(x=>x.id===id);if(!a)return;if(k
 function newComp(){localStorage.removeItem(SAVE_KEY);DATA.phase='setup';DATA.event=null;DATA.athletes=[];DATA.changeTimers={};R()}
 
 const ctIntervals={};
-function startCT(key){
-  if(ctIntervals[key])clearInterval(ctIntervals[key]);
-  ctIntervals[key]=setInterval(()=>{
-    const ct=DATA.changeTimers[key];if(!ct){clearInterval(ctIntervals[key]);return}
+function startCT(key){/* just mark it active, master tick handles updates */}
+
+// Master tick: updates ALL change timers every second, no matter which tab
+setInterval(()=>{
+  let changed=false;
+  Object.keys(DATA.changeTimers).forEach(k=>{
+    const ct=DATA.changeTimers[k];if(!ct||ct.expired)return;
     ct.remaining--;
-    const el=document.getElementById('ct_'+key);
-    if(el){if(ct.remaining<=0){el.textContent='\u23F0';el.className='inp-sm expired';ct.expired=true;clearInterval(ctIntervals[key]);save()}
-      else{el.textContent=ct.remaining+'s';el.className='inp-sm countdown'}}
-    if(ct.remaining<=0){ct.expired=true;clearInterval(ctIntervals[key]);save()}
-  },1000);
-}
+    if(ct.remaining<=0){ct.expired=true;changed=true}
+    // Update manage tab element
+    const el=document.getElementById('ct_'+k);
+    if(el){
+      if(ct.expired){el.textContent='\u23F0';el.className='inp-sm expired'}
+      else{el.textContent=ct.remaining+'s';el.className='inp-sm countdown'}
+    }
+    // Update compete tab element
+    const el2=document.getElementById('cct_'+k);
+    if(el2){
+      if(ct.expired){el2.textContent='\u23F0 TIEMPO';el2.style.color='var(--red)'}
+      else{el2.textContent='\u23F1 '+ct.remaining+'s para entregar intento';el2.style.color='var(--orange)'}
+    }
+  });
+  if(changed)save();
+},1000);
 
 let mainTI=null;
 function startTimer(){DATA.timerOn=true;mainTI=setInterval(()=>{DATA.timer--;const el=document.getElementById('mainTimer');if(el){const c=DATA.timer<=10?'var(--red)':DATA.timer<=30?'var(--orange)':'var(--green)';el.style.color=c;el.textContent=Math.floor(DATA.timer/60)+':'+String(DATA.timer%60).padStart(2,'0');el.style.animation=DATA.timer<=10?'pulse 1s infinite':'none'}if(DATA.timer<=0){DATA.timerOn=false;clearInterval(mainTI)}},1000)}
@@ -187,6 +200,17 @@ function renderCompete(){
     h+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px"><input type="number" step="2.5" class="inp" value="'+(cw||'')+'" onchange="setAtt('+cur.id+',\''+DATA.lift+'\','+DATA.round+',this.value);R()" style="font-size:22px;font-weight:700;font-family:Oswald;text-align:center;letter-spacing:2px;border-color:'+LIFT_C[DATA.lift]+';padding:12px"><span class="os" style="color:var(--muted);font-size:15px">KG</span></div>';
     h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button onclick="setResult('+cur.id+',\''+DATA.lift+'\','+DATA.round+',\'g\')" style="padding:14px;border-radius:10px;border:3px solid var(--green);background:rgba(34,197,94,.08);color:var(--green);font-size:16px;font-weight:700;font-family:Oswald;letter-spacing:2px;cursor:pointer">\u2713 GOOD LIFT</button><button onclick="setResult('+cur.id+',\''+DATA.lift+'\','+DATA.round+',\'n\')" style="padding:14px;border-radius:10px;border:3px solid var(--red);background:rgba(239,68,68,.08);color:var(--red);font-size:16px;font-weight:700;font-family:Oswald;letter-spacing:2px;cursor:pointer">\u2717 NO LIFT</button></div></div>';
   }else{h+='<div class="card" style="text-align:center;padding:20px"><p class="os" style="font-size:15px;color:var(--gold);margin-bottom:10px">RONDA COMPLETADA</p><button class="btn btn-r" onclick="advanceLift()">Siguiente \u2192</button></div>'}
+  // Active change timers
+  const activeCTs=Object.keys(DATA.changeTimers).filter(k=>{const ct=DATA.changeTimers[k];return ct&&!ct.expired&&ct.remaining>0});
+  if(activeCTs.length){
+    h+='<div class="card" style="padding:10px;border-left:4px solid var(--orange);margin-bottom:10px">';
+    activeCTs.forEach(k=>{
+      const parts=k.split('_');const aId=parseInt(parts[0]);const lift=parts[1];const rnd=parseInt(parts[2]);
+      const a=DATA.athletes.find(x=>x.id===aId);const ct=DATA.changeTimers[k];
+      if(a)h+='<div id="cct_'+k+'" style="font-size:13px;color:var(--orange);padding:3px 0">\u23F1 <strong>'+a.name+'</strong> \u2014 '+LIFT_S[lift]+(rnd+1)+' \u2014 '+ct.remaining+'s para entregar intento</div>';
+    });
+    h+='</div>';
+  }
   // Queue
   h+='<div class="card"><h3 class="os" style="font-size:12px;letter-spacing:1px;margin-bottom:8px;color:var(--muted)">ORDEN \u00b7 VUELO '+DATA.flight+'</h3>';
   if(!queue.length)h+='<p style="color:var(--muted);font-size:11px;text-align:center;padding:8px">Sin atletas pendientes</p>';
@@ -204,7 +228,7 @@ function renderCompete(){
 }
 
 function renderResults(){
-  const all=DATA.athletes.map(a=>({...a,total:totalOf(a),gl:calcGL(totalOf(a),a.bw,a.sex)}));
+  const all=DATA.athletes.filter(a=>a.flight===DATA.flight).map(a=>({...a,total:totalOf(a),gl:calcGL(totalOf(a),a.bw,a.sex)}));
   const withTotal=all.filter(a=>a.total>0);
 
   // Group by category (sex + cat) and rank within each
@@ -231,7 +255,7 @@ function renderResults(){
   withTotal.forEach(a=>{const d=a.div||'Sin División';if(!divGroups[d])divGroups[d]=[];divGroups[d].push(a)});
   Object.values(divGroups).forEach(arr=>arr.sort((a,b)=>b.gl-a.gl));
 
-  let h='<div class="fade"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><h2 class="os" style="font-size:24px;letter-spacing:2px">RESULTADOS</h2><p style="color:var(--muted);font-size:12px">'+(DATA.event?.name||'')+' \u00b7 '+withTotal.length+' clasificados</p></div><button class="btn btn-g" onclick="exportJSON()">\uD83D\uDCE5 Exportar</button></div>';
+  let h='<div class="fade"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><h2 class="os" style="font-size:24px;letter-spacing:2px">RESULTADOS <span style="background:'+FL_C[DATA.flight]+';color:#fff;padding:2px 10px;border-radius:6px;font-size:14px;vertical-align:middle">VUELO '+DATA.flight+'</span></h2><p style="color:var(--muted);font-size:12px">'+(DATA.event?.name||'')+' \u00b7 '+withTotal.length+' clasificados</p></div><button class="btn btn-g" onclick="exportJSON()">\uD83D\uDCE5 Exportar</button></div>';
 
   // Stats
   h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">';
@@ -311,7 +335,7 @@ try{localStorage.removeItem('fechipo_lc2');localStorage.removeItem('fechipo_live
 
 const loaded=load();
 fetch('nominas.json').then(r=>r.json()).then(n=>{DATA.events=n.events||[];if(!loaded)R()}).catch(()=>{});
-if(loaded){R();Object.keys(DATA.changeTimers).forEach(k=>{const ct=DATA.changeTimers[k];if(ct&&!ct.expired&&ct.remaining>0)startCT(k)})}
+if(loaded){R()}
 else if(!DATA.events.length)R();
 
 </script>
