@@ -90,7 +90,7 @@ function pickEvent(i){
     att:{sq:[{w:0,r:null},{w:0,r:null},{w:0,r:null}],bp:[{w:0,r:null},{w:0,r:null},{w:0,r:null}],dl:[{w:0,r:null},{w:0,r:null},{w:0,r:null}]}}));
   DATA.lift='sq';DATA.round=0;DATA.flight='A';DATA.changeTimers={};go('manage');
 }
-function setAtt(id,l,r,val){const a=DATA.athletes.find(x=>x.id===id);if(!a)return;a.att[l][r].w=parseFloat(val)||0;save()}
+function setAtt(id,l,r,val){const a=DATA.athletes.find(x=>x.id===id);if(!a)return;a.att[l][r].w=parseFloat(val)||0;const key=id+'_'+l+'_'+r;if(DATA.changeTimers[key]){delete DATA.changeTimers[key]}save()}
 function setResult(id,l,r,res){
   const a=DATA.athletes.find(x=>x.id===id);if(!a)return;a.att[l][r].r=res;
   if(r<2){const key=id+'_'+l+'_'+(r+1);DATA.changeTimers[key]={remaining:60,expired:false};startCT(key)}
