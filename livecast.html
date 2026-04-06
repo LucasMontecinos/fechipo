@@ -143,8 +143,10 @@ function renderShell(){
   h+='</div></div>';return h;
 }
 
+function sortByCat(){DATA.athletes.sort((a,b)=>{const na=parseFloat(a.cat.replace(/[^0-9.]/g,''))||999;const nb=parseFloat(b.cat.replace(/[^0-9.]/g,''))||999;return na-nb});DATA.athletes.forEach((a,i)=>a.lot=i+1);save();R()}
+
 function renderManage(){
-  const ath=DATA.athletes;let h='<div class="fade"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><h2 class="os" style="font-size:22px;letter-spacing:1px">ATLETAS & PESAJE</h2><p style="color:var(--muted);font-size:12px">'+ath.filter(a=>a.bw>0).length+'/'+ath.length+' pesados</p></div><button class="btn btn-g" onclick="go(\'compete\')">Iniciar Competencia \u2192</button></div>';
+  const ath=DATA.athletes;let h='<div class="fade"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><h2 class="os" style="font-size:22px;letter-spacing:1px">ATLETAS & PESAJE</h2><p style="color:var(--muted);font-size:12px">'+ath.filter(a=>a.bw>0).length+'/'+ath.length+' pesados</p></div><div style="display:flex;gap:6px"><button class="btn btn-o" onclick="sortByCat()">Ordenar por Categoría ↑</button><button class="btn btn-g" onclick="go(\'compete\')">Iniciar Competencia →</button></div></div>';
   h+='<div class="card" style="padding:0;overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr style="border-bottom:2px solid var(--border)">';
   h+='<th class="os" style="padding:8px 4px;text-align:center;color:var(--muted);font-size:9px;width:28px">#</th><th style="padding:8px 4px;text-align:left;color:var(--muted);font-size:9px">ATLETA</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px;width:38px">VLO</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px;width:56px">BW</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px;width:48px">RkSQ</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px;width:48px">RkBP</th>';
   ['sq','bp','dl'].forEach(l=>{[1,2,3].forEach(r=>{h+='<th style="padding:8px 2px;text-align:center;color:'+LIFT_C[l]+';font-size:9px;width:54px">'+LIFT_S[l]+r+'</th>'})});
@@ -203,16 +205,69 @@ function renderCompete(){
 
 function renderResults(){
   const all=DATA.athletes.map(a=>({...a,total:totalOf(a),gl:calcGL(totalOf(a),a.bw,a.sex)}));
-  const ranked=all.filter(a=>a.total>0).sort((a,b)=>b.gl-a.gl);
-  let h='<div class="fade"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><h2 class="os" style="font-size:24px;letter-spacing:2px">RESULTADOS</h2><p style="color:var(--muted);font-size:12px">'+(DATA.event?.name||'')+' \u00b7 '+ranked.length+' clasificados</p></div><button class="btn btn-g" onclick="exportJSON()">\uD83D\uDCE5 Exportar</button></div>';
+  const withTotal=all.filter(a=>a.total>0);
+
+  // Group by category (sex + cat) and rank within each
+  const catGroups={};
+  all.forEach(a=>{const k=(a.sex||'?')+' '+(a.cat||'?');if(!catGroups[k])catGroups[k]=[];catGroups[k].push(a)});
+  Object.values(catGroups).forEach(arr=>arr.sort((a,b)=>b.total-a.total));
+  const catPos={};
+  Object.values(catGroups).forEach(arr=>{let p=1;arr.forEach(a=>{if(a.total>0){catPos[a.id]=p;p++}})});
+
+  // Sort display: by sex then cat weight ascending, within cat by total desc
+  const sorted=[];
+  const catKeys=Object.keys(catGroups).sort((a,b)=>{
+    const sa=a.startsWith('Hombre')||a.startsWith('Masculino')||a.startsWith('M')?1:0;
+    const sb=b.startsWith('Hombre')||b.startsWith('Masculino')||b.startsWith('M')?1:0;
+    if(sa!==sb)return sa-sb;
+    const na=parseFloat(a.replace(/[^0-9.]/g,''))||999;
+    const nb=parseFloat(b.replace(/[^0-9.]/g,''))||999;
+    return na-nb;
+  });
+  catKeys.forEach(k=>catGroups[k].forEach(a=>sorted.push(a)));
+
+  // Top 3 GL by division
+  const divGroups={};
+  withTotal.forEach(a=>{const d=a.div||'Sin División';if(!divGroups[d])divGroups[d]=[];divGroups[d].push(a)});
+  Object.values(divGroups).forEach(arr=>arr.sort((a,b)=>b.gl-a.gl));
+
+  let h='<div class="fade"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><h2 class="os" style="font-size:24px;letter-spacing:2px">RESULTADOS</h2><p style="color:var(--muted);font-size:12px">'+(DATA.event?.name||'')+' \u00b7 '+withTotal.length+' clasificados</p></div><button class="btn btn-g" onclick="exportJSON()">\uD83D\uDCE5 Exportar</button></div>';
+
+  // Stats
   h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">';
-  [[DATA.athletes.length,'Total','var(--blue)'],[ranked.length,'Clasificados','var(--green)'],[DATA.athletes.filter(a=>a.bombed).length,'Bomb Out','var(--red)'],[ranked[0]?.gl||'\u2014','Mejor GL','var(--gold)']].forEach(([v,l,c])=>{h+='<div class="card" style="text-align:center;padding:12px"><div class="os" style="font-size:24px;font-weight:700;color:'+c+'">'+v+'</div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:3px">'+l+'</div></div>'});
+  [[DATA.athletes.length,'Total','var(--blue)'],[withTotal.length,'Clasificados','var(--green)'],[DATA.athletes.filter(a=>a.bombed).length,'Bomb Out','var(--red)'],[withTotal[0]?.gl||'\u2014','Mejor GL','var(--gold)']].forEach(([v,l,c])=>{h+='<div class="card" style="text-align:center;padding:12px"><div class="os" style="font-size:24px;font-weight:700;color:'+c+'">'+v+'</div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:3px">'+l+'</div></div>'});
   h+='</div>';
+
+  // Top 3 GL by Division
+  const divKeys=Object.keys(divGroups).sort();
+  if(divKeys.length>0){
+    h+='<div class="card" style="margin-bottom:16px"><h3 class="os" style="font-size:14px;letter-spacing:1px;margin-bottom:12px;color:var(--gold)">\uD83C\uDFC5 TOP 3 GL POINTS POR DIVISI\u00D3N</h3>';
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">';
+    divKeys.forEach(d=>{
+      const top3=divGroups[d].slice(0,3);
+      h+='<div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border)"><div class="os" style="font-size:13px;letter-spacing:1px;color:var(--accent);margin-bottom:8px">'+d+'</div>';
+      const medals=['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'];
+      top3.forEach((a,i)=>{
+        h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;'+(i<2?'border-bottom:1px solid rgba(30,58,95,.2)':'')+'"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:14px">'+medals[i]+'</span><div><span style="font-weight:600;font-size:12px">'+a.name+'</span><span style="font-size:9px;color:var(--muted);margin-left:4px">'+a.cat+'</span></div></div><div style="text-align:right"><span class="os" style="font-size:15px;font-weight:700;color:var(--gold)">'+a.gl+'</span><span style="font-size:9px;color:var(--muted);margin-left:4px">'+a.total+'kg</span></div></div>';
+      });
+      h+='</div>';
+    });
+    h+='</div></div>';
+  }
+
+  // Results table grouped by category
   h+='<div class="card" style="padding:0;overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr style="border-bottom:2px solid var(--border)"><th class="os" style="padding:8px 4px;text-align:center;color:var(--muted);font-size:9px;width:28px">Pos</th><th style="padding:8px 4px;text-align:left;color:var(--muted);font-size:9px">Atleta</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px;width:44px">BW</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px">Div</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px">Cat</th>';
   ['sq','bp','dl'].forEach(l=>{[1,2,3].forEach(r=>{h+='<th style="padding:8px 2px;text-align:center;color:'+LIFT_C[l]+';font-size:9px;width:46px">'+LIFT_S[l]+r+'</th>'});h+='<th style="padding:8px 2px;text-align:center;color:'+LIFT_C[l]+';font-size:9px;width:40px;font-weight:800">Best</th>'});
   h+='<th class="os" style="padding:8px 4px;text-align:center;color:var(--text);font-size:10px;width:46px">Total</th><th class="os" style="padding:8px 4px;text-align:center;color:var(--gold);font-size:10px;width:48px">GL</th></tr></thead><tbody>';
-  all.sort((a,b)=>b.gl-a.gl).forEach(a=>{
-    const pos=a.total>0?ranked.findIndex(r=>r.id===a.id)+1:'\u2014';
+
+  let prevCat='';
+  sorted.forEach(a=>{
+    const catKey=(a.sex||'?')+' '+(a.cat||'?');
+    if(catKey!==prevCat){
+      h+='<tr><td colspan="18" style="padding:8px 6px;background:rgba(196,30,58,.1);border-bottom:2px solid var(--accent);font-family:Oswald;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--accent)">'+(a.sex==='Femenino'||a.sex==='Mujer'||a.sex==='F'?'\u2640':'\u2642')+' '+a.cat+'</td></tr>';
+      prevCat=catKey;
+    }
+    const pos=catPos[a.id]||'\u2014';
     h+='<tr style="border-bottom:1px solid rgba(30,58,95,.25);'+(a.bombed?'opacity:.4':'')+'">';
     h+='<td class="os" style="padding:6px 4px;text-align:center;color:'+(typeof pos==="number"&&pos<=3?'var(--gold)':'var(--muted)')+';font-weight:700;font-size:14px">'+pos+'</td>';
     h+='<td style="padding:6px 4px"><div style="font-weight:600;font-size:12px;white-space:nowrap">'+a.name+'</div><div style="font-size:9px;color:var(--muted)">'+a.club+'</div></td>';
