@@ -166,14 +166,14 @@ setInterval(()=>{
 },1000);
 
 let mainTI=null;
-function startTimer(){DATA.timerOn=true;mainTI=setInterval(()=>{DATA.timer--;const el=document.getElementById('mainTimer');if(el){const c=DATA.timer<=10?'var(--red)':DATA.timer<=30?'var(--orange)':'var(--green)';el.style.color=c;el.textContent=Math.floor(DATA.timer/60)+':'+String(DATA.timer%60).padStart(2,'0');el.style.animation=DATA.timer<=10?'pulse 1s infinite':'none'}if(DATA.timer<=0){DATA.timerOn=false;clearInterval(mainTI)}},1000)}
+function startTimer(){DATA.timerOn=true;mainTI=setInterval(()=>{DATA.timer--;const el=document.getElementById('mainTimer');if(el){const c=DATA.timer<=10?'var(--red)':DATA.timer<=30?'var(--orange)':'var(--green)';el.style.color=c;el.textContent=Math.floor(DATA.timer/60)+':'+String(DATA.timer%60).padStart(2,'0');el.style.animation=DATA.timer<=10?'pulse 1s infinite':'none'}const sb=document.getElementById('sbTimer');if(sb){sb.textContent=Math.floor(DATA.timer/60)+':'+String(DATA.timer%60).padStart(2,'0');sb.style.color=DATA.timer<=10?'var(--red)':DATA.timer<=30?'var(--orange)':'var(--green)'}const tx=document.getElementById('txTimer');if(tx){tx.textContent=String(Math.floor(DATA.timer/60)).padStart(2,'0')+':'+String(DATA.timer%60).padStart(2,'0');tx.style.color=DATA.timer<=10?'#ef4444':'#fff'}if(DATA.timer<=0){DATA.timerOn=false;clearInterval(mainTI)}},1000)}
 function pauseTimer(){DATA.timerOn=false;clearInterval(mainTI)}
 function resetTimer(){DATA.timer=60;DATA.timerOn=false;clearInterval(mainTI);const el=document.getElementById('mainTimer');if(el){el.style.color='var(--green)';el.textContent='1:00';el.style.animation='none'}}
 function advanceLift(){const li=LIFTS.indexOf(DATA.lift);if(DATA.round<2)DATA.round++;else if(li<2){DATA.lift=LIFTS[li+1];DATA.round=0}else go('results');save();R()}
 function editAtt(id,l,r){const a=DATA.athletes.find(x=>x.id===id);if(!a)return;const v=prompt(a.name+' \u2014 '+LIFT_S[l]+' Int '+(r+1)+'\nPeso actual: '+(a.att[l][r].w||'\u2014')+'\nNuevo peso (kg):',a.att[l][r].w||'');if(v!==null){a.att[l][r].w=parseFloat(v)||0;save();R()}}
 function exportJSON(){const r=rankings();const blob=new Blob([JSON.stringify(r.map((a,i)=>({rank:i+1,nombre:a.name,rut:a.rut,sexo:a.sex,division:a.div,categoria:a.cat,bw:a.bw,club:a.club,sq:bestOf(a,'sq'),bp:bestOf(a,'bp'),dl:bestOf(a,'dl'),total:a.total,gl:a.gl})),null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const l=document.createElement('a');l.href=u;l.download='resultados.json';l.click()}
 
-function R(){const el=document.getElementById('R');if(DATA.phase==='scoreboard'){el.innerHTML=renderSB();return}if(DATA.phase==='setup'){el.innerHTML=renderSetup();return}el.innerHTML=renderShell()}
+function R(){const el=document.getElementById('R');if(DATA.phase==='scoreboard'){el.innerHTML=renderSB();return}if(DATA.phase==='transmision'){el.innerHTML=renderTransmision();return}if(DATA.phase==='setup'){el.innerHTML=renderSetup();return}el.innerHTML=renderShell()}
 
 function renderSetup(){
   let h='<div style="max-width:700px;margin:60px auto;padding:0 20px" class="fade"><div style="text-align:center;margin-bottom:40px"><div class="os" style="font-size:clamp(30px,6vw,48px);font-weight:700;letter-spacing:3px"><span style="color:var(--accent)">LIVE</span>CAST</div><p style="color:var(--muted);font-size:14px;margin-top:6px">Sistema de Gesti\u00f3n de Competencia</p><div style="width:60px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:12px auto;border-radius:2px"></div><a href="index.html" style="display:inline-block;margin-top:10px;color:var(--muted);font-size:12px;text-decoration:none;padding:6px 16px;border:1px solid var(--border);border-radius:6px;transition:all .15s" onmouseenter="this.style.borderColor=\'var(--accent)\';this.style.color=\'var(--text)\'" onmouseleave="this.style.borderColor=\'var(--border)\';this.style.color=\'var(--muted)\'">← YourLift</a></div>';
@@ -188,6 +188,7 @@ function renderShell(){
   h+='<div class="side-label">Gesti\u00f3n</div><button class="side-btn '+(p==='manage'?'active':'')+'" onclick="go(\'manage\')"><span class="icon">\uD83D\uDCCB</span>Atletas & Pesaje</button>';
   h+='<div class="side-label">Competencia</div><button class="side-btn '+(p==='compete'?'active':'')+'" onclick="go(\'compete\')"><span class="icon">\uD83C\uDFCB\uFE0F</span>Control en Vivo</button>';
   h+='<button class="side-btn '+(p==='scoreboard'?'active':'')+'" onclick="go(\'scoreboard\')"><span class="icon">\uD83D\uDCFA</span>Scoreboard</button>';
+  h+='<button class="side-btn '+(p==='transmision'?'active':'')+'" onclick="go(\'transmision\')"><span class="icon">\uD83D\uDCE1</span>Transmisi\u00f3n</button>';
   }
   h+='<div class="side-label">P\u00fablico</div>';
   h+='<button class="side-btn '+(p==='results'?'active':'')+'" onclick="go(\'results\')"><span class="icon">\uD83C\uDFC6</span>Resultados</button>';
@@ -197,17 +198,19 @@ function renderShell(){
   h+='</div>';
   if(isAdmin){
   h+='<div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border)">';
+  h+='<button class="side-btn" onclick="go(\'setup\')"><span class="icon">\u2190</span>Volver</button>';
   h+='<div style="font-size:10px;color:var(--green);margin-bottom:6px;padding:0 8px">\uD83D\uDD13 Admin</div>';
   h+='<button class="side-btn" onclick="newComp()"><span class="icon">\u21BA</span>Nueva Competencia</button>';
   h+='<button class="side-btn" onclick="doLogout()"><span class="icon">\uD83D\uDD12</span>Cerrar sesi\u00f3n</button>';
   h+='<a href="index.html" class="side-btn" style="text-decoration:none;color:var(--muted)"><span class="icon">\u2190</span>YourLift</a></div>';
   }else{
   h+='<div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border)">';
+  h+='<button class="side-btn" onclick="go(\'setup\')"><span class="icon">\u2190</span>Volver</button>';
   h+='<button class="side-btn" onclick="showLogin()"><span class="icon">\uD83D\uDD10</span>Admin</button>';
   h+='<a href="index.html" class="side-btn" style="text-decoration:none;color:var(--muted)"><span class="icon">\u2190</span>YourLift</a></div>';
   }
   h+='</div><div class="main">';
-  if(p==='manage'&&isAdmin)h+=renderManage();else if(p==='compete'&&isAdmin)h+=renderCompete();else if(p==='results')h+=renderResults();else if(p==='atletaInfo')h+=renderAtletaInfo();else if(!isAdmin&&(p==='manage'||p==='compete')){DATA.phase='results';h+=renderResults();}
+  if(p==='manage'&&isAdmin)h+=renderManage();else if(p==='compete'&&isAdmin)h+=renderCompete();else if(p==='results')h+=renderResults();else if(p==='atletaInfo')h+=renderAtletaInfo();else if(!isAdmin&&(p==='manage'||p==='compete'||p==='transmision')){DATA.phase='results';h+=renderResults();}
   h+='</div></div>';return h;
 }
 
@@ -352,7 +355,7 @@ function renderResults(){
 
   // Results table grouped by category
   h+='<div class="card" style="padding:0;overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr style="border-bottom:2px solid var(--border)"><th class="os" style="padding:8px 4px;text-align:center;color:var(--muted);font-size:9px;width:28px">Pos</th><th style="padding:8px 4px;text-align:left;color:var(--muted);font-size:9px">Atleta</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px;width:44px">BW</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px">Div</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px">Cat</th>';
-  ['sq','bp','dl'].forEach(l=>{[1,2,3].forEach(r=>{h+='<th style="padding:8px 2px;text-align:center;color:'+LIFT_C[l]+';font-size:9px;width:46px">'+LIFT_S[l]+r+'</th>'});h+='<th style="padding:8px 2px;text-align:center;color:'+LIFT_C[l]+';font-size:9px;width:40px;font-weight:800">Best</th>'});
+  ['sq','bp','dl'].forEach(l=>{[1,2,3].forEach(r=>{h+='<th style="padding:8px 2px;text-align:center;color:'+LIFT_C[l]+';font-size:9px;width:46px">'+LIFT_S[l]+r+'</th>'});h+='<th style="padding:8px 2px;text-align:center;color:'+LIFT_C[l]+';font-size:9px;width:48px;font-weight:800">Sub</th>'});
   h+='<th class="os" style="padding:8px 4px;text-align:center;color:var(--text);font-size:10px;width:46px">Total</th><th class="os" style="padding:8px 4px;text-align:center;color:var(--gold);font-size:10px;width:48px">GL</th></tr></thead><tbody>';
 
   let prevCat='';
@@ -371,7 +374,8 @@ function renderResults(){
     h+='<td style="padding:6px 3px;text-align:center;font-size:10px">'+(a.cat||'\u2014')+'</td>';
     ['sq','bp','dl'].forEach(l=>{
       a.att[l].forEach((at,j)=>{let st='',tx=at.w||'\u2014';if(at.r==='g')st='background:rgba(34,197,94,.12);color:var(--green);font-weight:700';else if(at.r==='n')st='background:rgba(239,68,68,.1);color:var(--red);text-decoration:line-through';else if(at.w>0)st='color:var(--text)';else st='color:var(--border)';h+='<td style="padding:4px 2px;text-align:center;'+st+';font-family:Oswald;font-size:11px">'+tx+'</td>'});
-      h+='<td style="padding:4px 2px;text-align:center;font-weight:700;font-family:Oswald;color:'+LIFT_C[l]+';font-size:12px">'+(bestOf(a,l)||'\u2014')+'</td>';
+      const sub=l==='sq'?bestOf(a,'sq'):l==='bp'?bestOf(a,'sq')+bestOf(a,'bp'):bestOf(a,'sq')+bestOf(a,'bp')+bestOf(a,'dl');
+      h+='<td style="padding:4px 2px;text-align:center;font-weight:700;font-family:Oswald;color:#d4a843;font-size:12px;background:rgba(212,168,67,.08)">'+(sub||'\u2014')+'</td>';
     });
     h+='<td class="os" style="padding:6px 4px;text-align:center;font-weight:700;font-size:14px">'+(a.total||'\u2014')+'</td><td class="os" style="padding:6px 4px;text-align:center;font-weight:700;font-size:14px;color:var(--gold)">'+(a.gl||'\u2014')+'</td></tr>';
   });
@@ -398,6 +402,85 @@ function renderSB(){
   rk.forEach((a,i)=>{h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid rgba(30,58,95,.3);background:'+(cur&&a.id===cur.id?LIFT_C[DATA.lift]+'15':'transparent')+';border-radius:3px"><div style="display:flex;align-items:center;gap:8px"><span class="os" style="color:'+(i<3?'var(--gold)':'var(--muted)')+';font-weight:700;font-size:16px;width:24px">'+(i+1)+'</span><div><div style="font-weight:600;font-size:13px">'+a.name+'</div><div style="font-size:10px;color:var(--muted)">SQ '+bestOf(a,'sq')+' \u00b7 BP '+bestOf(a,'bp')+' \u00b7 DL '+bestOf(a,'dl')+'</div></div></div><div style="text-align:right"><div class="os" style="font-size:18px;font-weight:700;color:var(--gold)">'+a.gl+'</div><div style="font-size:10px;color:var(--muted)">'+a.total+'kg</div></div></div>'});
   if(!rk.length)h+='<p style="color:var(--muted);font-size:11px;text-align:center;padding:20px">Sin totales</p>';
   h+='</div></div></div>';return h;
+}
+
+function subTotal(a,lift){
+  const s=bestOf(a,'sq');
+  if(lift==='sq')return s;
+  const b=bestOf(a,'bp');
+  if(lift==='bp')return s+b;
+  return s+b+bestOf(a,'dl');
+}
+function catRankBySub(athlete){
+  const sameCat=DATA.athletes.filter(a=>a.cat===athlete.cat&&a.flight===DATA.flight&&!a.bombed);
+  const withSub=sameCat.map(a=>({id:a.id,sub:subTotal(a,DATA.lift)})).filter(x=>x.sub>0).sort((a,b)=>b.sub-a.sub);
+  const idx=withSub.findIndex(x=>x.id===athlete.id);
+  return{pos:idx>=0?idx+1:0,of:withSub.length};
+}
+function renderTransmision(){
+  const queue=liftQueue(),cur=queue[0];
+  const evName=DATA.event?.name||DATA.event?.short||'Campeonato';
+  let h='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;flex-direction:column;justify-content:flex-end;z-index:999">';
+  h+='<div style="position:absolute;top:12px;right:12px;display:flex;gap:6px;z-index:1000">';
+  h+='<button onclick="go(\'compete\')" style="background:rgba(30,50,80,.85);border:1px solid rgba(100,140,200,.3);color:#aac;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:Oswald;font-size:11px;letter-spacing:1px">\u2699 CONTROL</button>';
+  h+='<button onclick="go(\'setup\')" style="background:rgba(30,50,80,.85);border:1px solid rgba(100,140,200,.3);color:#aac;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:Oswald;font-size:11px;letter-spacing:1px">\u2190 VOLVER</button>';
+  h+='</div>';
+  if(!cur){
+    h+='<div style="margin:0 30px 60px;padding:18px 30px;background:linear-gradient(135deg,rgba(20,35,65,.97),rgba(25,40,72,.97));border-radius:8px;max-width:760px;border:1px solid rgba(60,90,140,.3)">';
+    h+='<div style="font-family:Oswald;font-size:26px;font-weight:700;color:#d4a843;letter-spacing:3px;text-align:center">RONDA COMPLETADA</div>';
+    h+='<div style="display:flex;justify-content:space-between;padding:6px 0 0;font-family:Oswald;font-size:11px;color:rgba(160,180,210,.5);letter-spacing:1px"><span>\u26A1 YourLift</span><span style="text-transform:uppercase">'+evName+'</span></div>';
+    h+='</div></div>';
+    return h;
+  }
+  const cw=cur.att[DATA.lift][DATA.round].w;
+  const rk=catRankBySub(cur);
+  const st=subTotal(cur,DATA.lift);
+  const parts=cur.name.split(' ');
+  const lastName=parts.length>2?parts.slice(-2).join(' '):parts[parts.length-1];
+  const firstName=parts.length>2?parts.slice(0,-2).join(' '):parts.slice(0,-1).join(' ');
+  const timerStr=DATA.timerOn?String(Math.floor(DATA.timer/60)).padStart(2,'0')+':'+String(DATA.timer%60).padStart(2,'0'):'';
+  const divShort=(cur.div||'').replace('Sub Junior','SJR').replace('Junior','JR').replace('Open','OPN').replace('Master I','M1').replace('Master II','M2').replace('Master III','M3').replace('Master IV','M4');
+  const catDiv=(cur.cat?'-'+cur.cat+'kg ':'')+divShort;
+  h+='<div style="margin:0 30px 50px;max-width:760px">';
+  // Top bar
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 18px;background:linear-gradient(90deg,rgba(30,50,85,.94),rgba(35,55,95,.94));border-radius:7px 7px 0 0;border-bottom:1px solid rgba(80,120,180,.25)">';
+  h+='<div style="font-family:Oswald;font-size:14px;color:rgba(180,200,230,.75);letter-spacing:1px">'+catDiv+'</div>';
+  h+='<div style="font-family:Oswald;font-size:17px;color:#fff;letter-spacing:2px">RANK <span style="font-weight:700;color:#d4a843">'+(rk.pos||'')+'</span> <span style="color:rgba(180,200,230,.45)">de '+rk.of+'</span></div>';
+  h+='<div id="txTimer" style="font-family:Oswald;font-size:22px;font-weight:700;color:'+(DATA.timer<=10&&DATA.timerOn?'#ef4444':'#fff')+';letter-spacing:2px;min-width:60px;text-align:right">'+timerStr+'</div>';
+  h+='</div>';
+  // Name bar
+  h+='<div style="display:flex;align-items:center;padding:8px 18px;background:linear-gradient(90deg,rgba(22,40,72,.96),rgba(28,46,80,.96));gap:14px">';
+  h+='<div style="background:rgba(40,65,110,.8);padding:5px 10px;border-radius:4px;min-width:75px;text-align:center;border:1px solid rgba(70,110,170,.3)">';
+  h+='<div style="font-family:Oswald;font-size:10px;color:rgba(180,200,230,.7);letter-spacing:.5px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(cur.club||'\u2014')+'</div></div>';
+  h+='<div style="flex:1">';
+  if(firstName)h+='<div style="font-size:11px;color:rgba(180,200,230,.65);line-height:1;margin-bottom:1px">'+firstName+'</div>';
+  h+='<div style="font-family:Oswald;font-size:clamp(22px,4vw,32px);font-weight:700;color:#fff;letter-spacing:1px;line-height:1.1;text-transform:uppercase">'+lastName+'</div>';
+  h+='</div></div>';
+  // Attempts bar
+  h+='<div style="display:flex;align-items:stretch;background:linear-gradient(90deg,rgba(16,30,55,.96),rgba(20,34,60,.96))">';
+  h+='<div style="display:flex;flex:1">';
+  cur.att[DATA.lift].forEach((at,j)=>{
+    let bg,clr,td='none';
+    if(at.r==='g'){bg='rgba(34,197,94,.22)';clr='#22c55e'}
+    else if(at.r==='n'){bg='rgba(239,68,68,.18)';clr='#ef4444';td='line-through'}
+    else if(at.w>0){bg='rgba(45,65,105,.6)';clr='#fff'}
+    else{bg='rgba(30,48,78,.4)';clr='rgba(90,120,160,.35)'}
+    const cur2=j===DATA.round&&at.r===null;
+    h+='<div style="flex:1;padding:10px 16px;text-align:center;background:'+bg+';border-right:1px solid rgba(55,85,130,.2);'+(cur2?'box-shadow:inset 0 -3px 0 '+LIFT_C[DATA.lift]+';':'')+'">';
+    h+='<div style="font-family:Oswald;font-size:24px;font-weight:700;color:'+clr+';text-decoration:'+td+'">'+(at.w||'\u2014')+'</div></div>';
+  });
+  h+='</div>';
+  if(st>0){
+    h+='<div style="padding:10px 22px;text-align:center;background:rgba(212,168,67,.18);border-left:2px solid #d4a843;min-width:100px;display:flex;align-items:center;justify-content:center">';
+    h+='<div style="font-family:Oswald;font-size:28px;font-weight:700;color:#d4a843">'+st.toFixed(1)+'</div></div>';
+  }
+  h+='</div>';
+  // Footer
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 18px;background:linear-gradient(90deg,rgba(12,22,42,.92),rgba(16,26,46,.92));border-radius:0 0 7px 7px">';
+  h+='<div style="font-family:Oswald;font-size:11px;color:rgba(160,180,210,.45);letter-spacing:1px">\u26A1 YourLift</div>';
+  h+='<div style="font-family:Oswald;font-size:11px;color:rgba(160,180,210,.45);letter-spacing:1px;text-transform:uppercase">'+evName+'</div>';
+  h+='</div></div></div>';
+  return h;
 }
 
 // INIT
