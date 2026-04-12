@@ -40574,7 +40574,7 @@
     "nombre": "Abigail joset Zepeda Moreno",
     "fechaNac": "06/07/1993",
     "club": "Potencia Muscular",
-    "debut": "2025 /2026",
+    "debut": "2025",
     "competencias": []
   },
   {
@@ -40602,189 +40602,6 @@
     "club": "All Power CD",
     "debut": "2026",
     "competencias": []
-  },
-  {
-    "codigo": "OPL-IGN-2201",
-    "rut": "",
-    "nombre": "Ignacio Bordones",
-    "fechaNac": "",
-    "club": "Sin Club Registrado",
-    "debut": "2022",
-    "competencias": [
-      {
-        "evento": "Zona Centro Iron Forces 2022",
-        "fecha": "2022-03-12",
-        "division": "",
-        "categoria": "105",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 220,
-          "bp": 125,
-          "dl": 250,
-          "total": 595,
-          "bw": 100,
-          "glp": 75.17,
-          "rank": 34
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2201"
-      },
-      {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "93",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 210,
-          "bp": 125,
-          "dl": 240,
-          "total": 575,
-          "bw": 91.6,
-          "glp": null,
-          "rank": 27,
-          "ipf": 531.46
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
-      }
-    ],
-    "source": "openpowerlifting",
-    "bestLifts": {
-      "sq": 220,
-      "bp": 125,
-      "dl": 250,
-      "total": 595,
-      "glp": 75.17
-    }
-  },
-  {
-    "codigo": "OPL-MON-2201",
-    "rut": "",
-    "nombre": "Monica Carrillo",
-    "fechaNac": "",
-    "club": "Hannya Strength",
-    "debut": "2022",
-    "competencias": [
-      {
-        "evento": "Zona Centro Iron Forces 2022",
-        "fecha": "2022-03-12",
-        "division": "",
-        "categoria": "69",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 110,
-          "bp": 60,
-          "dl": 142.5,
-          "total": 312.5,
-          "bw": 66.3,
-          "glp": 66.24,
-          "rank": 60
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2201"
-      },
-      {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 142.5,
-          "bp": 72.5,
-          "dl": 152.5,
-          "total": 367.5,
-          "pesoCorporal": 67.65,
-          "categoria": "69",
-          "division": "Open",
-          "glp": 76.991
-        }
-      }
-    ],
-    "source": "openpowerlifting",
-    "bestLifts": {
-      "sq": 142.5,
-      "bp": 72.5,
-      "dl": 152.5,
-      "total": 367.5,
-      "glp": 76.991
-    }
-  },
-  {
-    "codigo": "OPL-MIL-1903",
-    "rut": "",
-    "nombre": "Milenka Torres Ramos",
-    "fechaNac": "",
-    "club": "Sin Club Registrado",
-    "debut": "2019",
-    "competencias": [
-      {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "63",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 120,
-          "bp": 55,
-          "dl": 155,
-          "total": 330,
-          "bw": 62.5,
-          "glp": null,
-          "rank": 18,
-          "ipf": 572.48
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
-      }
-    ],
-    "source": "openpowerlifting",
-    "bestLifts": {
-      "sq": 120,
-      "bp": 55,
-      "dl": 155,
-      "total": 330,
-      "glp": 0
-    }
-  },
-  {
-    "codigo": "OPL-MOI-1903",
-    "rut": "",
-    "nombre": "Moisés Contreras",
-    "fechaNac": "",
-    "club": "Sin Club Registrado",
-    "debut": "2019",
-    "competencias": [
-      {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "105",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 235,
-          "bp": 130,
-          "dl": 250,
-          "total": 615,
-          "bw": 101.6,
-          "glp": null,
-          "rank": 25,
-          "ipf": 537.61
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
-      }
-    ],
-    "source": "openpowerlifting",
-    "bestLifts": {
-      "sq": 235,
-      "bp": 130,
-      "dl": 250,
-      "total": 615,
-      "glp": 0
-    }
   },
   {
     "codigo": "2103AFS-2026",
@@ -40844,7 +40661,7 @@
     }
   },
   {
-    "codigo": "RC26-1036",
+    "codigo": "2285DVM-2026",
     "rut": "22852682-7",
     "nombre": "Danilo Anibal Véliz Miranda",
     "fechaNac": "29/09/2008",
@@ -40880,7 +40697,7 @@
     ]
   },
   {
-    "codigo": "RC26-1038",
+    "codigo": "1734-NN-2026",
     "rut": "17340839-0",
     "nombre": "Joled Mateo nur narvaez",
     "fechaNac": "19/04/1990",
@@ -40972,7 +40789,7 @@
     ]
   },
   {
-    "codigo": "RC26-1042",
+    "codigo": "2162MVC-2026",
     "rut": "21626941-1",
     "nombre": "Monserrat Trinidad Vera Cubillos",
     "fechaNac": "24/07/2004",
@@ -41026,7 +40843,7 @@
     ]
   },
   {
-    "codigo": "RC26-1045",
+    "codigo": "1934FCB-2026",
     "rut": "19342692-1",
     "nombre": "Fernanda Lorena Camilla Bascuñán",
     "fechaNac": "06/05/1996",
@@ -41116,7 +40933,7 @@
     ]
   },
   {
-    "codigo": "RC26-1051",
+    "codigo": "1959JVP-2026",
     "rut": "19591130-4",
     "nombre": "Jael Ignacia Villalobos Pozo",
     "fechaNac": "04/06/1997",
@@ -41134,7 +40951,7 @@
     ]
   },
   {
-    "codigo": "RC26-1052",
+    "codigo": "2115FRP-2026",
     "rut": "21159132-3",
     "nombre": "Florencia Amapola Riveaud Pérez",
     "fechaNac": "07/11/2002",
