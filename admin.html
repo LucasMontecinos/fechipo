@@ -257,6 +257,44 @@ window.openEditModal=function(title,field,currentValue,onSave){
 // ═══════════════════════════════════════════
 // EDIT INSCRIPCIONES
 // ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
+// IMPORT NOMINAS.JSON TO FIREBASE
+// ═══════════════════════════════════════════
+window.importNominaToFB=async function(eventName){
+  const ev=ST.nominas.events?.find(e=>e.name===eventName);
+  if(!ev){showToast('Evento no encontrado',null,true);return}
+  if(!confirm(`Importar ${ev.athletes.length} atletas de "${eventName}" a Firebase?\n\nEsto los hará editables. Los duplicados (mismo RUT) se omiten.`))return;
+  
+  // Get existing RUTs in Firebase for this event
+  const existing=new Set(ST.inscripciones.filter(i=>i.evento===eventName).map(i=>(i.rut||'').replace(/[^0-9kK]/gi,'').toUpperCase()));
+  
+  let imported=0,skipped=0;
+  for(const a of ev.athletes){
+    const rutClean=(a.rut||'').replace(/[^0-9kK]/gi,'').toUpperCase();
+    if(rutClean&&existing.has(rutClean)){skipped++;continue}
+    try{
+      await addDoc(collection(db,'inscripciones'),{
+        nombre:a.nombre||'',
+        rut:a.rut||'',
+        sexo:a.sexo||'',
+        fechaNac:a.dob||'',
+        division:a.division||'',
+        categoria:a.categoria||'',
+        modalidad:a.modalidad||'',
+        club:a.club||'',
+        universidad:a.universidad||'',
+        evento:eventName,
+        status:a.status||'approved',
+        timestamp:Date.now(),
+        importedFromJson:true
+      });
+      imported++;
+    }catch(e){console.warn('Error importing',a.nombre,e)}
+  }
+  await logAction('import_nomina',eventName,null,`${imported} imported, ${skipped} skipped`);
+  showToast(`Importado: ${imported} atletas (${skipped} duplicados omitidos)`);
+}
+
 window.editInsc=async function(insId,field){
   const ins=ST.inscripciones.find(x=>x.id===insId);if(!ins)return;
   const cur=ins[field]||'';
@@ -513,32 +551,57 @@ function renderAthletes(){
 }
 
 function renderNominas(){
-  const events=[...new Set(ST.inscripciones.map(i=>i.evento))].filter(Boolean);
-  if(!ST.filterEv&&events.length)ST.filterEv=events[0];
-  const filtered=ST.inscripciones.filter(i=>i.evento===ST.filterEv&&i.status!=='rejected');
-  filtered.sort((a,b)=>(a.sortOrder||999)-(b.sortOrder||999));
+  // Combine Firebase inscriptions events + nominas.json events
+  const fbEvents=[...new Set(ST.inscripciones.map(i=>i.evento))].filter(Boolean);
+  const jsonEvents=(ST.nominas.events||[]).map(e=>e.name);
+  const allEvents=[...new Set([...fbEvents,...jsonEvents])];
+  if(!ST.filterEv&&allEvents.length)ST.filterEv=allEvents[0];
+  
+  const inFirebase=fbEvents.includes(ST.filterEv);
+  const jsonEv=ST.nominas.events?.find(e=>e.name===ST.filterEv);
+  
+  let filtered;
+  if(inFirebase){
+    filtered=ST.inscripciones.filter(i=>i.evento===ST.filterEv&&i.status!=='rejected');
+    filtered.sort((a,b)=>(a.sortOrder||999)-(b.sortOrder||999));
+  }else if(jsonEv){
+    filtered=jsonEv.athletes.map((a,idx)=>({...a,id:'json_'+idx,_json:true}));
+  }else{
+    filtered=[];
+  }
+  
   return `
     <div class="h1">Nóminas</div>
-    <p class="subtitle">Edita inscripciones en tiempo real · ${filtered.length} atletas en evento seleccionado</p>
+    <p class="subtitle">Edita inscripciones · ${filtered.length} atletas en evento seleccionado</p>
     <div class="search-box">
       <select class="inp" onchange="ST.filterEv=this.value;render()">
-        ${events.map(e=>`<option value="${e}" ${ST.filterEv===e?'selected':''}>${e}</option>`).join('')}
+        ${allEvents.map(e=>{
+          const isFB=fbEvents.includes(e);
+          return `<option value="${e}" ${ST.filterEv===e?'selected':''}>${isFB?'🔴 ':'📄 '}${e}${isFB?' (LIVE)':' (JSON)'}</option>`;
+        }).join('')}
       </select>
-      <button class="btn btn-b" onclick="sortNominaByEvent('${ST.filterEv}')">⇅ ORDENAR</button>
+      ${inFirebase?`<button class="btn btn-b" onclick="sortNominaByEvent('${ST.filterEv}')">⇅ ORDENAR</button>`:''}
+      ${!inFirebase&&jsonEv?`<button class="btn btn-g" onclick="importNominaToFB('${ST.filterEv.replace(/'/g,"\\'")}')">📥 IMPORTAR A FIREBASE</button>`:''}
     </div>
+    ${!inFirebase&&jsonEv?'<div class="card" style="background:rgba(212,168,67,.08);border-color:rgba(212,168,67,.3);padding:12px 16px;margin-bottom:12px"><span style="color:var(--gold);font-size:12px">⚠️ Esta nómina viene de nominas.json (estática). Para editarla en tiempo real, importarla a Firebase.</span></div>':''}
     <div class="card" style="padding:0;overflow-x:auto">
       <table class="tbl">
         <tr><th>#</th><th>Nombre</th><th>Sexo</th><th>División</th><th>Cat.</th><th>Modalidad</th><th>Club</th><th>Estado</th></tr>
-        ${filtered.map((i,idx)=>`<tr>
-          <td style="color:var(--muted);font-family:Oswald">${idx+1}</td>
-          <td>${i.nombre}<br><span style="font-size:9px;color:var(--muted)">${i.rut||''}</span></td>
-          <td><span class="editable" onclick="editInsc('${i.id}','sexo')">${i.sexo||'?'}</span></td>
-          <td><span class="editable" onclick="editInsc('${i.id}','division')">${i.division||'—'}</span></td>
-          <td><span class="editable" onclick="editInsc('${i.id}','categoria')">${i.categoria||'—'}</span></td>
-          <td><span class="editable" onclick="editInsc('${i.id}','modalidad')">${i.modalidad||'—'}</span></td>
-          <td><span class="editable" onclick="editInsc('${i.id}','club')">${i.club||'—'}</span></td>
-          <td><span class="badge ${i.status==='approved'?'b-g':i.status==='pending'?'b-y':'b-r'}">${i.status||'?'}</span></td>
-        </tr>`).join('')}
+        ${filtered.map((i,idx)=>{
+          const editable=!i._json;
+          const click=(f)=>editable?`onclick="editInsc('${i.id}','${f}')"`:'';
+          const cls=editable?'editable':'';
+          return `<tr>
+            <td style="color:var(--muted);font-family:Oswald">${idx+1}</td>
+            <td>${i.nombre}<br><span style="font-size:9px;color:var(--muted)">${i.rut||''}</span></td>
+            <td><span class="${cls}" ${click('sexo')}>${i.sexo||'?'}</span></td>
+            <td><span class="${cls}" ${click('division')}>${i.division||'—'}</span></td>
+            <td><span class="${cls}" ${click('categoria')}>${i.categoria||'—'}</span></td>
+            <td><span class="${cls}" ${click('modalidad')}>${i.modalidad||'—'}</span></td>
+            <td><span class="${cls}" ${click('club')}>${i.club||'—'}</span></td>
+            <td><span class="badge ${i.status==='approved'?'b-g':i.status==='pending'?'b-y':'b-r'}">${i.status||'approved'}</span></td>
+          </tr>`;
+        }).join('')}
       </table>
       ${filtered.length===0?'<div class="empty">Sin atletas en este evento</div>':''}
     </div>`;
