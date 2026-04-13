@@ -147,7 +147,7 @@ body{font-family:'Oswald',sans-serif;background:var(--bg);color:var(--text);heig
 
   <!-- Action bar: timer + limpiar -->
   <div class="action-bar">
-    <button class="btn-timer" onclick="sendStartTimer()">▶ INICIAR TIMER</button>
+    <button class="btn-timer" id="btnTimer" onclick="sendStartTimer()" style="display:none">▶ INICIAR TIMER</button>
     <button class="btn-clear" id="btnClear" onclick="clearVote()">✕ LIMPIAR</button>
   </div>
 
@@ -193,6 +193,9 @@ window.selectPos=function(pos){
   document.getElementById('posBadge').textContent=POS_LABEL[pos];
   document.getElementById('pick').classList.remove('active');
   document.getElementById('panel').classList.add('active');
+  // Timer button only for central judge
+  const btn=document.getElementById('btnTimer');
+  if(btn)btn.style.display=pos==='central'?'block':'none';
 };
 
 // ══ Athlete listener (shows current athlete from Firebase) ═

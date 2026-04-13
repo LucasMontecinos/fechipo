@@ -393,10 +393,17 @@ function startJudgeListener(){
   if(!fbReady)return;
   if(judgeUnsub){judgeUnsub();judgeUnsub=null}
   // Also listen for timer-start signals from judge panel
+  let _timerListenerFirst=true;
   window._fb.onSnapshot(window._fb.doc(fbDB,'timer_control','current'),(snap)=>{
     if(!snap.exists())return;
     const d=snap.data();
-    if(d.action==='start'&&d.ts&&d.ts>(_lastTimerSignal||0)){
+    // First snapshot: just record current ts to ignore stale signals already in Firestore
+    if(_timerListenerFirst){
+      _timerListenerFirst=false;
+      if(d.ts)_lastTimerSignal=d.ts;
+      return;
+    }
+    if(d.action==='start'&&d.ts&&d.ts>_lastTimerSignal){
       _lastTimerSignal=d.ts;
       if(!DATA.timerOn)startTimer();
     }
