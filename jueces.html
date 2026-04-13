@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>YourLift - Panel de Jueces</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A1628;--card:#11223B;--border:#1E3A5F;--text:#D4E1F0;--muted:#7A8FA6;--accent:#C41E3A}
+body{font-family:'Oswald',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased;overflow:hidden}
+.pick{text-align:center;padding:20px}
+.pick h1{font-size:28px;letter-spacing:3px;margin-bottom:8px}
+.pick p{color:var(--muted);font-size:14px;margin-bottom:30px}
+.pick-btn{display:block;width:280px;margin:10px auto;padding:20px;border-radius:12px;border:2px solid var(--border);background:var(--card);color:var(--text);font-family:Oswald;font-size:20px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .2s}
+.pick-btn:hover{border-color:var(--accent);transform:scale(1.02)}
+.panel{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;width:100vw;gap:16px;padding:16px}
+.judge-title{font-size:18px;letter-spacing:3px;color:var(--muted)}
+.judge-pos{font-size:36px;font-weight:700;letter-spacing:4px;margin-bottom:8px}
+.athlete-info{font-size:16px;color:var(--muted);text-align:center;margin-bottom:12px;min-height:44px}
+.athlete-name{font-size:22px;color:#fff;font-weight:700}
+.athlete-weight{font-size:18px;color:#D4A843}
+.lights{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:90%;max-width:400px}
+.light-btn{padding:0;border:4px solid rgba(255,255,255,.1);border-radius:20px;cursor:pointer;font-family:Oswald;font-size:18px;font-weight:700;letter-spacing:2px;transition:all .15s;height:120px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;user-select:none}
+.light-btn:active{transform:scale(.95)}
+.light-btn.selected{border-width:6px;transform:scale(1.05);box-shadow:0 0 30px rgba(255,255,255,.2)}
+.l-white{background:linear-gradient(135deg,#f0f0f0,#d4d4d4);color:#111}
+.l-white.selected{border-color:#fff;box-shadow:0 0 40px rgba(255,255,255,.5)}
+.l-red{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff}
+.l-red.selected{border-color:#fca5a5;box-shadow:0 0 40px rgba(239,68,68,.5)}
+.l-yellow{background:linear-gradient(135deg,#f59e0b,#d97706);color:#111}
+.l-yellow.selected{border-color:#fde68a;box-shadow:0 0 40px rgba(245,158,11,.5)}
+.l-blue{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff}
+.l-blue.selected{border-color:#93c5fd;box-shadow:0 0 40px rgba(59,130,246,.5)}
+.status{text-align:center;padding:12px;border-radius:10px;font-size:14px;letter-spacing:1px;min-height:50px;display:flex;align-items:center;justify-content:center;width:90%;max-width:400px}
+.status.waiting{background:rgba(30,58,95,.5);color:var(--muted)}
+.status.sent{background:rgba(34,197,94,.15);color:#22c55e}
+.status.locked{background:rgba(212,168,67,.15);color:#D4A843}
+.reset-btn{padding:10px 24px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:Oswald;font-size:12px;cursor:pointer;letter-spacing:1px}
+.reset-btn:hover{border-color:var(--accent);color:var(--text)}
+@media(max-width:400px){.light-btn{height:90px;font-size:14px;border-radius:14px}.judge-pos{font-size:28px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getFirestore,doc,setDoc,onSnapshot,getDoc}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const FB_CFG={apiKey:"AIzaSyA21IHMus2bklPLJm7ExRrVJJL9bzLhyp4",authDomain:"fechipo-db-13148.firebaseapp.com",projectId:"fechipo-db-13148",storageBucket:"fechipo-db-13148.firebasestorage.app",messagingSenderId:"551573388751",appId:"1:551573388751:web:5fcc377a8d595378ab26ba"};
+const app=initializeApp(FB_CFG);
+const db=getFirestore(app);
+
+let position=sessionStorage.getItem('judge_position')||'';
+let selected='';
+let status='waiting'; // waiting|sent|locked
+let athleteInfo={name:'',weight:0,lift:'',round:0};
+let judgeLocked=false;
+
+function render(){
+  const el=document.getElementById('app');
+  if(!position){
+    el.innerHTML=`<div class="pick">
+      <img src="YourLift_logo.png" style="height:40px;margin-bottom:12px" onerror="this.style.display='none'">
+      <h1>PANEL DE JUECES</h1>
+      <p>Selecciona tu posición</p>
+      <button class="pick-btn" onclick="pickPos('izq')">⬅️ JUEZ IZQUIERDO</button>
+      <button class="pick-btn" onclick="pickPos('central')">⬆️ JUEZ CENTRAL</button>
+      <button class="pick-btn" onclick="pickPos('der')">➡️ JUEZ DERECHO</button>
+      <p style="margin-top:24px;font-size:11px"><a href="index.html" style="color:var(--muted);text-decoration:none">← Volver al sitio</a></p>
+    </div>`;
+    return;
+  }
+  const posLabel={izq:'IZQUIERDO',central:'CENTRAL',der:'DERECHO'}[position];
+  const statusHTML=status==='sent'?'<div class="status sent">✓ DECISIÓN ENVIADA</div>':
+    status==='locked'?'<div class="status locked">🔒 ESPERANDO SIGUIENTE ATLETA</div>':
+    '<div class="status waiting">ESPERANDO TU DECISIÓN</div>';
+  
+  el.innerHTML=`<div class="panel">
+    <div class="judge-title">JUEZ</div>
+    <div class="judge-pos">${posLabel}</div>
+    <div class="athlete-info">
+      ${athleteInfo.name?`<div class="athlete-name">${athleteInfo.name}</div><div class="athlete-weight">${athleteInfo.weight} kg · ${athleteInfo.lift} · Int ${athleteInfo.round+1}</div>`:'<span style="color:var(--muted)">Esperando atleta...</span>'}
+    </div>
+    <div class="lights">
+      <button class="light-btn l-white ${selected==='white'?'selected':''}" onclick="vote('white')" ${judgeLocked?'disabled':''}>BUENO</button>
+      <button class="light-btn l-red ${selected==='red'?'selected':''}" onclick="vote('red')" ${judgeLocked?'disabled':''}>NULO</button>
+      <button class="light-btn l-yellow ${selected==='yellow'?'selected':''}" onclick="vote('yellow')" ${judgeLocked?'disabled':''}>AMARILLA</button>
+      <button class="light-btn l-blue ${selected==='blue'?'selected':''}" onclick="vote('blue')" ${judgeLocked?'disabled':''}>AZUL</button>
+    </div>
+    ${statusHTML}
+    <button class="reset-btn" onclick="changePos()">Cambiar posición</button>
+  </div>`;
+}
+
+window.pickPos=function(pos){
+  position=pos;
+  sessionStorage.setItem('judge_position',pos);
+  startListener();
+  render();
+}
+
+window.changePos=function(){
+  position='';selected='';status='waiting';judgeLocked=false;
+  sessionStorage.removeItem('judge_position');
+  render();
+}
+
+window.vote=async function(color){
+  if(judgeLocked||!position)return;
+  selected=color;
+  status='sent';
+  judgeLocked=true;
+  render();
+  try{
+    await setDoc(doc(db,'judge_decisions','current'),{
+      [position]:color,
+      [`${position}_ts`]:Date.now()
+    },{merge:true});
+  }catch(e){console.error('Vote error',e);status='waiting';judgeLocked=false;render()}
+}
+
+function startListener(){
+  // Listen for resets (new athlete) from livecast
+  onSnapshot(doc(db,'judge_decisions','current'),(snap)=>{
+    if(!snap.exists())return;
+    const d=snap.data();
+    // If reset flag changed, unlock
+    if(d.reset_ts&&d.reset_ts>Date.now()-5000){
+      selected='';status='waiting';judgeLocked=false;
+    }
+    // Update athlete info
+    if(d.athlete_name!==undefined)athleteInfo.name=d.athlete_name;
+    if(d.athlete_weight!==undefined)athleteInfo.weight=d.athlete_weight;
+    if(d.athlete_lift!==undefined)athleteInfo.lift=d.athlete_lift;
+    if(d.athlete_round!==undefined)athleteInfo.round=d.athlete_round;
+    render();
+  });
+}
+
+if(position)startListener();
+render();
+</script>
+</body>
+</html>
