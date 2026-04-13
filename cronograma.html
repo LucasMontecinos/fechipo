@@ -57,6 +57,13 @@ async function initCronoFB(){
     const snap=await fb.getDocs(fb.collection(fbDB,'inscripciones'));
     fbInscripciones=[];snap.forEach(d=>fbInscripciones.push({id:d.id,...d.data()}));
     fbReady=true;
+    // Sync NOM_EVENTS from Firestore eventos collection
+    fb.onSnapshot(fb.collection(fbDB,'eventos'),(snap)=>{
+      const evs=snap.docs.map(d=>({...d.data(),id:d.id}))
+        .filter(e=>e.status!=='archived'&&e.status!=='draft')
+        .sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+      if(evs.length){NOM_EVENTS=evs;render();}
+    });
     console.log('[CronoFB] Ready,',fbInscripciones.length,'inscripciones loaded');
   }catch(e){console.warn('[CronoFB] Init failed',e)}
 }
@@ -78,11 +85,11 @@ async function syncFlightsToFB(){
   }
   if(updated>0)console.log('[CronoFB] Updated',updated,'flight assignments');
 }
-// ── NOM_EVENTS: event IDs must match inscripcion.html EVENTS ──
-const NOM_EVENTS=[
-  {id:'regional_centro_2026',name:'Campeonato Regional Centro FECHIPO 2026',date:'2026-05-09',closeDate:'2026-04-09',location:'Santiago, RM',org:'Athor Powerlifting',days:'09 y 10 de Mayo'},
-  {id:'universitario_2026',name:'Primer Campeonato Nacional Universitario FECHIPO 2026',date:'2026-05-23',closeDate:'2026-04-23',location:'Talca',org:'Club Bushido Lifting',days:'23 de Mayo'},
-  {id:'Campeonato_de_debutantes',name:'Campeonato de Debutantes',date:'2026-XX-XX',closeDate:'2026-XX-XX',location:'Santiago, Ñuñoa',org:'All Power',days:'Por definir'},
+// NOM_EVENTS loaded from Firestore — seeded as fallback
+let NOM_EVENTS=[
+  {id:'regional_centro_2026',name:'Campeonato Regional Centro FECHIPO 2026',date:'2026-05-09',closeDate:'2026-04-09',location:'Santiago, RM',org:'Athor Powerlifting',days:'09 y 10 de Mayo',status:'open'},
+  {id:'universitario_2026',name:'Primer Campeonato Nacional Universitario FECHIPO 2026',date:'2026-05-23',closeDate:'2026-04-23',location:'Talca',org:'Club Bushido Lifting',days:'23 de Mayo',status:'open'},
+  {id:'Campeonato_de_debutantes',name:'Campeonato de Debutantes',date:'2026-XX-XX',closeDate:'2026-XX-XX',location:'Santiago, Ñuñoa',org:'All Power',days:'Por definir',status:'open'},
 ];
 
 function _cronoApplyNominas(all){

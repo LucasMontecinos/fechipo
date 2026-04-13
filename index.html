@@ -88,7 +88,7 @@ a{color:var(--accent);text-decoration:none}
 // Firebase config (same as inscripcion.html)
 const FB_CFG={apiKey:"AIzaSyA21IHMus2bklPLJm7ExRrVJJL9bzLhyp4",authDomain:"fechipo-db-13148.firebaseapp.com",projectId:"fechipo-db-13148",storageBucket:"fechipo-db-13148.firebasestorage.app",messagingSenderId:"551573388751",appId:"1:551573388751:web:5fcc377a8d595378ab26ba"};
 
-const NOM_EVENTS=[
+let NOM_EVENTS=[
   {id:"regional_centro_2026",name:"Campeonato Regional Centro FECHIPO 2026",date:"2026-05-09",closeDate:"2026-04-09",location:"Santiago, RM",org:"Athor Powerlifting",days:"09 y 10 de Mayo",extraCols:["modalidad"]},
   {id:"universitario_2026",name:"Primer Campeonato Nacional Universitario FECHIPO 2026",date:"2026-05-23",closeDate:"2026-04-23",location:"Talca",org:"Club Bushido Lifting",days:"23 de Mayo",extraCols:["universidad"]},
   {id:"Campeonato_de_debutantes",name:"Campeonato de Debutantes",date:"2026-XX-XX",closeDate:"2026-XX-XX",location:"Santiago, Ñuñoa",org:"All Power",days:"Por definir",extraCols:["modalidad"]},
@@ -101,6 +101,13 @@ async function initFB(){
     const app=initializeApp(FB_CFG);fbDB=fb.getFirestore(app);
     window.FBQ={collection:fb.collection,getDocs:fb.getDocs,query:fb.query,orderBy:fb.orderBy,where:fb.where,doc:fb.doc,setDoc:fb.setDoc,getDoc:fb.getDoc,onSnapshot:fb.onSnapshot,updateDoc:fb.updateDoc};
     fbReady=true;
+    // Load eventos from Firestore and update NOM_EVENTS
+    window.FBQ.onSnapshot(window.FBQ.collection(fbDB,'eventos'),(snap)=>{
+      const evs=snap.docs.map(d=>({...d.data(),id:d.id}))
+        .filter(e=>e.status!=='archived'&&e.status!=='draft')
+        .sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+      if(evs.length)NOM_EVENTS=evs;
+    });
     await loadEdits();
     startEditsListener();
     await loadFBNominas();

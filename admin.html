@@ -92,7 +92,7 @@ const auth=getAuth(app);
 const db=getFirestore(app);
 
 // Estado global
-const ST={user:null,adminInfo:null,view:'dashboard',data:null,nominas:null,inscripciones:[],auditLog:[],events:[],filterEv:'',search:'',filterLetter:''};
+const ST={user:null,adminInfo:null,view:'dashboard',data:null,nominas:null,inscripciones:[],auditLog:[],events:[],eventos:[],filterEv:'',search:'',filterLetter:'',eventoForm:null,eventoFormMode:'create'};
 window.ST=ST;
 
 // ═══════════════════════════════════════════
@@ -175,6 +175,14 @@ async function loadAll(){
         if(ST.view==='nominas'||ST.view==='dashboard'||ST.view==='approvals')render();
       });
     }
+    // Real-time listener for eventos
+    if(!window._eventosListener){
+      window._eventosListener=onSnapshot(collection(db,'eventos'),(snap)=>{
+        ST.eventos=snap.docs.map(d=>({...d.data(),id:d.id}))
+          .sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+        if(ST.view==='campeonatos')render();
+      });
+    }
     
     // Load audit log (last 100)
     try{
@@ -182,6 +190,9 @@ async function loadAll(){
       ST.auditLog=[];
       logSnap.forEach(d=>ST.auditLog.push({id:d.id,...d.data()}));
     }catch(e){console.warn('No audit log access',e)}
+    
+    // Auto-close overdue nominations (non-blocking)
+    setTimeout(()=>autoCloseOverdueEventos(),2000);
     
   }catch(e){console.error('Load error',e);alert('Error cargando datos: '+e.message)}
 }
@@ -524,6 +535,7 @@ function render(){
       <button class="side-btn ${ST.view==='cronograma'?'active':''}" onclick="go('cronograma')"><span class="icon">✈️</span>Cronograma</button>
       <div class="side-label">Sistema</div>
       <button class="side-btn ${ST.view==='livecast'?'active':''}" onclick="go('livecast')"><span class="icon">📡</span>LiveCast</button>
+      <button class="side-btn ${ST.view==='campeonatos'?'active':''}" onclick="go('campeonatos')"><span class="icon">🏆</span>Campeonatos</button>
       <button class="side-btn ${ST.view==='exports'?'active':''}" onclick="go('exports')"><span class="icon">💾</span>Exports</button>
       <button class="side-btn ${ST.view==='audit'?'active':''}" onclick="go('audit')"><span class="icon">📜</span>Audit Log</button>
       <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border)">
@@ -539,6 +551,7 @@ function render(){
   else if(ST.view==='approvals')content=renderApprovals();
   else if(ST.view==='cronograma')content=renderCronograma();
   else if(ST.view==='livecast')content=renderLivecast();
+  else if(ST.view==='campeonatos')content=renderCampeonatos();
   else if(ST.view==='exports')content=renderExports();
   else if(ST.view==='audit')content=renderAudit();
   
@@ -973,6 +986,222 @@ window.searchDebounced=function(val){
 
 window.render=render;
 render();
+// ═══════════════════════════════════════════════════════════
+// CAMPEONATOS — CRUD COMPLETO
+// ═══════════════════════════════════════════════════════════
+
+const STATUS_LABELS = {open:'🟢 Inscripciones abiertas', closed:'🔒 Nómina cerrada', draft:'📝 Borrador', archived:'🗄 Archivado'};
+const STATUS_COLORS = {open:'var(--green)', closed:'var(--accent)', draft:'var(--gold)', archived:'var(--muted)'};
+
+function renderCampeonatos(){
+  const evs = ST.eventos;
+  const editing = ST.eventoForm;
+
+  if(editing){
+    const isNew = ST.eventoFormMode === 'create';
+    const inscCount = ST.inscripciones.filter(i=>i.evento===editing.id).length;
+    return `
+    <div class="h1">${isNew?'Nuevo Campeonato':'Editar Campeonato'}</div>
+    <p class="subtitle">${isNew?'Se publicará inmediatamente en inscripciones y nómina':'Cambios se propagan en tiempo real a todos los archivos'}</p>
+    <div class="card" style="max-width:680px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <label class="field" style="grid-column:span 2">
+          <span>Nombre del campeonato</span>
+          <input class="inp" id="ef_name" value="${editing.name||''}" placeholder="ej: Campeonato Regional Centro 2027">
+        </label>
+        <label class="field">
+          <span>ID (slug único, sin espacios)</span>
+          <input class="inp" id="ef_id" value="${editing.id||''}" placeholder="ej: regional_centro_2027" ${!isNew?'disabled style="opacity:.5"':''}>
+          ${!isNew?'<span style="font-size:10px;color:var(--muted)">El ID no se puede cambiar</span>':''}
+        </label>
+        <label class="field">
+          <span>Estado</span>
+          <select class="inp" id="ef_status">
+            ${['open','closed','draft','archived'].map(s=>`<option value="${s}" ${(editing.status||'open')===s?'selected':''}>${STATUS_LABELS[s]}</option>`).join('')}
+          </select>
+        </label>
+        <label class="field">
+          <span>📅 Fecha de competencia</span>
+          <input class="inp" type="date" id="ef_date" value="${editing.date||''}">
+        </label>
+        <label class="field">
+          <span>🔒 Cierre de nómina</span>
+          <input class="inp" type="date" id="ef_closeDate" value="${editing.closeDate||''}">
+        </label>
+        <label class="field">
+          <span>📍 Ubicación</span>
+          <input class="inp" id="ef_location" value="${editing.location||''}" placeholder="ej: Santiago, RM">
+        </label>
+        <label class="field">
+          <span>🏢 Organizador</span>
+          <input class="inp" id="ef_org" value="${editing.org||''}" placeholder="ej: Club Bushido Lifting">
+        </label>
+        <label class="field">
+          <span>📆 Días (texto visible)</span>
+          <input class="inp" id="ef_days" value="${editing.days||''}" placeholder="ej: 09 y 10 de Mayo">
+        </label>
+        <label class="field">
+          <span>Columna extra en nómina</span>
+          <select class="inp" id="ef_extra">
+            <option value="modalidad" ${!(editing.extraCols||[]).includes('universidad')?'selected':''}>Modalidad</option>
+            <option value="universidad" ${(editing.extraCols||[]).includes('universidad')?'selected':''}>Universidad</option>
+          </select>
+        </label>
+      </div>
+      ${!isNew?`<div style="margin-top:14px;padding:10px 14px;background:rgba(30,58,95,.3);border-radius:8px;font-size:12px;color:var(--muted)">
+        <span style="color:var(--text)">📊 Estado actual:</span>
+        ${inscCount} inscripciones · ${ST.inscripciones.filter(i=>i.evento===editing.id&&i.status==='approved').length} aprobadas
+      </div>`:''}
+      <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+        <button class="btn btn-g" onclick="saveEvento()">💾 ${isNew?'Crear campeonato':'Guardar cambios'}</button>
+        <button class="btn" style="background:transparent;border:1px solid var(--border);color:var(--muted)" onclick="ST.eventoForm=null;render()">Cancelar</button>
+        ${!isNew&&editing.status!=='closed'?`<button class="btn btn-r" onclick="closeNomina('${editing.id}')" style="margin-left:auto">🔒 Cerrar nómina ahora</button>`:''}
+        ${!isNew&&editing.status!=='archived'?`<button class="btn" style="background:transparent;border:1px solid var(--muted);color:var(--muted);margin-left:${editing.status==='closed'?'auto':'0'}" onclick="archiveEvento('${editing.id}')">🗄 Archivar</button>`:''}
+      </div>
+    </div>`;
+  }
+
+  return `
+  <div class="h1">Campeonatos</div>
+  <p class="subtitle">Gestiona los campeonatos — los cambios se propagan en tiempo real a inscripciones, nómina y cronograma</p>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+    <button class="btn btn-g" onclick="newEvento()">+ Nuevo campeonato</button>
+  </div>
+  <div style="display:grid;gap:12px">
+    ${!evs.length?'<div class="card" style="text-align:center;padding:40px;color:var(--muted)">No hay campeonatos. Crea el primero.</div>':''}
+    ${evs.map(ev=>{
+      const insc = ST.inscripciones.filter(i=>i.evento===ev.id);
+      const approved = insc.filter(i=>i.status==='approved').length;
+      const pending  = insc.filter(i=>i.status==='pending').length;
+      const today = new Date().toISOString().slice(0,10);
+      const autoClose = ev.closeDate && ev.closeDate < today && ev.status==='open';
+      return `<div class="card" style="border-left:4px solid ${STATUS_COLORS[ev.status]||'var(--border)'}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+          <div style="flex:1;min-width:200px">
+            <div style="font-family:Oswald;font-size:16px;font-weight:700">${ev.name}</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px">${ev.location||'—'} · ${ev.days||ev.date||'—'} · ${ev.org||'—'}</div>
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center">
+              <span style="font-size:11px;font-weight:700;color:${STATUS_COLORS[ev.status]||'var(--muted)'}">${STATUS_LABELS[ev.status]||ev.status}</span>
+              ${autoClose?'<span style="font-size:10px;background:rgba(239,68,68,.15);color:var(--red);padding:2px 8px;border-radius:4px">⚠️ Nómina vencida — cierra automáticamente</span>':''}
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <div style="text-align:center;min-width:44px">
+              <div style="font-family:Oswald;font-size:20px;font-weight:700;color:var(--green)">${approved}</div>
+              <div style="font-size:9px;color:var(--muted)">Aprobados</div>
+            </div>
+            <div style="text-align:center;min-width:44px">
+              <div style="font-family:Oswald;font-size:20px;font-weight:700;color:var(--gold)">${pending}</div>
+              <div style="font-size:9px;color:var(--muted)">Pendientes</div>
+            </div>
+            <div style="text-align:center;min-width:44px">
+              <div style="font-family:Oswald;font-size:20px;font-weight:700">${insc.length}</div>
+              <div style="font-size:9px;color:var(--muted)">Total</div>
+            </div>
+            <button class="btn btn-b" onclick="editEvento('${ev.id}')" style="padding:6px 14px;font-size:11px">✏️ Editar</button>
+            ${ev.status==='open'?`<button class="btn btn-r" onclick="closeNomina('${ev.id}')" style="padding:6px 14px;font-size:11px">🔒 Cerrar nómina</button>`:''}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+          <a href="inscripcion.html" target="_blank" style="font-size:10px;color:var(--blue);text-decoration:none;padding:3px 8px;border:1px solid rgba(59,130,246,.3);border-radius:4px">🔗 Formulario público</a>
+          <a href="cronograma.html" target="_blank" style="font-size:10px;color:var(--muted);text-decoration:none;padding:3px 8px;border:1px solid var(--border);border-radius:4px">📅 Cronograma</a>
+          <a href="livecast.html" target="_blank" style="font-size:10px;color:var(--muted);text-decoration:none;padding:3px 8px;border:1px solid var(--border);border-radius:4px">📡 LiveCast</a>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+// ── CRUD helpers ────────────────────────────────────────────
+window.newEvento = function(){
+  ST.eventoForm = {id:'',name:'',date:'',closeDate:'',location:'',org:'',days:'',status:'open',extraCols:['modalidad']};
+  ST.eventoFormMode = 'create';
+  render();
+};
+
+window.editEvento = function(id){
+  const ev = ST.eventos.find(e=>e.id===id);
+  if(!ev)return;
+  ST.eventoForm = {...ev};
+  ST.eventoFormMode = 'edit';
+  render();
+};
+
+window.saveEvento = async function(){
+  const isNew = ST.eventoFormMode === 'create';
+  const id  = isNew ? (document.getElementById('ef_id').value||'').trim().replace(/\s+/g,'_') : ST.eventoForm.id;
+  const name = (document.getElementById('ef_name').value||'').trim();
+  const status = document.getElementById('ef_status').value;
+  const date   = document.getElementById('ef_date').value;
+  const closeDate = document.getElementById('ef_closeDate').value;
+  const location  = document.getElementById('ef_location').value.trim();
+  const org       = document.getElementById('ef_org').value.trim();
+  const days      = document.getElementById('ef_days').value.trim();
+  const extra     = document.getElementById('ef_extra').value;
+
+  if(!id || !name){ showToast('ID y nombre son obligatorios', null, true); return; }
+  if(isNew && ST.eventos.find(e=>e.id===id)){ showToast('Ya existe un campeonato con ese ID', null, true); return; }
+
+  const data = {id, name, date, closeDate, location, org, days, status,
+    extraCols: [extra], updatedAt: serverTimestamp()};
+  if(isNew) data.createdAt = serverTimestamp();
+
+  try{
+    await setDoc(doc(db,'eventos',id), data, {merge:true});
+    await logAction(isNew?'create_evento':'update_evento', id, null, name);
+    showToast(isNew?'✅ Campeonato creado — ya visible en inscripciones y nómina':'✅ Cambios guardados');
+    ST.eventoForm = null;
+    render();
+  }catch(e){ showToast('Error: '+e.message, null, true); console.error(e); }
+};
+
+window.closeNomina = async function(id){
+  const ev = ST.eventos.find(e=>e.id===id);
+  if(!ev) return;
+  const insc = ST.inscripciones.filter(i=>i.evento===id);
+  const pending = insc.filter(i=>i.status==='pending').length;
+  const msg = pending > 0
+    ? `⚠️ Hay ${pending} inscripción${pending!==1?'es':''} pendiente${pending!==1?'s':''}. Al cerrar la nómina quedarán como rechazadas.\n\n¿Cerrar igualmente?`
+    : `¿Cerrar la nómina de "${ev.name}"?\nNo se aceptarán nuevas inscripciones.`;
+  if(!confirm(msg)) return;
+  try{
+    await setDoc(doc(db,'eventos',id),{status:'closed',closedAt:serverTimestamp()},{merge:true});
+    if(pending > 0){
+      await Promise.all(insc.filter(i=>i.status==='pending').map(i=>
+        updateDoc(doc(db,'inscripciones',i.id),{status:'rejected'})
+      ));
+    }
+    await logAction('close_nomina', id, 'open', 'closed');
+    showToast('🔒 Nómina cerrada — '+ev.name);
+    ST.eventoForm = null;
+    render();
+  }catch(e){ showToast('Error: '+e.message, null, true); }
+};
+
+window.archiveEvento = async function(id){
+  if(!confirm('¿Archivar este campeonato? Seguirá visible en el historial pero no en inscripciones.')) return;
+  try{
+    await setDoc(doc(db,'eventos',id),{status:'archived',updatedAt:serverTimestamp()},{merge:true});
+    await logAction('archive_evento', id, null, 'archived');
+    showToast('🗄 Campeonato archivado');
+    ST.eventoForm = null;
+    render();
+  }catch(e){ showToast('Error: '+e.message, null, true); }
+};
+
+// Auto-close overdue nominations (runs on loadAll)
+async function autoCloseOverdueEventos(){
+  const today = new Date().toISOString().slice(0,10);
+  const overdue = ST.eventos.filter(ev => ev.status==='open' && ev.closeDate && ev.closeDate < today);
+  for(const ev of overdue){
+    try{
+      await setDoc(doc(db,'eventos',ev.id),{status:'closed',closedAt:serverTimestamp(),autoClosedAt:today},{merge:true});
+      await logAction('auto_close_nomina', ev.id, 'open', 'closed', {reason:'closeDate passed'});
+      console.log('[Admin] Auto-closed:', ev.name);
+    }catch(e){ console.warn('Auto-close failed for', ev.id, e); }
+  }
+}
+
 </script>
 </body>
 </html>
