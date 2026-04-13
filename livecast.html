@@ -275,6 +275,7 @@ function checkRecord(athlete,lift,round){
   const match=recs.find(rec=>rec.categoria===cat&&_normDiv(rec.division)===div);
   if(match&&weight>match.marca)showRecordAlert(athlete.name,lift,round,weight,match.marca,match.nombre,cat,div,mod);
 }
+function closeRecAlert(){const e=document.getElementById('recAlert');if(e)e.remove();}
 function showRecordAlert(athName,lift,round,newMark,oldMark,holder,cat,div,mod){
   const ex=document.getElementById('recAlert');if(ex)ex.remove();
   const LL={sq:'SQUAT',bp:'BENCH PRESS',dl:'DEADLIFT'};
@@ -293,7 +294,7 @@ function showRecordAlert(athName,lift,round,newMark,oldMark,holder,cat,div,mod){
     +'<div style="font-family:Oswald;font-size:38px;font-weight:700;color:#7A8FA6">'+oldMark+' kg</div>'
     +'<div style="font-size:10px;color:#7A8FA6;margin-top:2px">'+holder+'</div></div>'
     +'</div>'
-    +'<button onclick="document.getElementById('recAlert').remove()" style="padding:10px 30px;border-radius:10px;border:2px solid #C41E3A;background:transparent;color:#fff;font-family:Oswald;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer">CONFIRMAR &amp; CERRAR</button>'
+    +'<button onclick="closeRecAlert()" style="padding:10px 30px;border-radius:10px;border:2px solid #C41E3A;background:transparent;color:#fff;font-family:Oswald;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer">CONFIRMAR &amp; CERRAR</button>'
     +'<div style="font-size:10px;color:#7A8FA6;margin-top:10px">&#9888;&#65039; Sujeto a confirmación del intento por los jueces &mdash; se cierra en 15s</div>'
     +'</div>';
   document.body.appendChild(el);
@@ -354,6 +355,35 @@ async function toggleJudgeMode(){
     showToastLC('Modo Jueces DESACTIVADO — decisiones manuales');
   }
   R();
+}
+function manualRecordAlert(){
+  const queue=liftQueue();const cur=queue[0];if(!cur){showToastLC('No hay atleta activo');return;}
+  const weight=cur.att[DATA.lift][DATA.round].w;
+  if(!weight){showToastLC('Ingresa el peso del intento primero');return;}
+  // Try to find existing record
+  if(RECORDS){
+    const mod=cur.mod||'classic';
+    const cat=_normCat(cur.cat||'');
+    const div=_normDiv(cur.div||'');
+    const liftRecs=(RECORDS[mod]&&RECORDS[mod][DATA.lift])||[];
+    const match=liftRecs.find(rec=>rec.categoria===cat&&_normDiv(rec.division)===div);
+    if(match){showRecordAlert(cur.name,DATA.lift,DATA.round,weight,match.marca,match.nombre,cat,div,mod);return;}
+  }
+  // Generic record attempt overlay (no existing record to compare)
+  const ex=document.getElementById('recAlert');if(ex)ex.remove();
+  const LL={sq:'SQUAT',bp:'BENCH PRESS',dl:'DEADLIFT'};
+  const el=document.createElement('div');el.id='recAlert';
+  el.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:99999';
+  el.innerHTML='<div style="background:#0D1F38;border:3px solid #D4A843;border-radius:20px;padding:36px 44px;max-width:480px;width:90%;text-align:center;box-shadow:0 0 80px rgba(212,168,67,.35)">'
+    +'<div style="font-size:48px;margin-bottom:6px">&#127942;</div>'
+    +'<div style="font-family:Oswald;font-size:13px;letter-spacing:4px;color:#D4A843;margin-bottom:10px">INTENTO DE RÉCORD NACIONAL</div>'
+    +'<div style="font-family:Oswald;font-size:28px;font-weight:700;color:#fff;margin-bottom:4px">'+cur.name+'</div>'
+    +'<div style="font-family:Oswald;font-size:16px;color:#7A8FA6;margin-bottom:20px">'+LL[DATA.lift]+' · -'+_normCat(cur.cat||'')+'kg · '+_normDiv(cur.div||'')+'</div>'
+    +'<div style="font-family:Oswald;font-size:64px;font-weight:700;color:#D4A843;margin-bottom:8px">'+weight+' kg</div>'
+    +'<button onclick="closeRecAlert()" style="padding:10px 30px;border-radius:10px;border:2px solid #D4A843;background:transparent;color:#fff;font-family:Oswald;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer">CONFIRMAR</button>'
+    +'</div>';
+  document.body.appendChild(el);
+  setTimeout(()=>{const e=document.getElementById('recAlert');if(e)e.remove();},15000);
 }
 function showToastLC(msg){
   const t=document.createElement('div');t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--green);color:var(--text);padding:12px 20px;border-radius:10px;z-index:9999;font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,.4)';
@@ -444,7 +474,7 @@ setInterval(()=>{
 },1000);
 
 let mainTI=null;
-function startTimer(){DATA.timerOn=true;syncToFB();mainTI=setInterval(()=>{DATA.timer--;const el=document.getElementById('mainTimer');if(el){const c=DATA.timer<=10?'var(--red)':DATA.timer<=30?'var(--orange)':'var(--green)';el.style.color=c;el.textContent=Math.floor(DATA.timer/60)+':'+String(DATA.timer%60).padStart(2,'0');el.style.animation=DATA.timer<=10?'pulse 1s infinite':'none'}const sb=document.getElementById('sbTimer');if(sb){sb.textContent=Math.floor(DATA.timer/60)+':'+String(DATA.timer%60).padStart(2,'0');sb.style.color=DATA.timer<=10?'var(--red)':DATA.timer<=30?'var(--orange)':'var(--green)'}const tx=document.getElementById('txTimer');if(tx){tx.textContent=String(Math.floor(DATA.timer/60)).padStart(2,'0')+':'+String(DATA.timer%60).padStart(2,'0');tx.style.color=DATA.timer<=10?'#ef4444':'#fff'}if(DATA.timer%5===0||DATA.timer<=10)syncToFB();if(DATA.timer<=0){DATA.timerOn=false;clearInterval(mainTI);mainTI=null;syncToFB()}},1000)}
+function startTimer(){DATA.timerOn=true;syncToFB();mainTI=setInterval(()=>{DATA.timer--;const el=document.getElementById('mainTimer');if(el){const c=DATA.timer<=10?'var(--red)':DATA.timer<=30?'var(--orange)':'var(--green)';el.style.color=c;el.textContent=Math.floor(DATA.timer/60)+':'+String(DATA.timer%60).padStart(2,'0');el.style.animation=DATA.timer<=10?'pulse 1s infinite':'none'}const sb=document.getElementById('sbTimer');if(sb){sb.textContent=Math.floor(DATA.timer/60)+':'+String(DATA.timer%60).padStart(2,'0');sb.style.color=DATA.timer<=10?'var(--red)':DATA.timer<=30?'var(--orange)':'var(--green)'}const tx=document.getElementById('txTimer');if(tx){tx.textContent=String(Math.floor(DATA.timer/60)).padStart(2,'0')+':'+String(DATA.timer%60).padStart(2,'0');tx.style.color=DATA.timer<=10?'#ef4444':'#fff'}const txp=document.getElementById('txTimerPanel');if(txp){txp.textContent=String(Math.floor(DATA.timer/60)).padStart(2,'0')+':'+String(DATA.timer%60).padStart(2,'0');txp.style.color=DATA.timer<=10?'#ef4444':DATA.timer<=30?'#f59e0b':'#ffffff'}if(DATA.timer%5===0||DATA.timer<=10)syncToFB();if(DATA.timer<=0){DATA.timerOn=false;clearInterval(mainTI);mainTI=null;syncToFB()}},1000)}
 function pauseTimer(){DATA.timerOn=false;clearInterval(mainTI);mainTI=null;syncToFB()}
 function resetTimer(){DATA.timer=60;DATA.timerOn=false;clearInterval(mainTI);mainTI=null;const el=document.getElementById('mainTimer');if(el){el.style.color='var(--green)';el.textContent='1:00';el.style.animation='none'}syncToFB()}
 function advanceLift(){const li=LIFTS.indexOf(DATA.lift);if(DATA.round<2)DATA.round++;else if(li<2){DATA.lift=LIFTS[li+1];DATA.round=0}else go('results');saveNow();R()}
@@ -589,6 +619,8 @@ function renderCompete(){
     h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:8px 12px;background:var(--bg);border-radius:8px;border:1px solid '+(judgeMode?'var(--green)':'var(--border)')+'">';
     h+='<div><span style="font-size:12px;font-weight:600;color:'+(judgeMode?'var(--green)':'var(--muted)')+'">Modo Jueces</span><span style="font-size:10px;color:var(--muted);margin-left:6px">'+(judgeMode?'ACTIVO — decisiones desde panel de jueces':'DESACTIVADO — decisiones manuales')+'</span></div>';
     h+='<button onclick="toggleJudgeMode()" style="padding:6px 14px;border-radius:6px;border:1px solid '+(judgeMode?'var(--green)':'var(--border)')+';background:'+(judgeMode?'rgba(34,197,94,.15)':'transparent')+';color:'+(judgeMode?'var(--green)':'var(--muted)')+';font-family:Oswald;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:1px">'+(judgeMode?'DESACTIVAR':'ACTIVAR')+'</button></div>';
+    // Record attempt button
+    h+='<button onclick="manualRecordAlert()" style="width:100%;margin-top:8px;padding:9px 14px;border-radius:8px;border:2px solid #D4A843;background:rgba(212,168,67,.08);color:#D4A843;font-family:Oswald;font-size:12px;font-weight:700;letter-spacing:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">&#127942; SE PERMITE RÉCORD NACIONAL</button>';
     h+='</div>';
   }else{h+='<div class="card" style="text-align:center;padding:20px"><p class="os" style="font-size:15px;color:var(--gold);margin-bottom:10px">RONDA COMPLETADA</p><button class="btn btn-r" onclick="advanceLift()">Siguiente \u2192</button></div>'}
   // Active change timers
@@ -780,25 +812,28 @@ function txEnVivo(cur,evName){
   h+='<div style="overflow-y:auto;padding:0 10px">'+txLeaderboardCompact(cur,evName)+'</div>';
   h+='<div style="overflow-y:auto;padding:0 10px">'+txSiLevantaCompact(cur,evName)+'</div>';
   h+='</div>';
-  // Judge lights overlay (centered, only when judgeMode and votes exist)
-  if(judgeMode){
-    const votes=[judgeLights.izq,judgeLights.central,judgeLights.der].filter(Boolean);
-    if(votes.length>0){
-      const jcSmallSB={white:'#f0f0f0',red:'#ef4444',yellow:'#f59e0b',blue:'#3b82f6'};
-      h+='<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;gap:28px;z-index:100;align-items:flex-end">';
-      ['izq','central','der'].forEach(j=>{
-        const v=judgeLights[j];
-        const bigCol=v?(v==='white'?'#f0f0f0':'#ef4444'):'rgba(40,60,100,.4)';
-        const bigGlow=v?(v==='white'?'0 0 40px rgba(240,240,240,.7),0 0 80px rgba(240,240,240,.3)':'0 0 40px rgba(239,68,68,.7),0 0 80px rgba(239,68,68,.3)'):'none';
-        const smallCol=v?jcSmallSB[v]:'rgba(40,60,100,.4)';
-        h+='<div style="text-align:center">'
-          +'<div style="width:70px;height:70px;border-radius:50%;background:'+bigCol+';border:4px solid rgba(255,255,255,.2);box-shadow:'+bigGlow+';transition:all .3s;margin:0 auto 8px"></div>'
-          +'<div style="width:22px;height:22px;border-radius:50%;background:'+smallCol+';border:2px solid rgba(255,255,255,.2);margin:0 auto;box-shadow:'+(v?'0 0 12px '+smallCol:'none')+'"></div>'
-          +'</div>';
-      });
-      h+='</div>';
-    }
-  }
+  // Permanent lights + timer panel (always visible at bottom center)
+  const jcSm={white:'#f0f0f0',red:'#ef4444',yellow:'#f59e0b',blue:'#3b82f6'};
+  const timerTx=DATA.timerOn||DATA.timer<60?String(Math.floor(DATA.timer/60)).padStart(2,'0')+':'+String(DATA.timer%60).padStart(2,'0'):'—:——';
+  const timerColor=DATA.timer<=10&&DATA.timerOn?'#ef4444':DATA.timer<=30&&DATA.timerOn?'#f59e0b':'#ffffff';
+  h+='<div style="position:absolute;bottom:72px;left:50%;transform:translateX(-50%);z-index:200;background:rgba(8,18,36,.85);border:1px solid rgba(80,120,180,.35);border-radius:16px;padding:14px 24px;display:flex;flex-direction:column;align-items:center;gap:10px;backdrop-filter:blur(8px)">';
+  // Timer row
+  h+='<div id="txTimerPanel" style="font-family:Oswald;font-size:44px;font-weight:700;color:'+timerColor+';letter-spacing:3px;line-height:1">'+timerTx+'</div>';
+  // Lights row — always visible
+  h+='<div style="display:flex;gap:18px;align-items:flex-end">';
+  const jlNames={izq:'IZQ',central:'CTR',der:'DER'};
+  ['izq','central','der'].forEach(j=>{
+    const v=judgeLights[j];
+    const bigCol=v?(v==='white'?'#f0f0f0':'#ef4444'):'rgba(30,55,100,.6)';
+    const bigGlow=v?(v==='white'?'0 0 30px rgba(240,240,240,.65),0 0 60px rgba(240,240,240,.25)':'0 0 30px rgba(239,68,68,.65),0 0 60px rgba(239,68,68,.25)'):'none';
+    const smallCol=v?jcSm[v]:'rgba(30,55,100,.6)';
+    h+='<div style="text-align:center">'
+      +'<div style="width:52px;height:52px;border-radius:50%;background:'+bigCol+';border:3px solid '+(v?'rgba(255,255,255,.25)':'rgba(80,120,180,.3)')+';box-shadow:'+bigGlow+';transition:all .25s;margin:0 auto 6px"></div>'
+      +'<div style="width:16px;height:16px;border-radius:50%;background:'+smallCol+';border:2px solid '+(v?'rgba(255,255,255,.25)':'rgba(80,120,180,.3)')+';margin:0 auto 4px;box-shadow:'+(v?'0 0 8px '+smallCol:'none')+'"></div>'
+      +'<div style="font-family:Oswald;font-size:9px;color:'+(v?'rgba(255,255,255,.6)':'rgba(100,140,200,.4)')+';letter-spacing:1px">'+jlNames[j]+'</div>'
+      +'</div>';
+  });
+  h+='</div></div>';
   h+='<div style="padding:0 20px 16px">'+txMarcadorIPF(cur,evName)+'</div>';
   return h;
 }
