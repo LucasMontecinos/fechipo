@@ -155,15 +155,25 @@ onAuthStateChanged(auth,async(u)=>{_authFired=true;
 window.doLogin=async function(){
   const em=document.getElementById('lEm').value.trim();
   const pw=document.getElementById('lPw').value;
-  if(!em||!pw){alert('Completa email y contraseña');return}
+  const errEl=document.getElementById('loginErr');
+  if(errEl){errEl.style.display='none';}
+  if(!em||!pw){
+    if(errEl){errEl.style.display='block';errEl.textContent='Completa email y contraseña';}
+    return;
+  }
+  const btn=document.querySelector('[onclick*="doLogin"]');
+  if(btn){btn.textContent='Ingresando...';btn.disabled=true;}
   try{
     await signInWithEmailAndPassword(auth,em,pw);
   }catch(e){
-    console.error(e);
-    let msg='Error de autenticación';
+    console.error('[doLogin]',e.code,e.message);
+    let msg='Error: '+e.message;
     if(e.code==='auth/invalid-credential'||e.code==='auth/wrong-password'||e.code==='auth/user-not-found')msg='Email o contraseña incorrectos';
-    if(e.code==='auth/too-many-requests')msg='Demasiados intentos. Espera unos minutos.';
-    alert(msg);
+    else if(e.code==='auth/too-many-requests')msg='Demasiados intentos. Espera unos minutos.';
+    else if(e.code==='auth/network-request-failed')msg='Sin conexión a internet';
+    if(errEl){errEl.style.display='block';errEl.textContent=msg;}
+  }finally{
+    if(btn){btn.textContent='INGRESAR';btn.disabled=false;}
   }
 }
 
@@ -598,7 +608,11 @@ function render(){
         <p>Panel de administración</p>
         <div class="field"><label>Email</label><input type="email" id="lEm" placeholder="admin@ejemplo.cl" onkeydown="if(event.key==='Enter')document.getElementById('lPw').focus()"></div>
         <div class="field"><label>Contraseña</label><input type="password" id="lPw" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
-        <button class="btn btn-p" style="width:100%;padding:12px" onclick="doLogin()">INGRESAR</button>
+        <div id="loginErr" style="color:#ef4444;font-size:12px;text-align:center;margin-bottom:8px;display:none"></div>
+        <button class="btn btn-p" style="width:100%;padding:12px" onclick="
+          if(typeof window.doLogin==='function'){doLogin();}
+          else{document.getElementById('loginErr').style.display='block';document.getElementById('loginErr').textContent='El módulo no cargó. Haz Ctrl+Shift+R para recargar sin caché.';}
+        ">INGRESAR</button>
         <p style="margin-top:18px;font-size:11px"><a href="index.html" style="color:var(--muted);text-decoration:none">← Volver al sitio</a></p>
       </div></div>`;
     return;
