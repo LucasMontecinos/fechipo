@@ -91,10 +91,28 @@ async function initFB(){
     });
     // Check if already logged in (session persists)
     authMod.onAuthStateChanged(fbAuth,(u)=>{
-      if(u&&!isAdmin){isAdmin=true;console.log('[FB] Auto-logged in as',u.email);R()}
+      if(u){
+        // Verify this user is an admin in Firestore
+        fb.getDoc(fb.doc(fbDB,'admins',u.uid)).then(snap=>{
+          if(snap.exists()){
+            isAdmin=true;
+            console.log('[LiveCast] Admin session detected:',u.email);
+          } else {
+            isAdmin=false;
+            console.log('[LiveCast] Logged in but not admin:',u.email);
+          }
+          R();
+        }).catch(()=>{isAdmin=true;R();}); // fallback: trust auth
+      } else {
+        if(isAdmin){isAdmin=false;DATA.phase='results';R();}
+      }
     });
     console.log('[FB] Firebase ready');
     if(DATA.event)startFBSync();
+    // If redirected back from admin.html after login
+    if(sessionStorage.getItem('livecast_return')){
+      sessionStorage.removeItem('livecast_return');
+    }
   }catch(e){console.warn('[FB] Init failed',e)}
 }
 function fbDocId(){
@@ -163,6 +181,11 @@ async function doLogin(){
 }
 async function doLogout(){
   isAdmin=false;DATA.phase='results';save();
+  // Sign out from Firebase so admin.html also reflects the logout
+  try{
+    const authMod=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    await authMod.signOut(fbAuth);
+  }catch(e){console.warn('Logout error',e)}
   try{if(fbAuth)await window._fbAuth.signOut(fbAuth)}catch(e){}
   R();
 }
@@ -1128,7 +1151,7 @@ function renderShell(){
   h+='<div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border)">';
   h+='<div style="font-size:9px;color:'+(fbReady?'var(--green)':'var(--muted)')+';padding:0 8px;margin-bottom:6px">'+(fbReady?'\uD83D\uDCE1 Datos en vivo':'\u23F3 Conectando...')+'</div>';
   h+='<button class="side-btn" onclick="go(\'setup\')"><span class="icon">\u2190</span>Volver</button>';
-  h+='<button class="side-btn" onclick="showLogin()"><span class="icon">\uD83D\uDD10</span>Admin</button>';
+  // Admin button removed — login via admin.html only
   h+='<a href="index.html" class="side-btn" style="text-decoration:none;color:var(--muted)"><span class="icon">\u2190</span>YourLift</a></div>';
   }
   h+='</div><div class="main">';
@@ -1919,13 +1942,15 @@ else if(!DATA.events.length)R();
 
 
 function showLogin(){
-  const m=document.createElement('div');m.id='loginModal';
-  m.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:9999';
-  m.innerHTML='<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:360px;width:90%"><div style="text-align:center;margin-bottom:20px"><div class=\'os\' style=\'font-size:22px;font-weight:700;letter-spacing:2px\'>🔐 ADMIN</div><p style=\'color:var(--muted);font-size:12px;margin-top:4px\'>Ingresa tus credenciales</p></div><div style=\'margin-bottom:12px\'><label style=\'font-size:11px;color:var(--muted)\'>Correo</label><input id=\'adminEmail\' type=\'email\' placeholder=\'correo@ejemplo.cl\' style=\'width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px;margin-top:4px;box-sizing:border-box\'></div><div style=\'margin-bottom:16px\'><label style=\'font-size:11px;color:var(--muted)\'>Clave</label><input id=\'adminPass\' type=\'password\' placeholder=\'••••••\' style=\'width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px;margin-top:4px;box-sizing:border-box\' onkeydown=\'if(event.key==="Enter")doLogin()\'></div><div style=\'display:flex;gap:8px\'><button onclick=\'document.getElementById("loginModal").remove()\' style=\'flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:Oswald;font-size:13px;cursor:pointer;letter-spacing:1px\'>CANCELAR</button><button onclick=\'doLogin();document.getElementById("loginModal")?.remove()\' style=\'flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-family:Oswald;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px\'>INGRESAR</button></div></div>';
-  document.body.appendChild(m);
-  m.onclick=function(e){if(e.target===m)m.remove()};
-  setTimeout(()=>document.getElementById('adminEmail')?.focus(),100);
+  // Redirect to admin.html — admin login is centralized there
+  if(confirm('Para acceder al modo Admin del LiveCast debes iniciar sesión en el panel de administración.\n\n¿Ir a admin.html?')){
+    sessionStorage.setItem('livecast_return','1');
+    window.location.href='admin.html';
+  }
 }
+
+async function doLogin(){showLogin();}
+
 
 function renderAtletaInfo(){
   const ath=DATA.athletes;
