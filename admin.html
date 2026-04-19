@@ -131,7 +131,7 @@ setTimeout(()=>{
     {ST.user=null;render();}
 },5000);
 
-onAuthStateChanged(auth,async(u)=>{_authFired=true;
+onAuthStateChanged(auth,async(u)=>{window._authFired=true;
   if(!u){ST.user=null;ST.adminInfo=null;render();return}
   try{
     const adminDoc=await getDoc(doc(db,'admins',u.uid));
@@ -1688,5 +1688,5 @@ window.refreshAdmins = async function(){
 
 </script>
 </body>
-</html>let _authFired=false;
+</html>window._authFired=false;
 
