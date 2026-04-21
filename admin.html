@@ -438,7 +438,33 @@ window.importNominaToFB=async function(eventName){
   const ev=ST.nominas.events?.find(e=>e.name===eventName);
   if(!ev){showToast('Evento no encontrado',null,true);return}
   if(!confirm(`Importar ${ev.athletes.length} atletas de "${eventName}" a Firebase?\n\nEsto los hará editables. Los duplicados (mismo RUT) se omiten.`))return;
-  
+
+  // Ensure the event doc exists in Firestore `eventos/` so public pages (index.html)
+  // can show it. Use the event name as the doc id (same convention as inscripciones.evento).
+  try{
+    const existingEv=ST.eventos.find(e=>e.id===eventName||e.name===eventName);
+    if(!existingEv){
+      await setDoc(doc(db,'eventos',eventName),{
+        id:eventName,
+        name:eventName,
+        date:ev.date||'',
+        closeDate:ev.closeDate||'',
+        location:ev.location||'',
+        org:ev.organizer||'',
+        days:ev.days||'',
+        status:'open',
+        extraCols:ev.extraCols||['modalidad'],
+        createdAt:serverTimestamp(),
+        updatedAt:serverTimestamp()
+      },{merge:true});
+      console.log('[import] Evento creado en Firestore:',eventName);
+    }
+  }catch(e){
+    console.error('Error creando evento:',e);
+    showToast('Error creando evento: '+(e.code||e.message),null,true);
+    return;
+  }
+
   // Get existing RUTs in Firebase for this event
   const existing=new Set(ST.inscripciones.filter(i=>i.evento===eventName).map(i=>(i.rut||'').replace(/[^0-9kK]/gi,'').toUpperCase()));
   
@@ -473,6 +499,42 @@ window.importNominaToFB=async function(eventName){
     showToast(`⚠️ ${imported} OK · ${skipped} dup · ${errors} ERR (${lastErr?.code||lastErr?.message||'desconocido'})`,null,true);
   } else {
     showToast(`Importado: ${imported} atletas (${skipped} duplicados omitidos)`);
+  }
+}
+
+// Crea (o actualiza) el doc en `eventos/{eventName}` a partir de la metadata
+// que vive en nominas.json. Útil para eventos cuyas inscripciones ya están en
+// Firebase pero que nunca tuvieron doc de evento (ej. cargados antes de que
+// existiera esta herramienta).
+window.syncEventoFromJson=async function(eventName){
+  const ev=ST.nominas.events?.find(e=>e.name===eventName);
+  if(!ev){showToast('Evento no encontrado en nominas.json',null,true);return}
+  const existing=ST.eventos.find(e=>e.id===eventName||e.name===eventName);
+  const msg=existing
+    ? `Actualizar metadata de "${eventName}" desde nominas.json?`
+    : `Crear el evento "${eventName}" en Firestore con la metadata de nominas.json?\n\nDespués vas a poder editar fechas/ubicación/organizador desde Campeonatos.`;
+  if(!confirm(msg))return;
+  try{
+    const docId=existing?.id||eventName;
+    const data={
+      id:docId,
+      name:eventName,
+      date:ev.date||'',
+      closeDate:ev.closeDate||'',
+      location:ev.location||'',
+      org:ev.organizer||ev.org||'',
+      days:ev.days||'',
+      status:existing?.status||'open',
+      extraCols:ev.extraCols||['modalidad'],
+      updatedAt:serverTimestamp()
+    };
+    if(!existing)data.createdAt=serverTimestamp();
+    await setDoc(doc(db,'eventos',docId),data,{merge:true});
+    await logAction(existing?'sync_evento_meta':'create_evento_from_json',docId,null,eventName);
+    showToast(existing?'✓ Metadata actualizada':'✅ Evento creado — ya editable en Campeonatos');
+  }catch(e){
+    console.error(e);
+    showToast('Error: '+(e.code||e.message),null,true);
   }
 }
 
@@ -1393,6 +1455,8 @@ function renderNominas(){
   
   const inFirebase=fbEvents.includes(ST.filterEv);
   const jsonEv=ST.nominas.events?.find(e=>e.name===ST.filterEv);
+  const hasEventoDoc=ST.eventos.some(e=>e.id===ST.filterEv||e.name===ST.filterEv);
+  const needsMetaSync=!!jsonEv && !hasEventoDoc;
   
   let filtered;
   if(inFirebase){
@@ -1416,8 +1480,10 @@ function renderNominas(){
       </select>
       ${inFirebase?`<button class="btn btn-b" onclick="sortNominaByEvent('${ST.filterEv}')">⇅ ORDENAR</button>`:''}
       ${!inFirebase&&jsonEv?`<button class="btn btn-g" onclick="importNominaToFB('${ST.filterEv.replace(/'/g,"\\'")}')">📥 IMPORTAR A FIREBASE</button>`:''}
+      ${inFirebase&&needsMetaSync?`<button class="btn btn-g" onclick="syncEventoFromJson('${ST.filterEv.replace(/'/g,"\\'")}')" title="Crea el doc en eventos/ con la metadata de nominas.json — habilita la edición de fechas desde Campeonatos">📌 SINCRONIZAR METADATA</button>`:''}
     </div>
     ${!inFirebase&&jsonEv?'<div class="card" style="background:rgba(212,168,67,.08);border-color:rgba(212,168,67,.3);padding:12px 16px;margin-bottom:12px"><span style="color:var(--gold);font-size:12px">⚠️ Esta nómina viene de nominas.json (estática). Para editarla en tiempo real, importarla a Firebase.</span></div>':''}
+    ${inFirebase&&needsMetaSync?'<div class="card" style="background:rgba(212,168,67,.08);border-color:rgba(212,168,67,.3);padding:12px 16px;margin-bottom:12px"><span style="color:var(--gold);font-size:12px">⚠️ Las inscripciones están en Firebase pero falta el doc de evento en <code>eventos/</code>. Sin eso no podés editar fecha/cierre/ubicación desde <b>Campeonatos</b>. Tocá <b>📌 SINCRONIZAR METADATA</b>.</span></div>':''}
     <div class="card" style="padding:0;overflow-x:auto">
       <table class="tbl">
         <tr><th>#</th><th>Nombre</th><th>Sexo</th><th>División</th><th>Cat.</th><th>Modalidad</th><th>Club</th><th>Estado</th><th></th></tr>
