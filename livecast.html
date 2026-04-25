@@ -63,7 +63,7 @@ let DATA={phase:'setup',events:[],event:null,athletes:[],lift:'sq',round:0,fligh
 // Standalone widgets for OBS Browser Sources. Read-only.
 // ══════════════════════════════════════════════
 const TX_URL=new URLSearchParams(location.search);
-const TX_MODE=TX_URL.get('tx')||null; // 'profile' | 'scoreboard' | 'leaderboard' | 'lbauto' | 'slam' | 'timer' | 'lights' | null
+const TX_MODE=TX_URL.get('tx')||null; // 'profile' | 'scoreboard' | 'leaderboard' | 'lbauto' | 'slam' | 'timer' | 'lights' | 'ceremony' | null
 if(TX_MODE){
   const css=document.createElement('style');
   css.textContent=`
@@ -1218,6 +1218,7 @@ function renderObsTx(){
     {id:'slam',icon:'⚡',title:'Slam GOOD LIFT / NO LIFT',desc:'Flash de 2s con texto enorme verde (GOOD LIFT) o rojo (NO LIFT) cuando marcás ✓/✗ en Control en Vivo. Se dispara automáticamente. Overlay sobre la cámara de tarima.',obsBg:'Transparente. Sumar como capa encima de la cámara, siempre visible.',size:'1920×1080 (overlay fullscreen)'},
     {id:'timer',icon:'⏱',title:'Timer independiente',desc:'Reloj 1:00 → 0:00 en grande. Verde/ámbar/rojo según se acerca a 0. Pulsa cuando quedan ≤10s. Sincronizado con el timer del operador.',obsBg:'Transparente. Posicionalo donde quieras (esquina, banner, etc).',size:'1920×1080 (autoescala)'},
     {id:'lights',icon:'💡',title:'Luces de jueces',desc:'3 círculos para izq / central / der. Se prenden blanco (good) o rojo (no lift) cuando los jueces votan en su panel. Ideal arriba de la cámara o en pantalla aparte.',obsBg:'Transparente. Funciona solo si activás "Modo Jueces" en Control en Vivo.',size:'1920×1080 (autoescala)'},
+    {id:'ceremony',icon:'🎭',title:'Ceremonia (TODO-EN-UNO)',desc:'Widget orquestador. Detecta nuevo levantador → PROFILE fullscreen 5s → SCOREBOARD bottom-left 10s + SLAM top-left al marcar resultado → LEADERBOARD fullscreen 5s → cicla. UNA sola escena en OBS, este widget hace toda la ceremonia.',obsBg:'Mixto: fullscreen opaco durante PROFILE/LEADERBOARD, transparente sobre cámara durante SCOREBOARD. Una sola escena con cámara de fondo + este browser source encima.',size:'1920×1080'},
   ];
   let h='<div class="fade"><h2 class="os" style="font-size:22px;letter-spacing:1px;margin-bottom:6px">🎬 WIDGETS PARA OBS</h2>';
   h+='<p style="color:var(--muted);font-size:12px;margin-bottom:18px">Cada widget es una URL que se agrega como Browser Source en OBS. Actualiza en tiempo real desde Firestore — no necesita login.</p>';
@@ -1323,6 +1324,7 @@ function renderTxWidget(){
   // Widgets que NO dependen del lifter actual (pero sí de athletes)
   if(TX_MODE==='slam'){c.innerHTML=renderTxSlam();return true}
   if(TX_MODE==='lbauto'){c.innerHTML=renderTxLbAuto();return true}
+  if(TX_MODE==='ceremony'){c.innerHTML=renderTxCeremony();return true}
   // Widgets que dependen del lifter actual
   const cur=liftQueue()[0];
   if(!cur&&TX_MODE!=='leaderboard'){
@@ -1360,6 +1362,129 @@ function renderTxLbAuto(){
   const inner=renderTxLeaderboard(cur,false);
   if(!inner)return '';
   return '<div style="position:fixed;inset:0;animation:txLbCycle '+(TX_LBAUTO_DURATION/1000)+'s ease-in-out forwards">'+inner+'</div>';
+}
+
+// ─── CEREMONY (widget orquestador todo-en-uno) ─────────────────
+// Flujo:
+//   1) Detecta nuevo levantador → PROFILE fullscreen 5s
+//   2) → SCOREBOARD bottom-left 10s (con SLAM top-left siempre activo)
+//   3) Operador marca ✓/✗ → SLAM flash + LEADERBOARD fullscreen 5s
+//   4) → IDLE (transparente) hasta el próximo levantador
+const TX_CEREMONY={profileMs:5000,scoreboardMs:10000,leaderboardMs:5000,slamMs:2000};
+let _txCerState='idle';            // idle | profile | scoreboard | leaderboard
+let _txCerStateAt=0;
+let _txCerLastLifter=null;
+let _txCerSeenResults=null;        // Set<athleteId-lift-round-result>
+let _txCerSlamUntil=0;
+let _txCerSlamType=null;
+let _txCerLastLifterSnap=null;     // snapshot del último que terminó (para leaderboard)
+function _txCerSetState(s){_txCerStateAt=Date.now();_txCerState=s;
+  // tx-opaque para fullscreen, transparente para overlay
+  const opaque=(s==='profile'||s==='leaderboard');
+  document.body.classList.toggle('tx-opaque',opaque);
+}
+function renderTxCeremony(){
+  const cur=liftQueue()[0];
+  // Detectar nuevo levantador → PROFILE
+  if(cur && cur.id!==_txCerLastLifter && _txCerState!=='leaderboard'){
+    _txCerLastLifter=cur.id;
+    _txCerSetState('profile');
+    setTimeout(()=>{if(typeof renderTxWidget==='function')renderTxWidget()},TX_CEREMONY.profileMs+200);
+  }
+  // Detectar resultado nuevo (transición null → g/n) → SLAM + LEADERBOARD
+  if(_txCerSeenResults===null){
+    _txCerSeenResults={};
+    DATA.athletes.forEach(a=>LIFTS.forEach(l=>(a.att&&a.att[l]||[]).forEach((att,i)=>{_txCerSeenResults[a.id+'-'+l+'-'+i]=att.r||null;})));
+  } else {
+    DATA.athletes.forEach(a=>LIFTS.forEach(l=>(a.att&&a.att[l]||[]).forEach((att,i)=>{
+      const k=a.id+'-'+l+'-'+i;
+      const prev=_txCerSeenResults[k];
+      const now=att.r||null;
+      if((prev==null)&&(now==='g'||now==='n')){
+        _txCerSlamUntil=Date.now()+TX_CEREMONY.slamMs;
+        _txCerSlamType=now;
+        _txCerLastLifterSnap=a;
+        _txCerSetState('leaderboard');
+        setTimeout(()=>{if(typeof renderTxWidget==='function')renderTxWidget()},TX_CEREMONY.leaderboardMs+200);
+      }
+      _txCerSeenResults[k]=now;
+    })));
+  }
+  // Transiciones por tiempo
+  const elapsed=Date.now()-_txCerStateAt;
+  if(_txCerState==='profile'&&elapsed>TX_CEREMONY.profileMs){
+    _txCerSetState('scoreboard');
+    setTimeout(()=>{if(typeof renderTxWidget==='function')renderTxWidget()},TX_CEREMONY.scoreboardMs+200);
+  } else if(_txCerState==='scoreboard'&&elapsed>TX_CEREMONY.scoreboardMs){
+    _txCerSetState('idle');
+  } else if(_txCerState==='leaderboard'&&elapsed>TX_CEREMONY.leaderboardMs){
+    _txCerSetState('idle');
+    _txCerLastLifter=null; // permitir que el próximo levantador dispare PROFILE de nuevo
+  }
+  // Render según estado
+  let html='';
+  if(_txCerState==='profile'&&cur){
+    html+='<div style="position:fixed;inset:0">'+renderTxProfile(cur)+'</div>';
+  } else if(_txCerState==='scoreboard'&&cur){
+    // Scoreboard variante BOTTOM-LEFT (más angosto, no fullwidth)
+    html+=_renderTxCerScoreboardBL(cur);
+  } else if(_txCerState==='leaderboard'){
+    const ref=_txCerLastLifterSnap||cur;
+    html+='<div style="position:fixed;inset:0;animation:txLbCycle '+(TX_CEREMONY.leaderboardMs/1000)+'s ease-in-out forwards">'+renderTxLeaderboard(ref,false)+'</div>';
+  }
+  // SLAM top-left (overlay independiente, encima de todo)
+  if(Date.now()<_txCerSlamUntil&&_txCerSlamType){
+    html+=_renderTxCerSlamCorner(_txCerSlamType);
+  }
+  return html;
+}
+function _renderTxCerScoreboardBL(cur){
+  // Variante compacta del scoreboard, posicionada abajo-izquierda
+  const parts=(cur.name||'').trim().split(/\s+/);
+  const firstName=parts.length>2?parts.slice(0,-2).join(' '):parts.slice(0,-1).join(' ');
+  const lastName=(parts.length>2?parts.slice(-2).join(' '):parts[parts.length-1]).toUpperCase();
+  const divS=txDivShort(cur.div);
+  const catLabel=(cur.cat?'-'+txCatNum(cur.cat)+'kg ':'')+divS;
+  const cw=cur.att[DATA.lift][DATA.round].w;
+  const timerStr=DATA.timerOn?String(Math.floor(DATA.timer/60)).padStart(2,'0')+':'+String(DATA.timer%60).padStart(2,'0'):'';
+  const logo=window.clubLogoImg?window.clubLogoImg(cur.club,28,'background:rgba(10,22,40,.85);padding:2px;flex-shrink:0;'):'';
+  return '<div style="position:fixed;bottom:24px;left:24px;width:min(640px,55vw);animation:txScoreboardCycle '+(TX_CEREMONY.scoreboardMs/1000)+'s ease-in-out forwards;border-radius:8px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.6)">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,rgba(28,50,90,.96),rgba(35,60,105,.96));border-top:2px solid #D4A843;padding:6px 14px">'
+      +'<div style="font-family:Oswald;font-size:12px;color:rgba(200,215,240,.85);letter-spacing:1px">'+catLabel+'</div>'
+      +'<div style="font-family:Oswald;font-size:18px;font-weight:700;color:'+(DATA.timerOn&&DATA.timer<=10?'#ef4444':'#fff')+';letter-spacing:2px">'+(timerStr||'—:—')+'</div>'
+    +'</div>'
+    +'<div style="background:linear-gradient(90deg,#D4A843,#c19735);padding:5px 14px;display:flex;align-items:center;gap:10px">'
+      +'<div style="background:rgba(10,22,40,.9);color:#D4A843;padding:3px 9px;border-radius:3px;font-family:Oswald;font-size:10px;letter-spacing:2px;font-weight:700">CHI</div>'
+      +'<div style="flex:1;font-family:Oswald;color:#0A1628;letter-spacing:1px;overflow:hidden">'
+        +(firstName?'<div style="font-size:11px;font-weight:400;line-height:1;opacity:.75">'+firstName+'</div>':'')
+        +'<div style="font-size:18px;font-weight:700;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+lastName+'</div>'
+      +'</div>'
+      +logo
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(3,1fr) 100px;background:rgba(10,22,40,.94)">'
+      +cur.att[DATA.lift].map((at,j)=>{
+        let bg,clr,td='none';
+        if(at.r==='g'){bg='#22c55e';clr='#0A1628'}
+        else if(at.r==='n'){bg='#ef4444';clr='#fff';td='line-through'}
+        else if(j===DATA.round&&at.w>0){bg='rgba(45,65,105,.6)';clr='#fff'}
+        else{bg='rgba(30,48,78,.3)';clr='rgba(140,160,190,.45)'}
+        const isCur=j===DATA.round&&at.r===null&&at.w>0;
+        return '<div style="padding:7px 10px;text-align:center;background:'+bg+';border-right:1px solid rgba(255,255,255,.08);font-family:Oswald;font-size:18px;font-weight:700;color:'+clr+';text-decoration:'+td+';'+(isCur?'box-shadow:inset 0 -3px 0 '+LIFT_C[DATA.lift]+';':'')+'">'+(at.w||'—')+'</div>';
+      }).join('')
+      +'<div style="padding:7px 10px;text-align:center;background:#D4A843;color:#0A1628;font-family:Oswald;font-size:20px;font-weight:700;letter-spacing:1px">'+(subTotal(cur,DATA.lift)||0).toFixed(1)+'</div>'
+    +'</div>'
+  +'</div>';
+}
+function _renderTxCerSlamCorner(type){
+  const isGood=type==='g';
+  const text=isGood?'GOOD LIFT':'NO LIFT';
+  const color=isGood?'#22c55e':'#ef4444';
+  const glow=isGood?'rgba(34,197,94,.85)':'rgba(239,68,68,.85)';
+  return '<div style="position:fixed;top:24px;left:24px;animation:txSlamIn .45s cubic-bezier(.2,.9,.2,1) backwards,txSlamOut .35s ease-in 1.55s forwards">'
+    +'<div style="font-family:Oswald,sans-serif;font-size:clamp(40px,5vw,68px);font-weight:900;letter-spacing:4px;color:'+color+';text-shadow:0 0 30px '+glow+',0 4px 20px rgba(0,0,0,.85);-webkit-text-stroke:2px rgba(0,0,0,.4);background:rgba(10,22,40,.55);padding:10px 22px;border-radius:8px;border:2px solid '+color+'">'
+      +text
+    +'</div>'
+  +'</div>';
 }
 
 // ─── SLAM (GOOD LIFT / NO LIFT flash) ──────────────────────────
