@@ -432,7 +432,18 @@ function setAtt(id,l,r,val){
 
 function setResult(id,l,r,res){
   const a=DATA.athletes.find(x=>x.id===id);if(!a)return;a.att[l][r].r=res;
-  if(r<2){const key=id+'_'+l+'_'+(r+1);DATA.changeTimers[key]={remaining:60,expired:false};startCT(key)}
+  if(r<2){
+    const key=id+'_'+l+'_'+(r+1);
+    // Solo arrancar el change timer si el próximo intento NO tiene peso declarado.
+    // Si el operador ya cargó el peso antes de marcar este intento, no hay que
+    // pedirle que lo declare otra vez ni hacer sonar la alarma a los 60s.
+    if(!a.att[l][r+1]||!a.att[l][r+1].w){
+      DATA.changeTimers[key]={remaining:60,expired:false};
+      startCT(key);
+    } else if(DATA.changeTimers[key]){
+      delete DATA.changeTimers[key];
+    }
+  }
   if(a.att[l].every(x=>x.r==='n'))a.bombed=true;
   DATA.timer=60;DATA.timerOn=false;clearInterval(mainTI);mainTI=null;
   // Record alert: check if this good lift breaks a national record
