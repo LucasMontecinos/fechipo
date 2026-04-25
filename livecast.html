@@ -1386,8 +1386,9 @@ let _txCerLastLifter=null;
 let _txCerSeenResults=null;
 let _txCerSlamUntil=0;
 let _txCerSlamType=null;
-let _txCerLastLiftFlight=null;     // 'sq-A' → detecta cambio de bloque
-let _txCerLbCycle=null;            // {flight, cats:[], idx, startedAt}
+let _txCerLastLift=null;           // 'sq'|'bp'|'dl' → detecta cambio de lift
+let _txCerDlClosed=false;          // ya disparé el cycle de DL final
+let _txCerLbCycle=null;            // {liftLabel, cats:[], idx, startedAt}
 let _txCerLastSig=null;            // signature p/ saltarse re-renders innecesarios
 function _txCerSetState(s){
   _txCerStateAt=Date.now();_txCerState=s;
@@ -1432,17 +1433,27 @@ function renderTxCeremony(container){
     })));
   }
 
-  // ── Detectar cambio de BLOQUE (lift o flight) → LBCYCLE ───
-  const liftFlight=DATA.lift+'-'+DATA.flight;
-  if(_txCerLastLiftFlight===null){
-    _txCerLastLiftFlight=liftFlight;
-  } else if(liftFlight!==_txCerLastLiftFlight){
-    const prevFlight=_txCerLastLiftFlight.split('-')[1];
-    const cats=[...new Set(DATA.athletes.filter(a=>a.flight===prevFlight&&!a.bombed).map(a=>a.cat))]
+  // ── Detectar fin de LIFT completo → LBCYCLE ───────────────
+  // Trigger 1: cambia DATA.lift (operador avanzó al siguiente lift = SQ→BP, BP→DL)
+  // Trigger 2: terminado DL round 2 (3er intento) para todos los no-bombed
+  let liftJustEnded=null;
+  if(_txCerLastLift===null){
+    _txCerLastLift=DATA.lift;
+  } else if(DATA.lift!==_txCerLastLift){
+    liftJustEnded=_txCerLastLift;
+    _txCerLastLift=DATA.lift;
+    _txCerDlClosed=false;
+  } else if(DATA.lift==='dl'&&DATA.round===2&&!_txCerDlClosed){
+    const allDone=DATA.athletes.filter(a=>!a.bombed)
+      .every(a=>a.att?.dl?.[2]?.r==='g'||a.att?.dl?.[2]?.r==='n');
+    if(allDone){liftJustEnded='dl';_txCerDlClosed=true;}
+  }
+  if(liftJustEnded){
+    // Categorías = únicas de TODOS los flights (cubre el lift entero)
+    const cats=[...new Set(DATA.athletes.filter(a=>!a.bombed).map(a=>a.cat))]
       .filter(Boolean).sort((a,b)=>(parseFloat(a)||999)-(parseFloat(b)||999));
-    _txCerLastLiftFlight=liftFlight;
     if(cats.length){
-      _txCerLbCycle={flight:prevFlight,cats:cats,idx:0,startedAt:Date.now()};
+      _txCerLbCycle={liftLabel:liftJustEnded,cats:cats,idx:0,startedAt:Date.now()};
       _txCerSetState('lbcycle');
       setTimeout(()=>{if(typeof renderTxWidget==='function')renderTxWidget()},TX_CEREMONY.leaderboardMs+200);
     }
@@ -1492,11 +1503,11 @@ function renderTxCeremony(container){
     html+=_renderTxCerTimerCorner();
   } else if(_txCerState==='lbcycle'&&_txCerLbCycle){
     const cat=_txCerLbCycle.cats[_txCerLbCycle.idx];
-    const flight=_txCerLbCycle.flight;
-    const ref=DATA.athletes.find(a=>a.cat===cat&&a.flight===flight);
+    const ref=DATA.athletes.find(a=>a.cat===cat&&!a.bombed);
     if(ref){
-      html+='<div style="position:fixed;inset:0;animation:txLbCycle '+(TX_CEREMONY.leaderboardMs/1000)+'s ease-in-out forwards">'+renderTxLeaderboard(ref,false)+'</div>';
-      html+='<div style="position:fixed;top:18px;left:50%;transform:translateX(-50%);background:rgba(10,22,40,.72);border:1px solid rgba(212,168,67,.45);padding:6px 18px;border-radius:6px;font-family:Oswald;font-size:13px;letter-spacing:3px;color:#D4A843;z-index:5">VUELO '+flight+' · '+(_txCerLbCycle.idx+1)+'/'+_txCerLbCycle.cats.length+'</div>';
+      const liftName={sq:'SQUAT',bp:'BENCH PRESS',dl:'DEADLIFT'}[_txCerLbCycle.liftLabel]||_txCerLbCycle.liftLabel.toUpperCase();
+      html+='<div style="position:fixed;inset:0;animation:txLbCycle '+(TX_CEREMONY.leaderboardMs/1000)+'s ease-in-out forwards">'+renderTxLeaderboard(ref,false,{allFlights:true})+'</div>';
+      html+='<div style="position:fixed;top:18px;left:50%;transform:translateX(-50%);background:rgba(10,22,40,.78);border:1px solid rgba(212,168,67,.45);padding:6px 22px;border-radius:6px;font-family:Oswald;font-size:13px;letter-spacing:3px;color:#D4A843;z-index:5">RANKING '+liftName+' · '+(_txCerLbCycle.idx+1)+'/'+_txCerLbCycle.cats.length+'</div>';
     }
   }
   // SLAM top-left (overlay encima de todo)
@@ -1783,11 +1794,13 @@ function renderTxScoreboard(cur,lifterChanged){
     </div>`;
 }
 
-function renderTxLeaderboard(cur,lifterChanged){
+function renderTxLeaderboard(cur,lifterChanged,opts){
+  opts=opts||{};
   // Determine category to show: current lifter's, or first athlete of current flight if none
   const ref=cur||DATA.athletes.find(a=>a.flight===DATA.flight&&!a.bombed);
   if(!ref)return '';
-  const sameCat=DATA.athletes.filter(a=>a.cat===ref.cat&&a.flight===DATA.flight&&!a.bombed);
+  // allFlights: ranking de TODA la categoría (cubre todos los vuelos), usado en cycle de fin de lift
+  const sameCat=DATA.athletes.filter(a=>a.cat===ref.cat&&(opts.allFlights||a.flight===DATA.flight)&&!a.bombed);
   const ranked=sameCat.map(a=>({...a,total:totalOf(a),fTotal:forecastTotal(a),fPlace:0}));
   ranked.sort((a,b)=>b.fTotal-a.fTotal);
   ranked.forEach((a,i)=>a.fPlace=i+1);
