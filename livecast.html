@@ -53,6 +53,7 @@ input,select,button{font-family:inherit;outline:none}
 </head>
 <body>
 <div id="R"></div>
+<script src="clubs.js"></script>
 <script>
 
 let DATA={phase:'setup',events:[],event:null,athletes:[],lift:'sq',round:0,flight:'A',timer:60,timerOn:false,changeTimers:{},lotsGenerated:false};
@@ -1423,9 +1424,11 @@ function renderTxProfile(cur){
   const liftKey=DATA.lift;
   const pb=txPB(full,liftKey);
   const pbLabel={sq:'PERSONAL BEST SQ',bp:'PERSONAL BEST BP',dl:'PERSONAL BEST DL'}[liftKey]||'PERSONAL BEST';
+  const clubLogoHtml=(window.clubLogoImg?window.clubLogoImg(club,38,'background:rgba(10,22,40,.6);padding:3px;margin-right:14px;vertical-align:middle;'):'');
+  const clubCell=clubLogoHtml?('<span style="display:inline-flex;align-items:center;gap:0;justify-content:flex-end">'+clubLogoHtml+'<span>'+(club||'—')+'</span></span>'):(club||'—');
   const rows=[
     ['CATEGORY',cat+' '+divS],
-    ['CLUB',club||'—'],
+    ['CLUB',clubCell],
   ];
   if(age!==null)rows.push(['AGE',age+'']);
   if(years!==null)rows.push(['YEARS COMPETING',years+'']);
@@ -1495,7 +1498,10 @@ function renderTxScoreboard(cur,lifterChanged){
           ${firstName?'<div style="font-size:13px;font-weight:400;line-height:1;opacity:.75">'+firstName+'</div>':''}
           <div style="font-size:22px;font-weight:700;line-height:1.05">${lastName}</div>
         </div>
-        <div style="font-family:Oswald;font-size:11px;color:rgba(10,22,40,.75);letter-spacing:1px;text-align:right;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${cur.club||''}</div>
+        <div style="display:flex;align-items:center;gap:8px;font-family:Oswald;font-size:11px;color:rgba(10,22,40,.75);letter-spacing:1px;text-align:right;max-width:240px">
+          ${(window.clubLogoImg?window.clubLogoImg(cur.club,28,'background:rgba(10,22,40,.85);padding:2px;flex-shrink:0;'):'')}
+          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${cur.club||''}</span>
+        </div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr) 140px;background:rgba(10,22,40,.94)">
         ${cur.att[DATA.lift].map((at,j)=>{
@@ -1538,8 +1544,12 @@ function renderTxLeaderboard(cur,lifterChanged){
         </div>
         ${ranked.map(a=>{
           const isCur=a.id===ref.id;
+          const logo=window.clubLogoImg?window.clubLogoImg(a.club,28,'background:rgba(10,22,40,.6);padding:2px;flex-shrink:0;'):'';
           return `<div style="display:grid;grid-template-columns:1fr 120px 120px 80px;padding:clamp(10px,1.6vh,18px) clamp(20px,2.5vw,32px);background:${isCur?'linear-gradient(90deg,rgba(196,30,58,.35),rgba(212,168,67,.25))':'transparent'};border-bottom:1px solid rgba(50,80,120,.2);align-items:center">
-            <div style="font-family:Oswald;font-size:clamp(14px,1.5vw,20px);font-weight:${isCur?'700':'500'};color:${isCur?'#fff':'rgba(220,230,245,.85)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.name}</div>
+            <div style="display:flex;align-items:center;gap:10px;overflow:hidden">
+              ${logo||'<div style="width:28px;height:28px;flex-shrink:0"></div>'}
+              <span style="font-family:Oswald;font-size:clamp(14px,1.5vw,20px);font-weight:${isCur?'700':'500'};color:${isCur?'#fff':'rgba(220,230,245,.85)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.name}</span>
+            </div>
             <div style="font-family:Oswald;font-size:clamp(14px,1.5vw,20px);text-align:center;color:rgba(200,215,240,.6)">${(a.total||0).toFixed(1)}</div>
             <div style="font-family:Oswald;font-size:clamp(15px,1.6vw,22px);text-align:center;font-weight:700;color:${isCur?'#D4A843':'rgba(220,230,245,.85)'}">${a.fTotal||'—'}</div>
             <div style="font-family:Oswald;font-size:clamp(16px,1.7vw,24px);text-align:center;font-weight:700;color:${isCur?'#D4A843':'rgba(200,215,240,.6)'}">${a.fPlace}</div>
