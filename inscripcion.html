@@ -30,6 +30,7 @@ input,select,button,textarea{font-family:inherit;outline:none}
 .input{width:100%;padding:12px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:14px;transition:border-color .2s}
 .input:focus{border-color:var(--accent)}
 .input.ok{border-color:var(--green)}
+.input.err{border-color:#ef4444;background:rgba(239,68,68,.04)}
 select.input{cursor:pointer}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:600px){.row{grid-template-columns:1fr}}
@@ -212,6 +213,27 @@ function formatRut(val) {
     r = r.slice(0, -1) + '-' + r.slice(-1);
   }
   return r;
+}
+// ── Validador RUT chileno (módulo 11) ──────────────────────────
+// Devuelve {valid, dv, expected, msg}. Si valid=false, msg dice por qué.
+function validateRut(val){
+  if(!val) return {valid:false, msg:'RUT vacío'};
+  const clean = val.replace(/[^0-9kK]/g,'').toUpperCase();
+  if(clean.length < 2) return {valid:false, msg:'RUT muy corto'};
+  if(clean.length > 9) return {valid:false, msg:'RUT muy largo'};
+  const body = clean.slice(0,-1);
+  const dv = clean.slice(-1);
+  if(!/^\d+$/.test(body)) return {valid:false, msg:'Solo dígitos antes del DV'};
+  // Cálculo módulo 11
+  let sum = 0, mul = 2;
+  for(let i = body.length - 1; i >= 0; i--){
+    sum += parseInt(body[i],10) * mul;
+    mul = mul === 7 ? 2 : mul + 1;
+  }
+  const r = 11 - (sum % 11);
+  const expected = r === 11 ? '0' : (r === 10 ? 'K' : String(r));
+  if(dv !== expected) return {valid:false, dv, expected, msg:'Dígito verificador incorrecto (esperado: '+expected+')'};
+  return {valid:true, dv, expected};
 }
 
 // ══════════════════════════════════════════════
@@ -419,7 +441,8 @@ function renderForm() {
     <div class="row">
       <div class="field">
         <label>RUT <span class="req">*</span></label>
-        <input class="input ${f.rut?'ok':''}" type="text" placeholder="12345678-9" value="${f.rut}" oninput="upd('rut',this.value)" onblur="upd('rut',formatRut(this.value));autoFillCode();this.value=state.form.rut">
+        <input class="input ${f.rut?(validateRut(f.rut).valid?'ok':'err'):''}" type="text" placeholder="12345678-9" value="${f.rut}" oninput="upd('rut',this.value)" onblur="upd('rut',formatRut(this.value));autoFillCode();this.value=state.form.rut">
+        ${f.rut&&!validateRut(f.rut).valid?`<div style="font-size:10px;color:var(--red,#ef4444);margin-top:3px">⚠️ ${validateRut(f.rut).msg}</div>`:''}
       </div>
       <div class="field">
         <label>Código de Atleta FECHIPO <span style="font-size:9px;color:var(--muted);text-transform:none;letter-spacing:0">(auto)</span></label>
@@ -790,6 +813,8 @@ async function lookupEdit() {
   const rut = formatRut(document.getElementById('editRut')?.value || '');
   const pin = document.getElementById('editPin')?.value || '';
   if (!rut || !pin) { state.error = 'Ingresa RUT y PIN'; render(); return; }
+  const rutCheck = validateRut(rut);
+  if (!rutCheck.valid) { state.error = 'RUT inválido: ' + rutCheck.msg; render(); return; }
   if (!/^\d{4}$/.test(pin)) { state.error = 'El PIN debe ser de 4 dígitos'; render(); return; }
 
   state.error = '';
@@ -929,7 +954,14 @@ async function submitForm() {
 
   try {
     const f = state.form;
-    
+
+    // ── Validación RUT (módulo 11) ──────────────────────
+    const rutCheck = validateRut(f.rut);
+    if(!rutCheck.valid){
+      state.error = 'RUT inválido: ' + rutCheck.msg + '. Revisá el dígito verificador antes de enviar.';
+      state.submitting = false; render(); return;
+    }
+
     // ── Duplicate check ─────────────────────────────────
     if (firebaseReady) {
       const rutCleanCheck = f.rut.replace(/[^0-9kK]/gi,'').toUpperCase();
@@ -1151,7 +1183,7 @@ function exportNominas() {
     location: ev.location,
     organizer: ev.org,
     days: ev.date.split('-').reverse().join(' de '),
-    athletes: byEvent[ev.id] || [],
+    athletes: byEvent[ev.id] || byEvent[ev.name] || [],
     extraCols: ev.id.includes('universitario') ? ['universidad'] : ['modalidad'],
   }))};
 

@@ -876,6 +876,7 @@ function render(){
       <button class="side-btn ${ST.view==='nominas'?'active':''}" onclick="go('nominas')"><span class="icon">📋</span>Nóminas</button>
       <button class="side-btn ${ST.view==='approvals'?'active':''}" onclick="go('approvals')"><span class="icon">✓</span>Aprobaciones</button>
       <button class="side-btn ${ST.view==='editRequests'?'active':''}" onclick="go('editRequests')"><span class="icon">✏️</span>Solicitudes edit${ST.editRequests.length?` <span style="background:var(--accent);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;margin-left:4px">${ST.editRequests.length}</span>`:''}</button>
+      <button class="side-btn ${ST.view==='entrenadores'?'active':''}" onclick="go('entrenadores')"><span class="icon">👥</span>Entrenadores</button>
       <button class="side-btn ${ST.view==='cronograma'?'active':''}" onclick="go('cronograma')"><span class="icon">✈️</span>Cronograma</button>
       <div class="side-label">Sistema</div>
       <a href="cronograma.html" target="_blank" class="side-btn" style="text-decoration:none"><span class="icon">📅</span>Cronograma</a>
@@ -897,6 +898,7 @@ function render(){
   else if(ST.view==='nominas')content=renderNominas();
   else if(ST.view==='approvals')content=renderApprovals();
   else if(ST.view==='editRequests')content=renderEditRequests();
+  else if(ST.view==='entrenadores')content=renderEntrenadores();
   else if(ST.view==='cronograma')content=renderCronograma();
   else if(ST.view==='campeonatos')content=renderCampeonatos();
   else if(ST.view==='exports')content=renderExports();
@@ -2384,6 +2386,94 @@ function checkRecord(total,bw,categoria,division,modalidad,sexo,lift){
   const rec=matches[0];
   if(total>rec.marca)return{...rec,newMarca:total};
   return null;
+}
+
+// ─── Entrenadores: importación desde entrenadores_<evento>.json ─
+let _entrenadoresData = null;
+let _entrenadoresLoading = false;
+async function loadEntrenadoresData(){
+  if(_entrenadoresData||_entrenadoresLoading) return _entrenadoresData;
+  _entrenadoresLoading = true;
+  try {
+    const r = await fetch('entrenadores_centro_2026.json');
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    _entrenadoresData = await r.json();
+  } catch(e){ console.warn('No pude cargar entrenadores_centro_2026.json:', e.message); }
+  _entrenadoresLoading = false;
+  return _entrenadoresData;
+}
+function genTempPassword(nombre){
+  // Slug + 4 dígitos. Ejemplo: "Andrea Garcés" → "andrea2026!4827"
+  const slug = (nombre||'coach').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z]/g,'').slice(0,12) || 'coach';
+  const n = Math.floor(1000 + Math.random()*9000);
+  return slug + '2026!' + n;
+}
+window.coachExists = async function(email){
+  if(!email) return false;
+  try {
+    const q = window.FB.query(window.FB.collection(db,'coaches'), window.FB.where('email','==',email.toLowerCase()));
+    const snap = await window.FB.getDocs(q);
+    return !snap.empty;
+  } catch(e){ return false; }
+};
+window.importCoach = async function(idx, btn){
+  if(!_entrenadoresData) return;
+  const c = _entrenadoresData.entrenadores[idx];
+  if(!c) return;
+  const email = (c.emails[0]||'').trim().toLowerCase();
+  if(!email){ alert('Sin email — no se puede crear cuenta. Pedile el email primero.'); return; }
+  if(await window.coachExists(email)){ alert('Ya existe un coach con este email: '+email); if(btn){btn.textContent='Ya existe'; btn.disabled=true;} return; }
+  const pwd = genTempPassword(c.nombre);
+  const grado = c.roles.includes('head_coach')?'Head Coach':(c.roles.includes('head_coach_suplente')?'Head Coach Suplente':'Handler');
+  if(!confirm('Crear cuenta para "'+c.nombre+'"?\n\nEmail: '+email+'\nClave temporal: '+pwd+'\nGrado: '+grado+'\nClubs: '+c.clubs.join(', ')+'\n\nGuardá la clave antes de aceptar — solo se muestra una vez.')) return;
+  if(btn){btn.disabled=true; btn.textContent='Creando...';}
+  try {
+    await window.createCoach(email, pwd, c.nombre, grado, '');
+    if(btn){btn.textContent='✓ Creado'; btn.style.color='var(--green)';}
+    alert('✓ Cuenta creada.\n\nCredenciales para entregar al entrenador:\nEmail: '+email+'\nClave: '+pwd+'\n\n(Recordale que la cambie en su primer login.)');
+  } catch(e){
+    if(btn){btn.disabled=false; btn.textContent='Reintentar';}
+    alert('Error: '+(e.message||e));
+  }
+};
+function renderEntrenadores(){
+  loadEntrenadoresData().then(()=>{ if(ST.view==='entrenadores') render(); });
+  let h='<div class="h1">👥 Entrenadores</div>';
+  h+='<p class="subtitle">Lista importada desde <code>entrenadores_centro_2026.json</code>. Crea cuentas Firebase para los que tienen email — se les enviará una clave temporal que deben cambiar en su primer login.</p>';
+  if(!_entrenadoresData){
+    h+='<div class="card" style="padding:30px;text-align:center;color:var(--muted)">Cargando lista de entrenadores...</div>';
+    return h;
+  }
+  const list = _entrenadoresData.entrenadores;
+  const conEmail = list.filter(c=>c.emails.length).length;
+  const sinEmail = list.length - conEmail;
+  h+='<div class="card" style="margin-bottom:14px;padding:14px 18px;display:flex;gap:24px;flex-wrap:wrap;align-items:center">';
+  h+='<div><span style="font-size:11px;color:var(--muted);letter-spacing:1px;font-family:Oswald">EVENTO</span><div style="font-family:Oswald;font-size:15px;font-weight:700">'+_entrenadoresData.evento+'</div></div>';
+  h+='<div><span style="font-size:11px;color:var(--muted);letter-spacing:1px;font-family:Oswald">TOTAL</span><div style="font-family:Oswald;font-size:18px;font-weight:700;color:var(--gold)">'+list.length+'</div></div>';
+  h+='<div><span style="font-size:11px;color:var(--green);letter-spacing:1px;font-family:Oswald">CON EMAIL</span><div style="font-family:Oswald;font-size:18px;font-weight:700;color:var(--green)">'+conEmail+'</div></div>';
+  h+='<div><span style="font-size:11px;color:var(--orange,#f59e0b);letter-spacing:1px;font-family:Oswald">SIN EMAIL</span><div style="font-family:Oswald;font-size:18px;font-weight:700;color:var(--orange,#f59e0b)">'+sinEmail+'</div></div>';
+  h+='</div>';
+  h+='<div class="card" style="padding:0;overflow-x:auto"><table class="tbl"><tr><th>Nombre</th><th>Email</th><th>Roles</th><th>Clubs</th><th>Atletas</th><th>Acción</th></tr>';
+  list.forEach((c,i)=>{
+    const hasEmail = c.emails.length>0;
+    const rolesPretty = c.roles.map(r=>({entrenador_acreditado:'Acreditado',handler_1:'Handler 1',handler_2:'Handler 2',head_coach:'Head Coach',head_coach_suplente:'HC Suplente'}[r]||r)).join(', ');
+    h+='<tr>';
+    h+='<td><div style="font-weight:600">'+c.nombre+'</div></td>';
+    h+='<td style="font-size:11px">'+(c.emails.join('<br>')||'<span style="color:var(--muted)">—</span>')+'</td>';
+    h+='<td style="font-size:11px">'+rolesPretty+'</td>';
+    h+='<td style="font-size:11px">'+(c.clubs.join(', ')||'<span style="color:var(--muted)">—</span>')+'</td>';
+    h+='<td style="font-size:11px;color:var(--muted)">'+(c.atletas.length?c.atletas.length+' atleta'+(c.atletas.length!==1?'s':''):'—')+'</td>';
+    h+='<td>'+(hasEmail
+      ? '<button onclick="importCoach('+i+',this)" style="padding:5px 12px;border-radius:6px;border:1px solid var(--green);background:rgba(34,197,94,.1);color:var(--green);cursor:pointer;font-size:11px;font-family:Oswald;font-weight:700">Crear cuenta</button>'
+      : '<span style="font-size:10px;color:var(--muted)">Sin email</span>'
+    )+'</td>';
+    h+='</tr>';
+  });
+  h+='</table></div>';
+  h+='<div class="card" style="margin-top:14px;padding:14px 18px;background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.3);font-size:12px;color:var(--muted)">';
+  h+='💡 <b style="color:var(--text)">Tip</b>: Para los <b>'+sinEmail+' entrenadores sin email</b>, podés contactar al club o pedir el dato directo. Una vez que tengas el email, editá <code>entrenadores_centro_2026.json</code> a mano y recargá esta vista.';
+  h+='</div>';
+  return h;
 }
 
 function renderMergeResults(){
