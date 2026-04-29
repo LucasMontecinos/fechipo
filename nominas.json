@@ -426,6 +426,16 @@
       "days": "23 de Mayo",
       "athletes": [
         {
+          "nombre": "Constanza jesús arévalo prieto",
+          "rut": "22023717-6",
+          "sexo": "Mujer",
+          "dob": "2006-01-17",
+          "division": "Universitario",
+          "categoria": "63",
+          "club": "All Power CD",
+          "universidad": "Universidad Santo Tomás"
+        },
+        {
           "nombre": "Lucas Nicolás Ayala Medina",
           "rut": "21237705-8",
           "sexo": "Hombre",
