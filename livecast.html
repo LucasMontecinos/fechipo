@@ -1627,6 +1627,79 @@ function _renderTxCerSlamCorner(type){
   +'</div>';
 }
 
+// ─── DIRECTOR direct OBS WS (widget independiente) ─────────────
+// Cuando el widget se abre con ?tx=director&obsWs=localhost:4455&obsPwd=secret,
+// se conecta SOLO a OBS WebSocket (no necesita panel admin ni Firestore para
+// el director state). Stream Deck → OBS → Widget directo.
+let _widgetObsWs=null;
+function _widgetStartDirectObsListener(){
+  if(_widgetObsWs)return;
+  if(TX_MODE!=='director')return;
+  if(!window.OBSWebSocket)return;
+  const obsWsParam=TX_URL.get('obsWs');
+  if(!obsWsParam)return;
+  const obsPwd=TX_URL.get('obsPwd')||'';
+  const url='ws://'+obsWsParam;
+  _widgetObsWs=new window.OBSWebSocket();
+  _widgetObsWs.connect(url,obsPwd).then(()=>{
+    console.log('[Widget] OBS WS connected directly:',url);
+  }).catch(e=>{
+    console.error('[Widget] OBS WS connection failed:',e);
+    _widgetObsWs=null;
+  });
+  _widgetObsWs.on('CustomEvent',d=>{
+    _widgetHandleDirectObsEvent(d);
+  });
+  _widgetObsWs.on('ConnectionClosed',()=>{
+    _widgetObsWs=null;
+    setTimeout(_widgetStartDirectObsListener,3000); // reintento auto
+  });
+}
+function _widgetHandleDirectObsEvent(d){
+  if(!d)return;
+  if(!_txDirState)_txDirState={...TX_DIR_DEFAULT};
+  const action=d.action;
+  const mark=()=>{ _txDirLastSig=null; if(typeof renderTxWidget==='function')renderTxWidget(); };
+  if(action==='toggle'&&d.component){
+    const c=_txDirState[d.component]||{};
+    const isOn=c.active&&(!c.until||c.until>Date.now());
+    _txDirState[d.component]=Object.assign({},c,{active:!isOn,until:0});
+    mark();return;
+  }
+  if(action==='slam'&&d.type){
+    _txDirState.slam={active:true,until:Date.now()+2000,type:d.type};
+    mark();return;
+  }
+  if(action==='hideAll'){
+    ['profile','scoreboard','leaderboard','timer','slam'].forEach(k=>{
+      _txDirState[k]=Object.assign({},_txDirState[k]||{},{active:false,until:0});
+    });
+    if(_txDirState.breakTimer)_txDirState.breakTimer={active:false,startedAt:0,durationSec:0,label:'',pausedAt:0};
+    mark();return;
+  }
+  if(action==='showLb'&&d.cat){
+    _txDirState.leaderboard={active:true,until:0,cat:d.cat};
+    mark();return;
+  }
+  if(action==='breakStart'){
+    const m=d.minutes||10, s=d.seconds||0;
+    const durationSec=m*60+s;
+    if(durationSec<=0)return;
+    _txDirState.breakTimer={active:true,startedAt:Date.now(),durationSec,label:d.label||'',pausedAt:0};
+    mark();return;
+  }
+  if(action==='breakStop'){
+    _txDirState.breakTimer={active:false,startedAt:0,durationSec:0,label:'',pausedAt:0};
+    mark();return;
+  }
+  if(action==='breakAdd'&&typeof d.seconds==='number'){
+    const bt=_txDirState.breakTimer;
+    if(!bt||!bt.active)return;
+    bt.durationSec=Math.max(1,(bt.durationSec||0)+d.seconds);
+    mark();return;
+  }
+}
+
 // ─── DIRECTOR (control 100% manual desde panel admin) ──────────
 // Lee comandos desde Firestore livecast_director/current.
 // Cada componente tiene {active, until?} independiente; el panel del
@@ -1675,6 +1748,7 @@ function renderTxDirector(container){
   const c=container||document.getElementById('txWidget');
   if(!c)return;
   _txStartDirectorListener();
+  _widgetStartDirectObsListener();
   if(!_txDirState){c.innerHTML='';return}
   const cur=liftQueue()[0];
   const showProf=_txDirActive('profile');
