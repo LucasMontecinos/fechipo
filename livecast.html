@@ -84,6 +84,18 @@ if(TX_MODE){
     @keyframes txSlamFlash{0%,100%{background:rgba(0,0,0,0)}40%{background:rgba(0,0,0,.45)}}
     @keyframes txLightOn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
     @keyframes txTimerPulse{0%,100%{opacity:1}50%{opacity:.55}}
+    /* ─── IPF-style flag wipe (3 cintas diagonales) ─── */
+    @keyframes txStripeFwd{0%{transform:translateX(-160%) skewX(-18deg)}45%{transform:translateX(0) skewX(-18deg)}55%{transform:translateX(0) skewX(-18deg)}100%{transform:translateX(160%) skewX(-18deg)}}
+    @keyframes txStripeBack{0%{transform:translateX(160%) skewX(-18deg)}45%{transform:translateX(0) skewX(-18deg)}55%{transform:translateX(0) skewX(-18deg)}100%{transform:translateX(-160%) skewX(-18deg)}}
+    @keyframes txContentFadeIn{0%,55%{opacity:0;transform:scale(.96)}65%{opacity:1;transform:scale(1)}100%{opacity:1;transform:scale(1)}}
+    @keyframes txContentFadeOut{0%,45%{opacity:1;transform:scale(1)}55%{opacity:0;transform:scale(.96)}100%{opacity:0;transform:scale(.96)}}
+    @keyframes txLogoBeat{0%,55%{opacity:0;transform:scale(.5)}45%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.7)}}
+    /* ─── Slide-in / build animations para componentes corner ─── */
+    @keyframes txSlideInLeft{0%{transform:translateX(-110%);opacity:0}60%{transform:translateX(0);opacity:1}100%{transform:translateX(0);opacity:1}}
+    @keyframes txSlideOutLeft{0%{transform:translateX(0);opacity:1}100%{transform:translateX(-110%);opacity:0}}
+    @keyframes txSlideInRight{0%{transform:translateX(110%);opacity:0}60%{transform:translateX(0);opacity:1}100%{transform:translateX(0);opacity:1}}
+    @keyframes txSlideOutRight{0%{transform:translateX(0);opacity:1}100%{transform:translateX(110%);opacity:0}}
+    @keyframes txBuildRow{0%{transform:translateX(-30px) scaleY(0);opacity:0;transform-origin:left center}60%{transform:translateX(0) scaleY(1);opacity:1}100%{transform:translateX(0) scaleY(1);opacity:1}}
     @keyframes txScoreboardCycle{0%{transform:translateY(110%);opacity:0}3%{transform:translateY(0);opacity:1}97%{transform:translateY(0);opacity:1}100%{transform:translateY(110%);opacity:0}}
     @keyframes txLbCycle{0%{transform:scale(.92);opacity:0}5%{transform:scale(1);opacity:1}95%{transform:scale(1);opacity:1}100%{transform:scale(1.04);opacity:0;filter:blur(4px)}}
     @keyframes txRecordSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
@@ -1746,6 +1758,51 @@ function _txDirActive(comp){
   if(c.until>0&&Date.now()>=c.until)return false;
   return true;
 }
+// Animaciones de transición — detecta on→off / off→on por componente.
+// Cuando hay un cambio, se guarda timestamp y dirección para reproducir
+// la animación CSS correcta. Después de la duración, se limpia.
+const TX_ANIM_MS={fullscreen:1200,corner:650};
+let _txDirAnims={};       // {comp: {dir:'in'|'out', startedAt:ts}}
+let _txDirPrevActive={};  // {comp: bool}
+function _txDetectTransitions(){
+  const comps=['profile','scoreboard','leaderboard','timer','breakTimer'];
+  const fullscreen=new Set(['profile','leaderboard','breakTimer']);
+  const out=[];
+  comps.forEach(c=>{
+    const prev=!!_txDirPrevActive[c];
+    const now=_txDirActive(c);
+    if(prev!==now){
+      const dur=fullscreen.has(c)?TX_ANIM_MS.fullscreen:TX_ANIM_MS.corner;
+      _txDirAnims[c]={dir:now?'in':'out',startedAt:Date.now(),fullscreen:fullscreen.has(c),dur:dur};
+      out.push({comp:c,dir:now?'in':'out',fullscreen:fullscreen.has(c)});
+      // Limpieza automática después de la duración
+      setTimeout(()=>{if(_txDirAnims[c]&&Date.now()-_txDirAnims[c].startedAt>=dur-50){delete _txDirAnims[c];_txDirLastSig=null;if(typeof renderTxWidget==='function')renderTxWidget()}},dur+50);
+    }
+    _txDirPrevActive[c]=now;
+  });
+  return out;
+}
+function _txAnimActive(comp){
+  const a=_txDirAnims[comp];
+  if(!a)return null;
+  if(Date.now()-a.startedAt>=a.dur){delete _txDirAnims[comp];return null}
+  return a;
+}
+function _renderTxFlagCurtain(animDir){
+  // 3 cintas diagonales (rojo / blanco / azul navy) que barren la pantalla
+  // Lleva el logo FECHIPO en el medio durante el peak
+  const fwd=animDir!=='out';
+  const ks=fwd?'txStripeFwd':'txStripeBack';
+  const dur=(TX_ANIM_MS.fullscreen/1000).toFixed(2);
+  return '<div style="position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden">'
+    +'<div style="position:absolute;top:-30%;left:-30%;width:80%;height:160%;background:#c41e3a;animation:'+ks+' '+dur+'s cubic-bezier(.7,0,.3,1) forwards"></div>'
+    +'<div style="position:absolute;top:-30%;left:-30%;width:80%;height:160%;background:#ffffff;animation:'+ks+' '+dur+'s cubic-bezier(.7,0,.3,1) .08s forwards;transform:translateX(-160%) skewX(-18deg)"></div>'
+    +'<div style="position:absolute;top:-30%;left:-30%;width:80%;height:160%;background:#0a1f44;animation:'+ks+' '+dur+'s cubic-bezier(.7,0,.3,1) .16s forwards;transform:translateX(-160%) skewX(-18deg)"></div>'
+    +'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;animation:txLogoBeat '+dur+'s ease-out forwards;opacity:0">'
+      +'<img src="YourLift_logo.png" style="max-width:240px;max-height:240px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.6))" onerror="this.style.display=\'none\'">'
+    +'</div>'
+  +'</div>';
+}
 function _txDirScheduleHide(){
   // Re-render automático cuando el componente con menor `until` expire
   if(!_txDirState)return;
@@ -1771,6 +1828,8 @@ function renderTxDirector(container){
   // Break timer: activo si tiene `active=true` y aún hay tiempo (o pausado)
   const bt=_txDirState.breakTimer||{};
   const showBreak=!!bt.active&&bt.startedAt>0&&bt.durationSec>0;
+  // Detectar transiciones (cambios on↔off) para reproducir animaciones
+  _txDetectTransitions();
   // Signature p/ evitar flicker por timer cada 1s
   const sig=[showProf,showSb,showLb,showTm,showSlam,showBreak].join('|')
     +'|'+(cur?cur.id+'|'+(cur.att?.[DATA.lift]||[]).map(a=>a.w+'-'+(a.r||'')).join(','):'')
@@ -1809,29 +1868,57 @@ function renderTxDirector(container){
   _txDirLastSig=sig;
   // Stack: leaderboard tiene prioridad fullscreen, profile fullscreen, scoreboard/timer corners
   // Break timer también es fullscreen — gana sobre todo si está activo
-  document.body.classList.toggle('tx-opaque', showLb||showProf||showBreak);
+  // Las animaciones de salida ('out') mantienen el componente visible durante la animación
+  const animProf=_txAnimActive('profile');
+  const animSb=_txAnimActive('scoreboard');
+  const animLb=_txAnimActive('leaderboard');
+  const animTm=_txAnimActive('timer');
+  const animBt=_txAnimActive('breakTimer');
+  // Mantener body opaco mientras un fullscreen esté activo O en transición
+  document.body.classList.toggle('tx-opaque', showLb||showProf||showBreak||(animProf&&animProf.dir==='out')||(animLb&&animLb.dir==='out')||(animBt&&animBt.dir==='out'));
   let html='';
-  if(showBreak){
-    html+=_renderTxBreakTimer(bt,_txDirState.breakTimer?.scale||1);
-  } else if(showLb){
+  // Wipe curtain — render solo durante transición de un fullscreen (in u out)
+  const fsTrans=animProf||animLb||animBt;
+  if(fsTrans){
+    html+=_renderTxFlagCurtain(fsTrans.dir);
+  }
+  // Break timer (fullscreen, prioridad alta)
+  if(showBreak||(animBt&&animBt.dir==='out')){
+    const fade=animBt?(animBt.dir==='in'?'animation:txContentFadeIn 1.2s ease forwards;':'animation:txContentFadeOut 1.2s ease forwards;'):'';
+    html+='<div style="position:fixed;inset:0;'+fade+'">'+_renderTxBreakTimer(bt,_txDirState.breakTimer?.scale||1)+'</div>';
+  } else if(showLb||(animLb&&animLb.dir==='out')){
     const cat=_txDirState.leaderboard.cat;
     const ref=cat?DATA.athletes.find(a=>a.cat===cat&&!a.bombed):cur;
     const lbScale=_txDirState.leaderboard?.scale||1;
-    if(ref)html+='<div style="position:fixed;inset:0;'+(lbScale!==1?'transform:scale('+lbScale+');transform-origin:center center;':'')+'">'+renderTxLeaderboard(ref,false,{allFlights:true})+'</div>';
-  } else if(showProf){
+    if(ref){
+      const fade=animLb?(animLb.dir==='in'?'animation:txContentFadeIn 1.2s ease forwards;':'animation:txContentFadeOut 1.2s ease forwards;'):'';
+      html+='<div style="position:fixed;inset:0;'+(lbScale!==1?'transform:scale('+lbScale+');transform-origin:center center;':'')+fade+'">'+renderTxLeaderboard(ref,false,{allFlights:true})+'</div>';
+    }
+  } else if(showProf||(animProf&&animProf.dir==='out')){
+    const fade=animProf?(animProf.dir==='in'?'animation:txContentFadeIn 1.2s ease forwards;':'animation:txContentFadeOut 1.2s ease forwards;'):'';
     if(cur){
       const pfScale=_txDirState.profile?.scale||1;
-      html+='<div style="position:fixed;inset:0;'+(pfScale!==1?'transform:scale('+pfScale+');transform-origin:center center;':'')+'">'+renderTxProfile(cur)+'</div>';
-    } else {
-      // Profile activo pero NO hay levantador actual — mostrar mensaje útil en vez de negro
-      html+='<div style="position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;font-family:Oswald,sans-serif">'
+      html+='<div style="position:fixed;inset:0;'+(pfScale!==1?'transform:scale('+pfScale+');transform-origin:center center;':'')+fade+'">'+renderTxProfile(cur)+'</div>';
+    } else if(showProf){
+      html+='<div style="position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;font-family:Oswald,sans-serif;'+fade+'">'
         +'<div style="font-size:clamp(28px,3vw,42px);color:#D4A843;letter-spacing:4px;margin-bottom:16px">SIN LEVANTADOR ACTUAL</div>'
         +'<div style="font-size:clamp(14px,1.4vw,18px);color:rgba(220,230,245,.7);max-width:600px;line-height:1.6">El widget no encontró un atleta con peso cargado en el intento actual del flight '+(DATA.flight||'?')+'. Andá a Atletas &amp; Pesaje en LiveCast y cargá pesos de apertura para que aparezca.</div>'
       +'</div>';
     }
   }
-  if(showSb&&cur)html+=_renderTxCerScoreboardBL(cur,{noAnimate:true,scale:_txDirState.scoreboard?.scale||1});
-  if(showTm)html+=_renderTxCerTimerCorner(_txDirState.timer?.scale||1);
+  // Scoreboard (corner) — slide-in/out desde la izquierda
+  if((showSb||(animSb&&animSb.dir==='out'))&&cur){
+    const sbAnim=animSb?(animSb.dir==='in'?'animation:txSlideInLeft .65s cubic-bezier(.2,.85,.3,1) forwards;':'animation:txSlideOutLeft .55s cubic-bezier(.5,0,.7,.5) forwards;'):'';
+    const sbHtml=_renderTxCerScoreboardBL(cur,{noAnimate:true,scale:_txDirState.scoreboard?.scale||1});
+    // Inyectar la animación en el wrapper externo del scoreboard
+    html+=sbAnim?'<div style="'+sbAnim+'">'+sbHtml+'</div>':sbHtml;
+  }
+  // Timer (corner) — slide-in/out desde la derecha
+  if(showTm||(animTm&&animTm.dir==='out')){
+    const tmAnim=animTm?(animTm.dir==='in'?'animation:txSlideInRight .65s cubic-bezier(.2,.85,.3,1) forwards;':'animation:txSlideOutRight .55s cubic-bezier(.5,0,.7,.5) forwards;'):'';
+    const tmHtml=_renderTxCerTimerCorner(_txDirState.timer?.scale||1);
+    html+=tmAnim?'<div style="'+tmAnim+'">'+tmHtml+'</div>':tmHtml;
+  }
   if(showSlam)html+=_renderTxCerSlamCorner(_txDirState.slam.type||'g',_txDirState.slam?.scale||1);
   c.innerHTML=html;
   _txDirScheduleHide();
