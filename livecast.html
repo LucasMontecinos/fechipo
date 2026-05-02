@@ -1818,9 +1818,17 @@ function renderTxDirector(container){
     const ref=cat?DATA.athletes.find(a=>a.cat===cat&&!a.bombed):cur;
     const lbScale=_txDirState.leaderboard?.scale||1;
     if(ref)html+='<div style="position:fixed;inset:0;'+(lbScale!==1?'transform:scale('+lbScale+');transform-origin:center center;':'')+'">'+renderTxLeaderboard(ref,false,{allFlights:true})+'</div>';
-  } else if(showProf&&cur){
-    const pfScale=_txDirState.profile?.scale||1;
-    html+='<div style="position:fixed;inset:0;'+(pfScale!==1?'transform:scale('+pfScale+');transform-origin:center center;':'')+'">'+renderTxProfile(cur)+'</div>';
+  } else if(showProf){
+    if(cur){
+      const pfScale=_txDirState.profile?.scale||1;
+      html+='<div style="position:fixed;inset:0;'+(pfScale!==1?'transform:scale('+pfScale+');transform-origin:center center;':'')+'">'+renderTxProfile(cur)+'</div>';
+    } else {
+      // Profile activo pero NO hay levantador actual — mostrar mensaje útil en vez de negro
+      html+='<div style="position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;font-family:Oswald,sans-serif">'
+        +'<div style="font-size:clamp(28px,3vw,42px);color:#D4A843;letter-spacing:4px;margin-bottom:16px">SIN LEVANTADOR ACTUAL</div>'
+        +'<div style="font-size:clamp(14px,1.4vw,18px);color:rgba(220,230,245,.7);max-width:600px;line-height:1.6">El widget no encontró un atleta con peso cargado en el intento actual del flight '+(DATA.flight||'?')+'. Andá a Atletas &amp; Pesaje en LiveCast y cargá pesos de apertura para que aparezca.</div>'
+      +'</div>';
+    }
   }
   if(showSb&&cur)html+=_renderTxCerScoreboardBL(cur,{noAnimate:true,scale:_txDirState.scoreboard?.scale||1});
   if(showTm)html+=_renderTxCerTimerCorner(_txDirState.timer?.scale||1);
