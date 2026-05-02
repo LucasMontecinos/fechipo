@@ -1906,11 +1906,10 @@ function renderTxDirector(container){
       +'</div>';
     }
   }
-  // Scoreboard (corner) — slide-in/out desde la izquierda
+  // Scoreboard (corner) — slide-in/out desde la derecha (mismo estilo que el timer)
   if((showSb||(animSb&&animSb.dir==='out'))&&cur){
-    const sbAnim=animSb?(animSb.dir==='in'?'animation:txSlideInLeft .65s cubic-bezier(.2,.85,.3,1) forwards;':'animation:txSlideOutLeft .55s cubic-bezier(.5,0,.7,.5) forwards;'):'';
+    const sbAnim=animSb?(animSb.dir==='in'?'animation:txSlideInRight .65s cubic-bezier(.2,.85,.3,1) forwards;':'animation:txSlideOutRight .55s cubic-bezier(.5,0,.7,.5) forwards;'):'';
     const sbHtml=_renderTxCerScoreboardBL(cur,{noAnimate:true,scale:_txDirState.scoreboard?.scale||1});
-    // Inyectar la animación en el wrapper externo del scoreboard
     html+=sbAnim?'<div style="'+sbAnim+'">'+sbHtml+'</div>':sbHtml;
   }
   // Timer (corner) — slide-in/out desde la derecha
