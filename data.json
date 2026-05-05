@@ -35867,45 +35867,6 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Zonal Sur 2023",
-        "fecha": "2023-02-04",
-        "division": "",
-        "categoria": "105",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 260,
-          "bp": 157.5,
-          "dl": 252.5,
-          "total": 670,
-          "bw": 101.7,
-          "glp": 83.97,
-          "rank": 5
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2301"
-      },
-      {
-        "evento": "Nacional Chile 2017",
-        "fecha": "2017-01-01",
-        "division": "",
-        "categoria": "105",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 270,
-          "bp": 165,
-          "dl": 262.5,
-          "total": 697.5,
-          "bw": 102,
-          "glp": null,
-          "rank": 1,
-          "wilks": 421.23
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1701"
-      },
-      {
         "evento": "V Campeonato Zona Centro Clausura FECHIPO 2024",
         "resultado": {
           "sq": 190,
@@ -35920,12 +35881,12 @@
       }
     ],
     "bestLifts": {
-      "sq": 270,
-      "bp": 165,
-      "dl": 262.5,
-      "total": 670,
-      "glp": 83.97,
-      "dots": 415.59030042271235
+      "sq": 195,
+      "bp": 92.5,
+      "dl": 245,
+      "total": 532.5,
+      "glp": 82.432
+      
     }
   },
   {
