@@ -2609,7 +2609,7 @@ function _widgetHandleDirectObsEvent(d){
     const m=d.minutes||10, s=d.seconds||0;
     const durationSec=m*60+s;
     if(durationSec<=0)return;
-    _txDirState.breakTimer={active:true,startedAt:Date.now(),durationSec,label:d.label||'',pausedAt:0,videos:d.videos||[],movement:d.movement||''};
+    _txDirState.breakTimer={active:true,startedAt:Date.now(),durationSec,label:d.label||'',pausedAt:0,videos:d.videos||[],movement:d.movement||'',style:d.style||_txDirState.breakTimer?.style||{}};
     mark();return;
   }
   if(action==='breakStop'){
@@ -2628,7 +2628,7 @@ function _widgetHandleDirectObsEvent(d){
 // Lee comandos desde Firestore livecast_director/current.
 // Cada componente tiene {active, until?} independiente; el panel del
 // admin pushea cambios y este widget renderiza lo que esté activo.
-const TX_DIR_DEFAULT={profile:{active:false,until:0,scale:1},scoreboard:{active:false,until:0,scale:1},leaderboard:{active:false,until:0,cat:'',scale:1},timer:{active:false,until:0,scale:1},slam:{active:false,until:0,type:'g',scale:1},breakTimer:{active:false,startedAt:0,durationSec:0,label:'',pausedAt:0,scale:1,videos:[],movement:''}};
+const TX_DIR_DEFAULT={profile:{active:false,until:0,scale:1},scoreboard:{active:false,until:0,scale:1},leaderboard:{active:false,until:0,cat:'',scale:1},timer:{active:false,until:0,scale:1},slam:{active:false,until:0,type:'g',scale:1},breakTimer:{active:false,startedAt:0,durationSec:0,label:'',pausedAt:0,scale:1,videos:[],movement:'',style:{bgColor:'#0A1628',accentColor:'#C41E3A',videoW:42,titleTop:12,titleSize:8,movSize:5,timerSize:12,showLogos:true}}};
 let _txDirState=null;
 let _txDirUnsub=null;
 let _txDirPoll=null;
@@ -2689,8 +2689,8 @@ function _btVideoSetup(videos){
   }
   if(!_btVideoFgEl){
     _btVideoFgEl=document.createElement('video');
-    // Video nítido izquierda — círculo con clip-path
-    _btVideoFgEl.style.cssText='position:fixed;left:4vw;top:50%;transform:translateY(-50%);width:38vw;height:38vw;object-fit:cover;border-radius:50%;z-index:2;pointer-events:none;clip-path:circle(50% at 50% 50%)';
+    // Video nítido izquierda — rectángulo panel
+    _btVideoFgEl.style.cssText='position:fixed;left:0;top:0;width:42vw;height:100vh;object-fit:cover;z-index:2;pointer-events:none';
     _btVideoFgEl.muted=true;_btVideoFgEl.playsInline=true;_btVideoFgEl.loop=true;
     document.body.appendChild(_btVideoFgEl);
   }
@@ -2842,7 +2842,7 @@ function renderTxDirector(container){
     +'|'+DATA.lift+'|'+DATA.round+'|'+DATA.flight
     +'|'+(_txDirState.leaderboard?.cat||'')+'|'+(_txDirState.slam?.type||'')
     +'|'+(_txDirState.profile?.until||0)+'|'+(_txDirState.scoreboard?.until||0)+'|'+(_txDirState.leaderboard?.until||0)+'|'+(_txDirState.slam?.until||0)
-    +'|bt-'+(bt.startedAt||0)+'-'+(bt.durationSec||0)+'-'+(bt.pausedAt||0)+'-'+(bt.label||'')+'-'+(bt.videos||[]).length+'-'+(bt.movement||'')
+    +'|bt-'+(bt.startedAt||0)+'-'+(bt.durationSec||0)+'-'+(bt.pausedAt||0)+'-'+(bt.label||'')+'-'+(bt.videos||[]).length+'-'+(bt.movement||'')+'-'+JSON.stringify(bt.style||{})
     +'|sc-'+(_txDirState.profile?.scale||1)+'-'+(_txDirState.scoreboard?.scale||1)+'-'+(_txDirState.leaderboard?.scale||1)+'-'+(_txDirState.timer?.scale||1)+'-'+(_txDirState.slam?.scale||1)+'-'+(_txDirState.breakTimer?.scale||1)
     +'|col-'+JSON.stringify(_txDirState.colors||{});
   if(sig===_txDirLastSig){
@@ -2886,7 +2886,19 @@ function renderTxDirector(container){
   // Video de fondo del break timer (persiste independiente del innerHTML)
   if(showBreak){
     const bvids=bt.videos||[];
-    if(bvids.length)_btVideoSetup(bvids); else _btVideoTeardown();
+    if(bvids.length){
+      _btVideoSetup(bvids);
+      // Actualizar ancho del panel de video desde style params
+      if(_btVideoFgEl){
+        const vw=(bt.style?.videoW!=null?Number(bt.style.videoW):42);
+        _btVideoFgEl.style.width=vw+'vw';
+        _btVideoFgEl.style.height='100vh';
+        _btVideoFgEl.style.left='0';_btVideoFgEl.style.top='0';
+        _btVideoFgEl.style.transform='none';
+        _btVideoFgEl.style.borderRadius='0';
+        _btVideoFgEl.style.clipPath='none';
+      }
+    } else _btVideoTeardown();
   } else if(!(animBt&&animBt.dir==='out')){
     // Solo limpiar cuando la animación de salida ya terminó también
     _btVideoTeardown();
@@ -2971,79 +2983,59 @@ function _renderTxBreakTimer(bt,scale){
   const hasVideo=(bt.videos||[]).length>0;
   const evObj=DATA&&DATA.event;
   const evName=evObj?(evObj.nombre||evObj.name||''):'';
-
-  // ── NEO logo SVG inline (blanco) ──────────────────────────────────────────
-  const neoSvg='<svg viewBox="0 0 290 90" xmlns="http://www.w3.org/2000/svg" style="height:clamp(22px,3.2vh,42px);width:auto;display:block;fill:white;filter:drop-shadow(0 0 4px rgba(255,255,255,.25))">'
-    +'<rect x="0" y="0" width="18" height="90"/>'
-    +'<polygon points="18,0 40,0 72,90 50,90"/>'
-    +'<rect x="72" y="0" width="18" height="90"/>'
-    +'<rect x="103" y="0" width="87" height="24"/>'
-    +'<rect x="103" y="33" width="87" height="24"/>'
-    +'<rect x="103" y="66" width="87" height="24"/>'
+  // ── Parámetros de estilo editables ────────────────────────────────────
+  const stl=bt.style||{};
+  const bgColor=stl.bgColor||'#0A1628';
+  const accentColor=stl.accentColor||'#C41E3A';
+  const videoW=stl.videoW!=null?Number(stl.videoW):42;
+  const titleTop=stl.titleTop!=null?Number(stl.titleTop):12;
+  const titleSize=stl.titleSize!=null?Number(stl.titleSize):8;
+  const movSize=stl.movSize!=null?Number(stl.movSize):5;
+  const timerSz=stl.timerSize!=null?Number(stl.timerSize):12;
+  const showLogos=stl.showLogos!==false;
+  const barH=showLogos?'clamp(52px,7vh,84px)':'0px';
+  // ── NEO logo SVG ──────────────────────────────────────────────────────
+  const neoSvg='<svg viewBox="0 0 290 90" xmlns="http://www.w3.org/2000/svg" style="height:clamp(20px,3vh,40px);width:auto;display:block;fill:white">'
+    +'<rect x="0" y="0" width="18" height="90"/><polygon points="18,0 40,0 72,90 50,90"/><rect x="72" y="0" width="18" height="90"/>'
+    +'<rect x="103" y="0" width="87" height="24"/><rect x="103" y="33" width="87" height="24"/><rect x="103" y="66" width="87" height="24"/>'
     +'<path fill-rule="evenodd" d="M203,0 L290,0 L290,90 L203,90 Z M226,22 L267,22 L267,68 L226,68 Z"/>'
   +'</svg>';
-
-  // ── Barra inferior de sponsors ──────────────────────────────────────────
-  const sponsorBar='<div style="position:absolute;bottom:0;left:0;right:0;height:clamp(52px,7vh,84px);background:rgba(0,0,0,.88);border-top:2px solid #C41E3A;display:flex;align-items:center;justify-content:center;gap:clamp(20px,4vw,60px);padding:0 4vw;z-index:6">'
-    +'<img src="YourLift_logo.png" style="height:clamp(24px,3.5vh,44px);width:auto;object-fit:contain;filter:drop-shadow(0 0 8px rgba(196,30,58,.5)) brightness(1.1)" onerror="this.style.display=\'none\'">'
-    +'<div style="width:1px;height:38%;background:rgba(255,255,255,.22)"></div>'
-    +'<img src="promo/assets/fechipo_logo.png" style="height:clamp(24px,3.5vh,44px);width:auto;object-fit:contain;filter:brightness(0) invert(1) drop-shadow(0 0 5px rgba(255,255,255,.2))" onerror="this.style.display=\'none\'">'
-    +'<div style="width:1px;height:38%;background:rgba(255,255,255,.22)"></div>'
-    +neoSvg
-  +'</div>';
-
+  const sponsorBar=showLogos
+    ?'<div style="position:absolute;bottom:0;left:0;right:0;height:'+barH+';background:rgba(0,0,0,.85);border-top:2px solid '+accentColor+';display:flex;align-items:center;justify-content:center;gap:clamp(18px,3.5vw,55px);padding:0 4vw;z-index:6">'
+      +'<img src="YourLift_logo.png" style="height:clamp(22px,3.2vh,40px);width:auto;object-fit:contain;filter:brightness(1.1)" onerror="this.style.display=\'none\'">'
+      +'<div style="width:1px;height:36%;background:rgba(255,255,255,.2)"></div>'
+      +'<img src="promo/assets/fechipo_logo.png" style="height:clamp(22px,3.2vh,40px);width:auto;object-fit:contain;filter:brightness(0) invert(1)" onerror="this.style.display=\'none\'">'
+      +'<div style="width:1px;height:36%;background:rgba(255,255,255,.2)"></div>'
+      +neoSvg+'</div>'
+    :'';
   const scStyle=sc!==1?'transform:scale('+sc+');transform-origin:center center;':'';
 
   if(hasVideo){
-    // ══ LAYOUT CON VIDEO — estilo IPF Worlds "YA VOLVEMOS" ═══════════════
-    return '<div style="position:fixed;inset:0;z-index:3;overflow:hidden;'+scStyle+'">'
-      // Overlay de color sobre el video de fondo (z-index:2, encima de _btVideoBgEl en z:1)
-      +'<div style="position:absolute;inset:0;z-index:2;background:linear-gradient(115deg,rgba(0,5,22,.72) 0%,rgba(196,30,58,.14) 48%,rgba(0,0,0,.84) 100%)"></div>'
-      // ── Anillo brillante + viñeta sobre el vídeo circular (z:3, encima de _btVideoFgEl en z:2)
-      +'<div style="position:absolute;left:4vw;top:50%;transform:translateY(-50%);width:38vw;height:38vw;border-radius:50%;z-index:3;pointer-events:none">'
-        // Borde rojo brillante
-        +'<div style="position:absolute;inset:-3px;border-radius:50%;border:3px solid rgba(196,30,58,.75);box-shadow:0 0 0 1px rgba(196,30,58,.3),0 0 45px rgba(196,30,58,.35),0 0 90px rgba(0,0,0,.5)"></div>'
-        // Viñeta radial interna para que se desvanezca suavemente hacia los bordes
-        +'<div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,transparent 50%,rgba(0,0,0,.45) 72%,rgba(0,0,0,.88) 95%)"></div>'
-      +'</div>'
-      // ── Panel derecho con texto ──────────────────────────────────────
-      +'<div style="position:absolute;right:0;top:0;width:54%;height:calc(100% - clamp(52px,7vh,84px));display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 5vw 0 2vw;z-index:5">'
-        // "YA VOLVEMOS"
-        +'<div style="font-family:Oswald,Impact,sans-serif;font-size:clamp(44px,6.8vw,116px);font-weight:900;color:#ffffff;line-height:.88;letter-spacing:2px;text-transform:uppercase;text-shadow:0 4px 28px rgba(0,0,0,.95),0 0 50px rgba(0,0,0,.6)">YA VOLVEMOS</div>'
-        // Línea roja divisora
-        +'<div style="width:clamp(60px,8vw,120px);height:3px;background:#C41E3A;margin:clamp(10px,1.4vh,20px) 0;box-shadow:0 0 12px rgba(196,30,58,.6)"></div>'
-        // Movimiento (si está definido)
-        +(movement
-          ?'<div style="background:rgba(0,0,0,.78);border-left:5px solid #C41E3A;padding:clamp(7px,.9vh,12px) clamp(14px,1.8vw,24px);margin-bottom:clamp(8px,1.2vh,18px)">'
-            +'<div style="font-family:Oswald;font-size:clamp(8px,.85vw,12px);letter-spacing:4px;color:rgba(255,255,255,.45);margin-bottom:3px;text-transform:uppercase">Próximo movimiento</div>'
-            +'<div style="font-family:Oswald;font-size:clamp(20px,2.8vw,46px);font-weight:700;color:#ffffff;letter-spacing:3px">'+movement+'</div>'
-          +'</div>'
-          :'')
-        // Timer
-        +'<div id="dirBreakDisplay" style="font-family:Oswald,Impact,sans-serif;font-size:clamp(70px,10.5vw,176px);font-weight:900;color:'+timerColor+';line-height:.9;letter-spacing:2px;text-shadow:0 6px 28px rgba(0,0,0,.9),0 0 50px rgba(0,0,0,.5);-webkit-text-stroke:2px rgba(0,0,0,.25)">'+txt+'</div>'
+    return '<div style="position:fixed;inset:0;z-index:3;overflow:hidden;background:'+bgColor+';'+scStyle+'">'
+      +'<div style="position:absolute;left:0;top:0;width:'+videoW+'%;height:100%;z-index:3;pointer-events:none;background:linear-gradient(to right,transparent 45%,'+bgColor+' 90%)"></div>'
+      +'<div style="position:absolute;left:0;top:0;width:'+videoW+'%;height:22%;z-index:3;pointer-events:none;background:linear-gradient(to bottom,'+bgColor+' 0%,transparent 100%)"></div>'
+      +'<div style="position:absolute;left:0;bottom:'+barH+';width:'+videoW+'%;height:20%;z-index:3;pointer-events:none;background:linear-gradient(to top,'+bgColor+' 0%,transparent 100%)"></div>'
+      +'<div style="position:absolute;left:'+(videoW-6)+'%;right:0;top:0;bottom:'+barH+';z-index:5;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;padding:'+titleTop+'vh 4vw 3vh 2vw">'
+        +'<div style="font-family:Oswald,Impact,sans-serif;font-size:'+titleSize+'vw;font-weight:900;color:#ffffff;line-height:.88;letter-spacing:2px;text-transform:uppercase;text-shadow:0 4px 24px rgba(0,0,0,.9)">YA VOLVEMOS</div>'
+        +'<div style="width:clamp(50px,6vw,110px);height:3px;background:'+accentColor+';margin:clamp(8px,1.2vh,18px) 0;box-shadow:0 0 10px '+accentColor+'99"></div>'
+        +(movement?'<div style="font-family:Oswald,Impact,sans-serif;font-size:'+movSize+'vw;font-weight:700;color:#ffffff;line-height:1;letter-spacing:2px;margin-bottom:clamp(6px,1vh,16px)">'+movement+'</div>':'')
+        +'<div id="dirBreakDisplay" style="font-family:Oswald,Impact,sans-serif;font-size:'+timerSz+'vw;font-weight:900;color:'+timerColor+';line-height:.9;letter-spacing:2px;text-shadow:0 4px 22px rgba(0,0,0,.85)">'+txt+'</div>'
         +pausedBadge
-        // Nombre del evento
-        +(evName?'<div style="font-family:Oswald;font-size:clamp(10px,1.1vw,16px);letter-spacing:5px;color:rgba(255,255,255,.45);text-transform:uppercase;margin-top:clamp(6px,.9vh,14px)">'+String(evName).toUpperCase()+'</div>':'')
+        +(evName?'<div style="font-family:Oswald;font-size:clamp(9px,1vw,15px);letter-spacing:5px;color:rgba(255,255,255,.38);text-transform:uppercase;margin-top:clamp(6px,1vh,14px)">'+String(evName).toUpperCase()+'</div>':'')
       +'</div>'
       +sponsorBar
     +'</div>';
   }
 
-  // ══ LAYOUT SIN VIDEO — centrado, fondo oscuro ═══════════════════════════
-  return '<div style="position:fixed;inset:0;z-index:3;overflow:hidden;background:linear-gradient(135deg,#020814 0%,#0d0d1a 50%,#020814 100%);'+scStyle+'">'
-    +'<div style="position:absolute;inset:0;bottom:clamp(52px,7vh,84px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4vw;gap:0">'
-      +'<img src="YourLift_logo.png" style="height:clamp(42px,5.5vh,74px);width:auto;margin-bottom:clamp(12px,1.8vh,24px);filter:drop-shadow(0 0 16px rgba(196,30,58,.65))" onerror="this.style.display=\'none\'">'
-      +'<div style="font-family:Oswald,Impact,sans-serif;font-size:clamp(48px,7vw,120px);font-weight:900;color:#ffffff;line-height:.88;letter-spacing:2px;text-transform:uppercase;text-shadow:0 4px 28px rgba(0,0,0,.9)">YA VOLVEMOS</div>'
-      +'<div style="width:clamp(60px,8vw,120px);height:3px;background:#C41E3A;margin:clamp(10px,1.5vh,22px) 0;box-shadow:0 0 12px rgba(196,30,58,.5)"></div>'
-      +(movement
-        ?'<div style="background:rgba(0,0,0,.7);border-left:5px solid #C41E3A;padding:clamp(7px,.9vh,12px) clamp(14px,2vw,28px);margin-bottom:clamp(8px,1.2vh,16px);text-align:left">'
-          +'<div style="font-family:Oswald;font-size:clamp(8px,.85vw,12px);letter-spacing:4px;color:rgba(255,255,255,.45);margin-bottom:3px">PRÓXIMO MOVIMIENTO</div>'
-          +'<div style="font-family:Oswald;font-size:clamp(20px,3vw,48px);font-weight:700;color:#ffffff;letter-spacing:3px">'+movement+'</div>'
-        +'</div>'
-        :'')
-      +'<div id="dirBreakDisplay" style="font-family:Oswald,Impact,sans-serif;font-size:clamp(100px,14vw,230px);font-weight:900;color:'+timerColor+';line-height:.9;letter-spacing:4px;text-shadow:0 8px 38px rgba(0,0,0,.85);-webkit-text-stroke:3px rgba(0,0,0,.28)">'+txt+'</div>'
+  return '<div style="position:fixed;inset:0;z-index:3;overflow:hidden;background:'+bgColor+';'+scStyle+'">'
+    +'<div style="position:absolute;inset:0;bottom:'+barH+';display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:'+titleTop+'vh 4vw 3vh">'
+      +'<img src="YourLift_logo.png" style="height:clamp(38px,5vh,68px);width:auto;margin-bottom:clamp(10px,1.5vh,20px)" onerror="this.style.display=\'none\'">'
+      +'<div style="font-family:Oswald,Impact,sans-serif;font-size:'+titleSize+'vw;font-weight:900;color:#ffffff;line-height:.88;letter-spacing:2px;text-transform:uppercase;text-shadow:0 4px 24px rgba(0,0,0,.9)">YA VOLVEMOS</div>'
+      +'<div style="width:clamp(50px,6vw,110px);height:3px;background:'+accentColor+';margin:clamp(8px,1.2vh,18px) auto;box-shadow:0 0 10px '+accentColor+'99"></div>'
+      +(movement?'<div style="font-family:Oswald,Impact,sans-serif;font-size:'+movSize+'vw;font-weight:700;color:#ffffff;line-height:1;letter-spacing:2px;margin-bottom:clamp(6px,1vh,14px)">'+movement+'</div>':'')
+      +'<div id="dirBreakDisplay" style="font-family:Oswald,Impact,sans-serif;font-size:'+timerSz+'vw;font-weight:900;color:'+timerColor+';line-height:.9;letter-spacing:3px;text-shadow:0 6px 28px rgba(0,0,0,.85)">'+txt+'</div>'
       +pausedBadge
-      +(evName?'<div style="font-family:Oswald;font-size:clamp(11px,1.3vw,18px);letter-spacing:5px;color:rgba(255,255,255,.4);margin-top:clamp(6px,1vh,14px)">'+String(evName).toUpperCase()+'</div>':'')
+      +(evName?'<div style="font-family:Oswald;font-size:clamp(10px,1.1vw,16px);letter-spacing:5px;color:rgba(255,255,255,.38);margin-top:clamp(8px,1.2vh,16px)">'+String(evName).toUpperCase()+'</div>':'')
     +'</div>'
     +sponsorBar
   +'</div>';
@@ -3761,25 +3753,16 @@ window.dirBreakStart=async function(){
   const movement=(document.getElementById('dirBreakMovement')?.value||'').trim();
   // Videos de fondo — hardcodeados, toggle on/off desde el panel
   const useVideo=document.getElementById('dirBreakUseVideo')?.checked!==false;
+  // Solo videos de videos_recortados (clip01, clip02, ...)
   const BREAK_VIDEOS=[
     'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fclip01.mp4?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fkaizen_DQ2UQqFAVJJ.mp4?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fkaizen_DQr6qdojt0m.mp4?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fkaizen_DQnYr17EZlU.mp4?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fkaizen_DVXW9KyjlKm.mp4?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fkaizen_DVeZ38LAVT1.mp4?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fwa_20260502.mp4?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fwa_20260504a.mp4?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fwa_20260504b.mp4?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fwa_20260516a.mp4?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fwa_20260516b.mp4?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fyourlift_promo.mp4?alt=media',
   ];
   const videos=useVideo?BREAK_VIDEOS:[];
   const durationSec=m*60+s;
   if(durationSec<=0){alert('Ingresá al menos 1 segundo');return}
   if(!_dirState)_dirState={};
-  _dirState.breakTimer={active:true,startedAt:Date.now(),durationSec,label,pausedAt:0,videos,movement};
+  const currentStyle=_dirState?.breakTimer?.style||{};
+  _dirState.breakTimer={active:true,startedAt:Date.now(),durationSec,label,pausedAt:0,videos,movement,style:currentStyle};
   await _dirPush();R();
 };
 window.dirBreakPause=async function(){
@@ -3798,11 +3781,26 @@ window.dirBreakResume=async function(){
 };
 window.dirBreakHide=async function(){
   if(!_dirState)return;
-  _dirState.breakTimer={active:false,startedAt:0,durationSec:0,label:'',pausedAt:0,videos:[],movement:''};
+  const prevStyle=_dirState.breakTimer?.style||{};
+  _dirState.breakTimer={active:false,startedAt:0,durationSec:0,label:'',pausedAt:0,videos:[],movement:'',style:prevStyle};
+  await _dirPush();R();
+};
+window.dirBtApplyStyle=async function(){
+  if(!_dirState)return;
+  if(!_dirState.breakTimer)_dirState.breakTimer={};
+  _dirState.breakTimer.style={
+    bgColor:document.getElementById('dirBtBgColor')?.value||'#0A1628',
+    accentColor:document.getElementById('dirBtAccent')?.value||'#C41E3A',
+    videoW:Number(document.getElementById('dirBtVideoW')?.value||42),
+    titleTop:Number(document.getElementById('dirBtTitleTop')?.value||12),
+    titleSize:Number(document.getElementById('dirBtTitleSize')?.value||8),
+    movSize:Number(document.getElementById('dirBtMovSize')?.value||5),
+    timerSize:Number(document.getElementById('dirBtTimerSize')?.value||12),
+    showLogos:document.getElementById('dirBtShowLogos')?.checked!==false,
+  };
   await _dirPush();R();
 };
 window.dirBreakAdd=async function(secs){
-  // Sumar/restar segundos al descanso en curso (útil para extender o acortar)
   const bt=_dirState?.breakTimer;
   if(!bt?.active)return;
   bt.durationSec=Math.max(1,(bt.durationSec||0)+secs);
@@ -4010,8 +4008,29 @@ function renderDirector(){
   h+='<input type="checkbox" id="dirBreakUseVideo" '+(videoOn||!bt.active?'checked':'')+' style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">';
   h+='<span>🎬 Video de fondo</span>';
   h+='</label>';
-  h+='<span style="font-size:10px;color:var(--muted)">(clips KaizenMedia + videos YourLift en loop)</span>';
+  h+='<span style="font-size:10px;color:var(--muted)">(videos en loop)</span>';
   h+='</div>';
+  // ── Apariencia editable ──────────────────────────────────────────────────
+  const stl=bt.style||{};
+  h+='<details style="margin-top:10px;border:1px solid var(--border);border-radius:6px;padding:0">';
+  h+='<summary style="padding:8px 12px;cursor:pointer;font-size:11px;color:var(--muted);letter-spacing:1px;list-style:none;display:flex;align-items:center;gap:6px">🎨 APARIENCIA <span style="font-size:9px;opacity:.5">(click para editar)</span></summary>';
+  h+='<div style="padding:10px 12px;display:grid;gap:10px">';
+  // Colores
+  h+='<div style="display:flex;gap:12px;flex-wrap:wrap">';
+  h+='<div><label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px">Fondo</label><input type="color" id="dirBtBgColor" value="'+(stl.bgColor||'#0A1628')+'" style="width:44px;height:28px;border:1px solid var(--border);border-radius:4px;background:transparent;cursor:pointer;padding:1px"></div>';
+  h+='<div><label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px">Acento</label><input type="color" id="dirBtAccent" value="'+(stl.accentColor||'#C41E3A')+'" style="width:44px;height:28px;border:1px solid var(--border);border-radius:4px;background:transparent;cursor:pointer;padding:1px"></div>';
+  h+='</div>';
+  // Sliders
+  const sl=(id,label,min,max,val)=>'<div><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:3px"><span>'+label+'</span><span id="'+id+'Val">'+val+'</span></div><input type="range" id="'+id+'" min="'+min+'" max="'+max+'" value="'+val+'" oninput="document.getElementById(\''+id+'Val\').textContent=this.value" style="width:100%;accent-color:var(--accent)"></div>';
+  h+=sl('dirBtVideoW','📹 Ancho video %',10,65,stl.videoW!=null?stl.videoW:42);
+  h+=sl('dirBtTitleTop','↕ Posición texto (vh)',2,50,stl.titleTop!=null?stl.titleTop:12);
+  h+=sl('dirBtTitleSize','🔤 Tamaño "YA VOLVEMOS" (vw)',3,14,stl.titleSize!=null?stl.titleSize:8);
+  h+=sl('dirBtMovSize','🔤 Tamaño Movimiento (vw)',2,10,stl.movSize!=null?stl.movSize:5);
+  h+=sl('dirBtTimerSize','⏱ Tamaño Timer (vw)',5,22,stl.timerSize!=null?stl.timerSize:12);
+  // Logos checkbox
+  h+='<label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text);cursor:pointer"><input type="checkbox" id="dirBtShowLogos" '+(stl.showLogos!==false?'checked':'')+' style="accent-color:var(--accent)"> Mostrar barra de logos</label>';
+  h+='<button onclick="dirBtApplyStyle()" style="padding:7px 16px;background:var(--accent);color:#fff;border:none;border-radius:5px;font-family:Oswald;font-size:12px;letter-spacing:1px;cursor:pointer">✅ APLICAR</button>';
+  h+='</div></details>';
   // Botones
   h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">';
   if(!bt.active){
