@@ -2669,43 +2669,53 @@ let _txDirPrevActive={};
 // Así los re-renders del widget (sync cada 5s) no lo reinician.
 let _txBarridoEl=null;
 // Video de fondo del break timer — también persiste fuera del innerHTML para no reiniciar.
-let _btVideoEl=null;
+// ── Break timer video — dos capas: fondo difuminado + clip nítido izq ──
+let _btVideoBgEl=null;   // fondo: full screen, blur
+let _btVideoFgEl=null;   // primer plano: izquierda, aspect ratio natural
 let _btVideoIdx=0;
 let _btVideoSrcsKey='';
+let _btVideoInterval=null;
+const BT_CLIP_DURATION=4000; // ms por clip
+
 function _btVideoSetup(videos){
   if(!videos||!videos.length){_btVideoTeardown();return;}
   const key=JSON.stringify(videos);
-  if(!_btVideoEl){
-    _btVideoEl=document.createElement('video');
-    _btVideoEl.style.cssText='position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;pointer-events:none;';
-    _btVideoEl.muted=true;
-    _btVideoEl.playsInline=true;
-    _btVideoEl.autoplay=true;
-    document.body.appendChild(_btVideoEl);
-    _btVideoIdx=0;
-    _btVideoSrcsKey='';
+
+  if(!_btVideoBgEl){
+    _btVideoBgEl=document.createElement('video');
+    _btVideoBgEl.style.cssText='position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;pointer-events:none;filter:blur(22px) brightness(.32);transform:scale(1.08)';
+    _btVideoBgEl.muted=true;_btVideoBgEl.playsInline=true;_btVideoBgEl.loop=true;
+    document.body.appendChild(_btVideoBgEl);
   }
+  if(!_btVideoFgEl){
+    _btVideoFgEl=document.createElement('video');
+    // Video nítido izquierda — aspect ratio natural (clips verticales 9:16)
+    _btVideoFgEl.style.cssText='position:fixed;left:0;top:0;height:100vh;width:auto;max-width:56vw;object-fit:cover;z-index:2;pointer-events:none';
+    _btVideoFgEl.muted=true;_btVideoFgEl.playsInline=true;_btVideoFgEl.loop=true;
+    document.body.appendChild(_btVideoFgEl);
+  }
+
   if(_btVideoSrcsKey!==key){
-    _btVideoSrcsKey=key;
-    _btVideoIdx=0;
-    _btVideoEl.src=videos[0];
-    _btVideoEl.onended=function(){
+    _btVideoSrcsKey=key;_btVideoIdx=0;
+    _btSetClip(videos[0]);
+    if(_btVideoInterval)clearInterval(_btVideoInterval);
+    _btVideoInterval=setInterval(()=>{
       _btVideoIdx=(_btVideoIdx+1)%videos.length;
-      _btVideoEl.src=videos[_btVideoIdx];
-      _btVideoEl.play().catch(()=>{});
-    };
-    _btVideoEl.play().catch(()=>{});
+      _btSetClip(videos[_btVideoIdx]);
+    },BT_CLIP_DURATION);
   }
 }
+function _btSetClip(src){
+  if(_btVideoBgEl){_btVideoBgEl.src=src;_btVideoBgEl.play().catch(()=>{});}
+  if(_btVideoFgEl){_btVideoFgEl.src=src;_btVideoFgEl.play().catch(()=>{});}
+}
 function _btVideoTeardown(){
-  if(_btVideoEl){
-    _btVideoEl.pause();
-    _btVideoEl.onended=null;
-    if(_btVideoEl.parentNode)_btVideoEl.parentNode.removeChild(_btVideoEl);
-    _btVideoEl=null;
-  }
-  _btVideoIdx=0;
-  _btVideoSrcsKey='';
+  if(_btVideoInterval){clearInterval(_btVideoInterval);_btVideoInterval=null;}
+  [_btVideoBgEl,_btVideoFgEl].forEach(el=>{
+    if(el){el.pause();el.src='';if(el.parentNode)el.parentNode.removeChild(el);}
+  });
+  _btVideoBgEl=null;_btVideoFgEl=null;
+  _btVideoIdx=0;_btVideoSrcsKey='';
 }
 function _startBarrido(dir){
   if(_txBarridoEl&&_txBarridoEl.parentNode)_txBarridoEl.parentNode.removeChild(_txBarridoEl);
@@ -2944,36 +2954,40 @@ function _renderTxBreakTimer(bt,scale){
   const sc=scale||1;
   const tx=sc!==1?'transform:scale('+sc+');transform-origin:center center;':'';
   const hasVideo=(bt.videos||[]).length>0;
-  // Overlay: más oscuro arriba (logo/evento) y abajo (timer), más transparente al centro
-  const bgStyle=hasVideo
-    ?'background:linear-gradient(to bottom,rgba(0,0,0,.72) 0%,rgba(0,0,0,.18) 35%,rgba(0,0,0,.18) 65%,rgba(0,0,0,.72) 100%);'
-    :'background:#0d0d0d;';
 
-  // Nombre del evento (DATA.event.nombre o string)
+  // Nombre del evento
   const evObj=DATA&&DATA.event;
-  const evName=evObj?(evObj.nombre||evObj.name||evObj||''):'';
-  const eventoHtml=evName
-    ?'<div style="font-family:Oswald,sans-serif;font-size:clamp(18px,2.2vw,34px);letter-spacing:6px;color:rgba(255,255,255,.85);text-transform:uppercase;text-shadow:0 2px 12px rgba(0,0,0,.9);margin-bottom:6px;animation:txFade .8s ease backwards">'+String(evName).toUpperCase()+'</div>'
-    :'';
+  const evName=evObj?(evObj.nombre||evObj.name||String(evObj)||''):'';
 
-  return '<div style="position:fixed;inset:0;'+bgStyle+'display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;padding:5vh 4vw;'+tx+'">'
+  if(hasVideo){
+    // ── Layout con video: info a la DERECHA, video ocupa la izquierda ──
+    // Gradiente vertical en la mitad derecha para legibilidad
+    return '<div style="position:fixed;inset:0;z-index:3;pointer-events:none;'+( sc!==1?'transform:scale('+sc+');transform-origin:center center;':'' )+'">'
+      // Gradiente que cubre la mitad derecha para legibilidad del texto
+      +'<div style="position:absolute;right:0;top:0;width:50%;height:100%;background:linear-gradient(to right,transparent,rgba(0,0,0,.78) 30%,rgba(0,0,0,.88) 100%)"></div>'
+      // Panel derecho: logo + evento + label + timer
+      +'<div style="position:absolute;right:0;top:0;width:46%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0;padding:4vw 3vw">'
+        +'<img src="YourLift_logo.png" style="height:clamp(44px,6vh,80px);width:auto;object-fit:contain;filter:drop-shadow(0 0 16px rgba(196,30,58,.8)) drop-shadow(0 4px 10px rgba(0,0,0,.9));margin-bottom:clamp(12px,2vh,24px)" onerror="this.style.display=\'none\'">'
+        +(evName?'<div style="font-family:Oswald,sans-serif;font-size:clamp(13px,1.4vw,22px);letter-spacing:4px;color:rgba(255,255,255,.88);text-transform:uppercase;text-shadow:0 2px 12px rgba(0,0,0,1);margin-bottom:clamp(10px,2vh,20px);line-height:1.3">'+String(evName).toUpperCase()+'</div>':'')
+        +'<div style="font-family:Oswald,sans-serif;font-size:clamp(18px,2.2vw,36px);letter-spacing:10px;color:#D4A843;margin-bottom:clamp(6px,1vh,14px);text-shadow:0 2px 16px rgba(0,0,0,.9)">'+labelText+'</div>'
+        +'<div id="dirBreakDisplay" style="font-family:Oswald,sans-serif;font-size:clamp(72px,11vw,180px);font-weight:900;color:'+color+';line-height:.95;letter-spacing:2px;text-shadow:0 6px 30px rgba(0,0,0,.9),0 0 50px rgba(0,0,0,.6);-webkit-text-stroke:2px rgba(0,0,0,.4)">'+txt+'</div>'
+        +pausedBadge
+      +'</div>'
+    +'</div>';
+  }
 
-    // ── TOP: logo + nombre evento ──────────────────────────────────
+  // ── Layout sin video: centrado ─────────────────────────────────
+  return '<div style="position:fixed;inset:0;background:#0d0d0d;display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;padding:5vh 4vw;'+(sc!==1?'transform:scale('+sc+');transform-origin:center center;':'')+'">'
     +'<div style="display:flex;flex-direction:column;align-items:center;gap:14px;animation:txFade .6s ease backwards">'
       +'<img src="YourLift_logo.png" style="height:clamp(48px,7vh,90px);width:auto;object-fit:contain;filter:drop-shadow(0 0 18px rgba(196,30,58,.7)) drop-shadow(0 4px 12px rgba(0,0,0,.8))" onerror="this.style.display=\'none\'">'
-      +eventoHtml
+      +(evName?'<div style="font-family:Oswald,sans-serif;font-size:clamp(18px,2.2vw,34px);letter-spacing:6px;color:rgba(255,255,255,.85);text-transform:uppercase;text-shadow:0 2px 12px rgba(0,0,0,.9)">'+String(evName).toUpperCase()+'</div>':'')
     +'</div>'
-
-    // ── CENTRO: label + timer ──────────────────────────────────────
     +'<div style="display:flex;flex-direction:column;align-items:center">'
       +'<div style="font-family:Oswald,sans-serif;font-size:clamp(22px,3vw,46px);letter-spacing:10px;color:#D4A843;margin-bottom:12px;text-shadow:0 2px 16px rgba(0,0,0,.8)">'+labelText+'</div>'
       +'<div id="dirBreakDisplay" style="font-family:Oswald,sans-serif;font-size:clamp(140px,20vw,300px);font-weight:900;color:'+color+';line-height:.95;letter-spacing:4px;text-shadow:0 8px 40px rgba(0,0,0,.85),0 0 60px rgba(0,0,0,.5);-webkit-text-stroke:3px rgba(0,0,0,.35)">'+txt+'</div>'
       +pausedBadge
     +'</div>'
-
-    // ── BOTTOM: espacio para que quede balanceado ──────────────────
     +'<div style="height:clamp(48px,7vh,90px)"></div>'
-
   +'</div>';
 }
 
