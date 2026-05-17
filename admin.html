@@ -1355,8 +1355,8 @@ function buildStatsRows(){
 }
 
 function renderStats(){
-  if(!(ST.adminInfo?.role==='superadmin'||ST.adminInfo?.bootstrap))
-    return '<div class="h1">Sin acceso</div><p class="subtitle">Solo el superadmin puede ver las estadísticas.</p>';
+  if(!(ST.adminInfo?.role==='superadmin'||ST.adminInfo?.role==='owner'||ST.adminInfo?.bootstrap))
+    return '<div class="h1">Sin acceso</div><p class="subtitle">Solo el owner puede ver las estadísticas.</p>';
   const rows=buildStatsRows();
   const years=[...new Set(rows.map(r=>r.year))].sort();
   const totalAtletas=(ST.data||[]).length;
@@ -1580,7 +1580,7 @@ function initStatsCharts(){
 function renderDashboard(){
   const D=ST.data,I=ST.inscripciones;
   const YEARS=['2017','2018','2019','2020','2021','2022','2023','2024','2025','2026'];
-  const isSA=ST.adminInfo?.role==='superadmin'||ST.adminInfo?.bootstrap||false;
+  const isSA=ST.adminInfo?.role==='superadmin'||ST.adminInfo?.role==='owner'||ST.adminInfo?.bootstrap||false;
 
   // ── SVG CHART HELPERS ───────────────────────────────────
   function barChart(series,opts={}){
@@ -1793,7 +1793,7 @@ function renderDashboard(){
 
   // ── SECTION 2: Crecimiento ───────────────────────────────
 
-  // ── Secciones avanzadas — solo superadmin ────────────────
+  // ── Secciones avanzadas — owner / superadmin ─────────────
   if(isSA){
   h+=`<div style="font-family:Oswald;font-size:11px;letter-spacing:2px;color:var(--muted);margin:20px 0 8px;text-transform:uppercase">Crecimiento y Adquisición</div>`;
   h+=`<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px">`;
@@ -2736,8 +2736,8 @@ async function loadAdminsList(){
 }
 
 function renderAdmins(){
-  const isSuperAdmin = ST.adminInfo?.role==='superadmin'||ST.adminInfo?.bootstrap;
-  if(!isSuperAdmin) return '<div class="h1">Sin acceso</div><p class="subtitle">Solo el superadmin puede gestionar cuentas.</p>';
+  const isSuperAdmin = ST.adminInfo?.role==='superadmin'||ST.adminInfo?.role==='owner'||ST.adminInfo?.bootstrap;
+  if(!isSuperAdmin) return '<div class="h1">Sin acceso</div><p class="subtitle">Solo el owner puede gestionar cuentas.</p>';
 
   const form = ST.adminForm||{};
 
@@ -3014,7 +3014,7 @@ function renderAthleteProfile(){
             <button onclick="addAchievement('${a.codigo}')" class="btn btn-g" style="align-self:flex-start;padding:8px 20px;font-size:12px">🏅 Guardar logro</button>
           </div>
         </details>`
-      : `<div style="font-size:11px;color:var(--muted);padding:8px 10px;background:rgba(30,58,95,.12);border-radius:6px;border:1px solid var(--border)">🔒 Solo superadmin puede agregar o eliminar logros.</div>`
+      : `<div style="font-size:11px;color:var(--muted);padding:8px 10px;background:rgba(30,58,95,.12);border-radius:6px;border:1px solid var(--border)">🔒 Solo owner/superadmin puede agregar o eliminar logros.</div>`
     }
   </div>`;
 
