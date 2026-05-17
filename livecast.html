@@ -84,7 +84,7 @@ if(TX_MODE){
     html,body{background:transparent!important;overflow:hidden!important;margin:0}
     body.tx-opaque{background:linear-gradient(135deg,#0A1628 0%,#0E1F3A 50%,#0A1628 100%)!important}
     #R{display:none!important}
-    #txWidget{position:fixed;inset:0;font-family:'Oswald',sans-serif;color:#fff}
+    #txWidget{position:fixed;inset:0;font-family:'Oswald',sans-serif;color:#fff;z-index:2}
     @keyframes txSlideRight{from{transform:translateX(-40px);opacity:0}to{transform:translateX(0);opacity:1}}
     @keyframes txSlideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
     @keyframes txSlideDown{from{transform:translateY(-40px);opacity:0}to{transform:translateY(0);opacity:1}}
@@ -166,6 +166,43 @@ let isAdmin=false;
 // ══════════════════════════════════════════════
 const FB_CFG={apiKey:"AIzaSyA21IHMus2bklPLJm7ExRrVJJL9bzLhyp4",authDomain:"fechipo-db-13148.firebaseapp.com",projectId:"fechipo-db-13148",storageBucket:"fechipo-db-13148.firebasestorage.app",messagingSenderId:"551573388751",appId:"1:551573388751:web:5fcc377a8d595378ab26ba"};
 let fbDB=null,fbReady=false,fbUnsub=null,_fbSyncing=false,_fbLastWrite=0,fbAuth=null;
+
+// ══════════════════════════════════════════════
+// RELAY LAN — fallback automático sin internet
+// Corre relay.js en el PC admin: node relay.js
+// TX abre: livecast.html?tx=...&relay=192.168.1.X:3000
+// Admin abre: livecast.html?relay=localhost:3000
+// ══════════════════════════════════════════════
+const _RELAY_HOST=TX_URL.get('relay')||localStorage.getItem('yl_relay_host')||null;
+let _lastFbUpdate=0,_relayFallback=false;
+
+function _relaySend(payload){
+  if(!_RELAY_HOST||!isAdmin)return;
+  fetch('http://'+_RELAY_HOST+'/sync',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(600)}).catch(()=>{});
+}
+function _relayBadge(on){
+  let b=document.getElementById('_relayBadge');
+  if(on){if(!b){b=document.createElement('div');b.id='_relayBadge';b.style.cssText='position:fixed;top:8px;right:8px;z-index:99999;background:#f59e0b;color:#000;font-family:Oswald;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;pointer-events:none;letter-spacing:1px';document.body.appendChild(b);}b.textContent='📡 LAN';}
+  else{if(b)b.remove();}
+}
+function _relayConnect(){
+  if(!_RELAY_HOST||!TX_MODE)return;
+  const es=new EventSource('http://'+_RELAY_HOST+'/events');
+  es.onmessage=ev=>{
+    if(Date.now()-_lastFbUpdate<2500)return; // Firebase ok → ignorar relay
+    try{
+      const d=JSON.parse(ev.data);if(!d||!d.athletes)return;
+      const prevSig=(DATA.athletes?JSON.stringify(DATA.athletes):'')+DATA.lift+DATA.round+DATA.flight;
+      DATA.event=d.event||DATA.event;DATA.athletes=JSON.parse(d.athletes||'[]');
+      DATA.lift=d.lift||DATA.lift;DATA.round=typeof d.round==='number'?d.round:DATA.round;DATA.flight=d.flight||DATA.flight;
+      if(!_relayFallback){_relayFallback=true;_relayBadge(true);console.log('[Relay] Fallback LAN activo');}
+      const newSig=(DATA.athletes?JSON.stringify(DATA.athletes):'')+DATA.lift+DATA.round+DATA.flight;
+      if(prevSig!==newSig)R();
+    }catch(e){}
+  };
+  es.onerror=()=>console.warn('[Relay] Reconectando...');
+  console.log('[Relay] Listener SSE →',_RELAY_HOST);
+}
 // Event ID → name mapping (must match inscripcion.html EVENTS)
 let LIVE_EVENTS={'regional_centro_2026':'Campeonato Regional Centro FECHIPO 2026','universitario_2026':'Primer Campeonato Nacional Universitario FECHIPO 2026','Campeonato_de_debutantes':'Campeonato de Debutantes'};
 let _liveUnsub=null; // Firestore listener for current event athletes
@@ -240,15 +277,11 @@ async function syncToFB(){
   if(!fbReady||!isAdmin||_fbSyncing)return;
   const id=fbDocId();if(!id)return;
   _fbLastWrite=Date.now();
+  const payload={event:DATA.event,athletes:JSON.stringify(DATA.athletes),lift:DATA.lift,round:DATA.round,flight:DATA.flight,changeTimers:JSON.stringify(DATA.changeTimers),lotsGenerated:DATA.lotsGenerated||false,timer:DATA.timer,timerOn:DATA.timerOn,ts:Date.now()};
+  _relaySend(payload); // dual-write → relay LAN siempre en paralelo
   try{
     const ref=window._fb.doc(fbDB,'livecast_sync',id);
-    await window._fb.setDoc(ref,{
-      event:DATA.event,athletes:JSON.stringify(DATA.athletes),
-      lift:DATA.lift,round:DATA.round,flight:DATA.flight,
-      changeTimers:JSON.stringify(DATA.changeTimers),lotsGenerated:DATA.lotsGenerated||false,
-      timer:DATA.timer,timerOn:DATA.timerOn,
-      ts:Date.now()
-    });
+    await window._fb.setDoc(ref,payload);
   }catch(e){console.warn('[FB] Sync write error',e)}
 }
 // Sync liviano solo del timer — corre cada 1s mientras el timer está activo,
@@ -270,6 +303,8 @@ function startFBSync(){
   const ref=window._fb.doc(fbDB,'livecast_sync',id);
   fbUnsub=window._fb.onSnapshot(ref,(snap)=>{
     if(!snap.exists())return;
+    _lastFbUpdate=Date.now(); // marcar que Firebase sigue vivo
+    if(_relayFallback){_relayFallback=false;_relayBadge(false);console.log('[Relay] Firebase restaurado');}
     // Si hay un input enfocado, no re-renderizar (el usuario está editando)
     const focused=document.activeElement;
     if(focused&&(focused.tagName==='INPUT'||focused.tagName==='SELECT'||focused.tagName==='TEXTAREA'))return;
@@ -294,7 +329,7 @@ function startFBSync(){
         R();
       } else {
         // Actualizar solo el timer en pantalla sin re-render
-        const tmEls = ['mainTimer','sbTimer','txTimer','txTimerPanel'];
+        const tmEls = [];
         const mm = Math.floor(DATA.timer/60), ss = DATA.timer%60;
         const txt = String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
         tmEls.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=txt;});
@@ -303,6 +338,7 @@ function startFBSync(){
     _fbSyncing=false;
   });
   console.log('[FB] Listener started for',id);
+  _relayConnect(); // iniciar listener relay (TX side)
 }
 initFB();
 async function doLogin(){
@@ -713,8 +749,6 @@ function setResult(id,l,r,res){
   // bombed solo si falla los 9 intentos del meet completo.
   if(a.att.sq.every(x=>x.r==='n')&&a.att.bp.every(x=>x.r==='n')&&a.att.dl.every(x=>x.r==='n'))a.bombed=true;
   // Reset timer y arrancar automáticamente para el próximo atleta
-  DATA.timer=60;DATA.timerOn=false;clearInterval(mainTI);mainTI=null;
-  setTimeout(()=>{if(typeof startTimer==='function')startTimer();},150);
   // Record alert: check if this good lift breaks a national record
   if(res==='g')checkRecord(a,l,r);
   // Reset judge lights for next athlete
@@ -2560,7 +2594,7 @@ function _widgetHandleDirectObsEvent(d){
     ['profile','scoreboard','leaderboard','timer','slam'].forEach(k=>{
       _txDirState[k]=Object.assign({},_txDirState[k]||{},{active:false,until:0});
     });
-    if(_txDirState.breakTimer)_txDirState.breakTimer={active:false,startedAt:0,durationSec:0,label:'',pausedAt:0};
+    if(_txDirState.breakTimer)_txDirState.breakTimer={active:false,startedAt:0,durationSec:0,label:'',pausedAt:0,videos:[]};
     mark();return;
   }
   if(action==='showLb'&&d.cat){
@@ -2575,11 +2609,11 @@ function _widgetHandleDirectObsEvent(d){
     const m=d.minutes||10, s=d.seconds||0;
     const durationSec=m*60+s;
     if(durationSec<=0)return;
-    _txDirState.breakTimer={active:true,startedAt:Date.now(),durationSec,label:d.label||'',pausedAt:0};
+    _txDirState.breakTimer={active:true,startedAt:Date.now(),durationSec,label:d.label||'',pausedAt:0,videos:d.videos||[]};
     mark();return;
   }
   if(action==='breakStop'){
-    _txDirState.breakTimer={active:false,startedAt:0,durationSec:0,label:'',pausedAt:0};
+    _txDirState.breakTimer={active:false,startedAt:0,durationSec:0,label:'',pausedAt:0,videos:[]};
     mark();return;
   }
   if(action==='breakAdd'&&typeof d.seconds==='number'){
@@ -2594,7 +2628,7 @@ function _widgetHandleDirectObsEvent(d){
 // Lee comandos desde Firestore livecast_director/current.
 // Cada componente tiene {active, until?} independiente; el panel del
 // admin pushea cambios y este widget renderiza lo que esté activo.
-const TX_DIR_DEFAULT={profile:{active:false,until:0,scale:1},scoreboard:{active:false,until:0,scale:1},leaderboard:{active:false,until:0,cat:'',scale:1},timer:{active:false,until:0,scale:1},slam:{active:false,until:0,type:'g',scale:1},breakTimer:{active:false,startedAt:0,durationSec:0,label:'',pausedAt:0,scale:1}};
+const TX_DIR_DEFAULT={profile:{active:false,until:0,scale:1},scoreboard:{active:false,until:0,scale:1},leaderboard:{active:false,until:0,cat:'',scale:1},timer:{active:false,until:0,scale:1},slam:{active:false,until:0,type:'g',scale:1},breakTimer:{active:false,startedAt:0,durationSec:0,label:'',pausedAt:0,scale:1,videos:[]}};
 let _txDirState=null;
 let _txDirUnsub=null;
 let _txDirPoll=null;
@@ -2634,6 +2668,45 @@ let _txDirPrevActive={};
 // Overlay del barrido — vive en document.body, independiente del innerHTML del widget.
 // Así los re-renders del widget (sync cada 5s) no lo reinician.
 let _txBarridoEl=null;
+// Video de fondo del break timer — también persiste fuera del innerHTML para no reiniciar.
+let _btVideoEl=null;
+let _btVideoIdx=0;
+let _btVideoSrcsKey='';
+function _btVideoSetup(videos){
+  if(!videos||!videos.length){_btVideoTeardown();return;}
+  const key=JSON.stringify(videos);
+  if(!_btVideoEl){
+    _btVideoEl=document.createElement('video');
+    _btVideoEl.style.cssText='position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;pointer-events:none;';
+    _btVideoEl.muted=true;
+    _btVideoEl.playsInline=true;
+    _btVideoEl.autoplay=true;
+    document.body.appendChild(_btVideoEl);
+    _btVideoIdx=0;
+    _btVideoSrcsKey='';
+  }
+  if(_btVideoSrcsKey!==key){
+    _btVideoSrcsKey=key;
+    _btVideoIdx=0;
+    _btVideoEl.src=videos[0];
+    _btVideoEl.onended=function(){
+      _btVideoIdx=(_btVideoIdx+1)%videos.length;
+      _btVideoEl.src=videos[_btVideoIdx];
+      _btVideoEl.play().catch(()=>{});
+    };
+    _btVideoEl.play().catch(()=>{});
+  }
+}
+function _btVideoTeardown(){
+  if(_btVideoEl){
+    _btVideoEl.pause();
+    _btVideoEl.onended=null;
+    if(_btVideoEl.parentNode)_btVideoEl.parentNode.removeChild(_btVideoEl);
+    _btVideoEl=null;
+  }
+  _btVideoIdx=0;
+  _btVideoSrcsKey='';
+}
 function _startBarrido(dir){
   if(_txBarridoEl&&_txBarridoEl.parentNode)_txBarridoEl.parentNode.removeChild(_txBarridoEl);
   _txBarridoEl=document.createElement('div');
@@ -2743,7 +2816,7 @@ function renderTxDirector(container){
     +'|'+DATA.lift+'|'+DATA.round+'|'+DATA.flight
     +'|'+(_txDirState.leaderboard?.cat||'')+'|'+(_txDirState.slam?.type||'')
     +'|'+(_txDirState.profile?.until||0)+'|'+(_txDirState.scoreboard?.until||0)+'|'+(_txDirState.leaderboard?.until||0)+'|'+(_txDirState.slam?.until||0)
-    +'|bt-'+(bt.startedAt||0)+'-'+(bt.durationSec||0)+'-'+(bt.pausedAt||0)+'-'+(bt.label||'')
+    +'|bt-'+(bt.startedAt||0)+'-'+(bt.durationSec||0)+'-'+(bt.pausedAt||0)+'-'+(bt.label||'')+'-'+(bt.videos||[]).length
     +'|sc-'+(_txDirState.profile?.scale||1)+'-'+(_txDirState.scoreboard?.scale||1)+'-'+(_txDirState.leaderboard?.scale||1)+'-'+(_txDirState.timer?.scale||1)+'-'+(_txDirState.slam?.scale||1)+'-'+(_txDirState.breakTimer?.scale||1)
     +'|col-'+JSON.stringify(_txDirState.colors||{});
   if(sig===_txDirLastSig){
@@ -2784,6 +2857,14 @@ function renderTxDirector(container){
   const animBt=_txAnimActive('breakTimer');
   // Mantener body opaco mientras un fullscreen esté activo O en transición
   document.body.classList.toggle('tx-opaque', showLb||showProf||showBreak||(animProf&&animProf.dir==='out')||(animLb&&animLb.dir==='out')||(animBt&&animBt.dir==='out'));
+  // Video de fondo del break timer (persiste independiente del innerHTML)
+  if(showBreak){
+    const bvids=bt.videos||[];
+    if(bvids.length)_btVideoSetup(bvids); else _btVideoTeardown();
+  } else if(!(animBt&&animBt.dir==='out')){
+    // Solo limpiar cuando la animación de salida ya terminó también
+    _btVideoTeardown();
+  }
   let html='';
   // (el barrido/curtain vive en document.body como overlay independiente — ver _startBarrido)
   // Break timer (fullscreen, prioridad alta)
@@ -2862,9 +2943,12 @@ function _renderTxBreakTimer(bt,scale){
   const pausedBadge=bt.pausedAt?'<div style="margin-top:18px;display:inline-block;padding:6px 18px;background:rgba(245,158,11,.18);border:2px solid #f59e0b;border-radius:8px;font-family:Oswald;font-size:18px;letter-spacing:6px;color:#f59e0b">⏸ PAUSADO</div>':'';
   const sc=scale||1;
   const tx=sc!==1?'transform:scale('+sc+');transform-origin:center center;':'';
-  return '<div style="position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;'+tx+'">'
-    +'<div style="font-family:Oswald,sans-serif;font-size:clamp(28px,4vw,56px);letter-spacing:12px;color:#D4A843;margin-bottom:20px;animation:txFade .6s ease backwards">'+labelText+'</div>'
-    +'<div id="dirBreakDisplay" style="font-family:Oswald,sans-serif;font-size:clamp(160px,22vw,340px);font-weight:900;color:'+color+';line-height:.95;letter-spacing:6px;text-shadow:0 8px 40px rgba(0,0,0,.85);-webkit-text-stroke:3px rgba(0,0,0,.35)">'+txt+'</div>'
+  const hasVideo=(bt.videos||[]).length>0;
+  // Overlay oscuro para legibilidad sobre el video
+  const bgStyle=hasVideo?'background:linear-gradient(to bottom,rgba(0,0,0,.25) 0%,rgba(0,0,0,.55) 60%,rgba(0,0,0,.75) 100%);':'';
+  return '<div style="position:fixed;inset:0;'+bgStyle+'display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;'+tx+'">'
+    +'<div style="font-family:Oswald,sans-serif;font-size:clamp(28px,4vw,56px);letter-spacing:12px;color:#D4A843;margin-bottom:20px;animation:txFade .6s ease backwards;text-shadow:0 2px 16px rgba(0,0,0,.8)">'+labelText+'</div>'
+    +'<div id="dirBreakDisplay" style="font-family:Oswald,sans-serif;font-size:clamp(160px,22vw,340px);font-weight:900;color:'+color+';line-height:.95;letter-spacing:6px;text-shadow:0 8px 40px rgba(0,0,0,.85),0 0 60px rgba(0,0,0,.5);-webkit-text-stroke:3px rgba(0,0,0,.35)">'+txt+'</div>'
     +pausedBadge
   +'</div>';
 }
@@ -3422,7 +3506,7 @@ function _dirEnsureListener(){
   if(_dirUnsub||!fbReady||!window._fb)return;
   try{
     _dirUnsub=window._fb.onSnapshot(window._fb.doc(fbDB,'livecast_director','current'),(snap)=>{
-      const DEFAULT={profile:{active:false,until:0,scale:1},scoreboard:{active:false,until:0,scale:1},leaderboard:{active:false,until:0,cat:'',scale:1},timer:{active:false,until:0,scale:1},slam:{active:false,until:0,type:'g',scale:1},breakTimer:{active:false,startedAt:0,durationSec:0,label:'',pausedAt:0,scale:1}};
+      const DEFAULT={profile:{active:false,until:0,scale:1},scoreboard:{active:false,until:0,scale:1},leaderboard:{active:false,until:0,cat:'',scale:1},timer:{active:false,until:0,scale:1},slam:{active:false,until:0,type:'g',scale:1},breakTimer:{active:false,startedAt:0,durationSec:0,label:'',pausedAt:0,scale:1,videos:[]}};
       if(snap.exists()){
         const d=snap.data();
         _dirState=Object.assign({},DEFAULT,d.show||{});
@@ -3578,10 +3662,12 @@ window.dirBreakStart=async function(){
   const m=parseInt(document.getElementById('dirBreakMin')?.value||'0',10)||0;
   const s=parseInt(document.getElementById('dirBreakSec')?.value||'0',10)||0;
   const label=(document.getElementById('dirBreakLabel')?.value||'').trim();
+  const videosRaw=document.getElementById('dirBreakVideos')?.value||'';
+  const videos=videosRaw.split('\n').map(u=>u.trim()).filter(u=>u.startsWith('http'));
   const durationSec=m*60+s;
   if(durationSec<=0){alert('Ingresá al menos 1 segundo');return}
   if(!_dirState)_dirState={};
-  _dirState.breakTimer={active:true,startedAt:Date.now(),durationSec,label,pausedAt:0};
+  _dirState.breakTimer={active:true,startedAt:Date.now(),durationSec,label,pausedAt:0,videos};
   await _dirPush();R();
 };
 window.dirBreakPause=async function(){
@@ -3600,7 +3686,7 @@ window.dirBreakResume=async function(){
 };
 window.dirBreakHide=async function(){
   if(!_dirState)return;
-  _dirState.breakTimer={active:false,startedAt:0,durationSec:0,label:'',pausedAt:0};
+  _dirState.breakTimer={active:false,startedAt:0,durationSec:0,label:'',pausedAt:0,videos:[]};
   await _dirPush();R();
 };
 window.dirBreakAdd=async function(secs){
@@ -3793,6 +3879,13 @@ function renderDirector(){
   h+='<div><label style="font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:3px">SEG</label><input id="dirBreakSec" type="number" min="0" max="59" value="'+(bt.active?(bt.durationSec||0)%60:0)+'" style="width:70px;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:Oswald;font-size:18px;text-align:center"></div>';
   h+='<div style="flex:1;min-width:160px"><label style="font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:3px">LABEL (opcional)</label><input id="dirBreakLabel" type="text" placeholder="ej. DESCANSO, ALMUERZO, CAMBIO BARRA" value="'+(bt.label||'').replace(/"/g,'&quot;')+'" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px"></div>';
   h+='</div>';
+  // Video URLs
+  const currentVideos=(bt.videos||[]).join('\n');
+  h+='<div style="margin-top:10px">';
+  h+='<label style="font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:3px">📹 VIDEOS DE FONDO (opcional — una URL por línea)</label>';
+  h+='<textarea id="dirBreakVideos" rows="3" placeholder="https://firebasestorage.googleapis.com/.../video.mp4&#10;https://..." style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:11px;font-family:\'DM Sans\',sans-serif;resize:vertical;line-height:1.5">'+currentVideos+'</textarea>';
+  h+='<div style="font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4">URLs directas a mp4/webm (Firebase Storage, CDN, etc). Se reproducen en loop automático. El timer aparece encima del video.</div>';
+  h+='</div>';
   // Botones
   h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">';
   if(!bt.active){
@@ -3934,8 +4027,6 @@ function renderCompete(){
   h+='<div style="display:flex;gap:6px;margin-bottom:8px">'+LIFTS.map(l=>'<button onclick="DATA.lift=\''+l+'\';DATA.round=0;save();R()" class="os" style="flex:1;padding:9px 0;border-radius:8px;border:2px solid '+(DATA.lift===l?LIFT_C[l]:'var(--border)')+';background:'+(DATA.lift===l?LIFT_C[l]+'20':'transparent')+';color:'+(DATA.lift===l?LIFT_C[l]:'var(--muted)')+';font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer">'+LIFT_N[l]+'</button>').join('')+'</div>';
   h+='<div style="display:flex;gap:6px;margin-bottom:14px">'+[0,1,2].map(r=>'<button onclick="DATA.round='+r+';save();R()" class="os" style="flex:1;padding:6px 0;border-radius:6px;border:1px solid '+(DATA.round===r?'var(--gold)':'var(--border)')+';background:'+(DATA.round===r?'rgba(212,168,67,.15)':'transparent')+';color:'+(DATA.round===r?'var(--gold)':'var(--muted)')+';font-size:11px;font-weight:600;cursor:pointer">INTENTO '+(r+1)+'</button>').join('')+'</div>';
   h+='<div style="display:grid;grid-template-columns:1fr 300px;gap:14px"><div>';
-  // Timer
-  h+='<div class="card" style="padding:10px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span id="mainTimer" class="os" style="font-size:34px;font-weight:700;color:'+(DATA.timer<=10?'var(--red)':DATA.timer<=30?'var(--orange)':'var(--green)')+';min-width:65px;text-align:center">'+Math.floor(DATA.timer/60)+':'+String(DATA.timer%60).padStart(2,'0')+'</span><div style="display:flex;gap:5px"><button class="btn btn-g" onclick="startTimer()" style="padding:7px 10px;font-size:10px" '+(DATA.timerOn?'disabled':'')+'>&#9654;</button><button class="btn" onclick="pauseTimer()" style="padding:7px 10px;font-size:10px;background:var(--gold);color:#fff">&#9208;</button><button class="btn btn-o" onclick="resetTimer()" style="padding:7px 10px;font-size:10px">\u21BA</button></div></div>';
   if(cur){
     // Info compacta del atleta actual (sin botones grandes - los GOOD/NO LIFT estan en la tabla)
     h+='<div class="card" style="border-left:4px solid '+LIFT_C[DATA.lift]+';margin-bottom:10px;padding:10px 14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:0"><div class="os" style="font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+cur.name+'</div><div style="font-size:10px;color:var(--muted)">'+cur.club+' \u00b7 '+cur.bw+'kg \u00b7 '+cur.div+' \u00b7 '+cur.cat+' \u00b7 pr\u00f3ximo: <strong style="color:'+LIFT_C[DATA.lift]+'">'+(cw||'\u2014')+'kg</strong></div></div><div style="display:flex;gap:6px;align-items:center">'+(rack?'<span style="background:var(--bg);border:1px solid var(--border);padding:3px 8px;border-radius:5px;font-size:10px">\uD83D\uDD27 '+rack+'</span>':'')+'<span class="flight-badge" style="background:'+(FL_C[cur.flight]||'#666')+'">'+cur.flight+'</span><span style="background:'+LIFT_C[DATA.lift]+';color:#fff;padding:3px 10px;border-radius:5px;font-family:Oswald;font-weight:700;font-size:12px">'+LIFT_S[DATA.lift]+(DATA.round+1)+'</span></div></div></div>';
@@ -4253,7 +4344,6 @@ function renderSB(){
   const cw=cur?cur.att[DATA.lift][DATA.round].w:0;
   let h='<div class="sb-wrap"><div class="sb-top"><div class="os" style="font-size:22px;font-weight:700;letter-spacing:3px">FECHIPO LIVECAST</div><div class="os" style="font-size:15px">'+(DATA.event?.short||'')+'</div><div style="display:flex;gap:6px;align-items:center"><span class="os" style="font-size:13px;background:'+LIFT_C[DATA.lift]+';padding:3px 14px;border-radius:5px;font-weight:700">VLO '+DATA.flight+' \u2014 '+LIFT_N[DATA.lift]+' \u2014 INT '+(DATA.round+1)+'</span><button onclick="go(\'compete\')" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:10px;font-family:Oswald">\u2699</button></div></div><div class="sb-body"><div style="display:flex;flex-direction:column;justify-content:center;align-items:center;padding:30px">';
   if(cur){
-    h+='<div id="sbTimer" class="os" style="font-size:60px;font-weight:700;color:var(--green);margin-bottom:16px">'+(DATA.timerOn?Math.floor(DATA.timer/60)+':'+String(DATA.timer%60).padStart(2,'0'):'')+'</div>';
     h+='<div class="os" style="font-size:clamp(28px,5vw,48px);font-weight:700;letter-spacing:2px;text-align:center;margin-bottom:6px">'+cur.name+'</div>';
     h+='<div style="color:var(--muted);font-size:14px;margin-bottom:20px">'+cur.club+' \u00b7 '+cur.bw+'kg \u00b7 '+cur.div+' \u00b7 '+cur.cat+(rack?' \u00b7 \uD83D\uDD27 '+rack:'')+'</div>';
     h+='<div class="os" style="font-size:70px;font-weight:700;color:'+LIFT_C[DATA.lift]+';letter-spacing:4px">'+(cw||'\u2014')+' <span style="font-size:30px;color:var(--muted)">KG</span></div>';
@@ -4446,7 +4536,6 @@ function txEnVivo(cur,evName){
   h+='</div></div>';
   // Content
   h+='<div style="background:rgba(8,18,36,.88);border:1px solid rgba(80,120,180,.35);border-top:none;border-radius:0 0 12px 12px;padding:12px 18px;display:flex;flex-direction:column;align-items:center;gap:8px">';
-  h+='<div id="txTimerPanel" style="font-family:Oswald;font-size:44px;font-weight:700;color:'+timerColor+';letter-spacing:3px;line-height:1">'+timerTx+'</div>';
   h+='<div style="display:flex;gap:16px;align-items:flex-end">';
   const jlNames={izq:'IZQ',central:'CTR',der:'DER'};
   ['izq','central','der'].forEach(j=>{
@@ -4492,7 +4581,6 @@ function txMarcadorIPF(cur,evName){
     const simRanked=sameCat.map(a=>{if(a.id===cur.id)return{id:a.id,sub:newSub};return{id:a.id,sub:subTotal(a,DATA.lift)}}).filter(x=>x.sub>0).sort((a,b)=>b.sub-a.sub);
     simPos=simRanked.findIndex(x=>x.id===cur.id)+1;}
   const parts=cur.name.split(' ');const lastName=parts.length>2?parts.slice(-2).join(' '):parts[parts.length-1];const firstName=parts.length>2?parts.slice(0,-2).join(' '):parts.slice(0,-1).join(' ');
-  const timerStr=DATA.timerOn?String(Math.floor(DATA.timer/60)).padStart(2,'0')+':'+String(DATA.timer%60).padStart(2,'0'):'';
   const divShort=(cur.div||'').replace('Sub Junior','SJR').replace('Junior','JR').replace('Open','OPN').replace('Master I','M1').replace('Master II','M2').replace('Master III','M3').replace('Master IV','M4');
   const catDiv=(cur.cat?'-'+cur.cat+'kg ':'')+divShort;
   const rankStr=rk.pos?(simPos&&simPos!==rk.pos?rk.pos+' to '+simPos:'to '+rk.pos):'-';
@@ -4500,7 +4588,7 @@ function txMarcadorIPF(cur,evName){
   h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 18px;background:linear-gradient(90deg,rgba(45,65,100,.92),rgba(50,72,110,.88));border-radius:5px 5px 0 0">';
   h+='<div style="font-family:Oswald;font-size:13px;color:rgba(200,215,240,.7);letter-spacing:1px">'+catDiv+'</div>';
   h+='<div style="font-family:Oswald;font-size:16px;color:#fff;letter-spacing:2px">RANK <span style="font-weight:700;color:#d4a843">'+rankStr+'</span></div>';
-  h+='<div id="txTimer" style="font-family:Oswald;font-size:20px;font-weight:700;color:'+(DATA.timer<=10&&DATA.timerOn?'#ef4444':'#fff')+';letter-spacing:2px;min-width:55px;text-align:right">'+timerStr+'</div></div>';
+  h+='</div>';
   h+='<div style="display:flex;align-items:center;padding:6px 18px;background:linear-gradient(90deg,rgba(25,42,72,.95),rgba(30,48,80,.95));gap:12px">';
   h+='<div style="background:linear-gradient(135deg,rgba(50,75,120,.9),rgba(40,62,100,.9));padding:4px 10px;border-radius:4px;border:1px solid rgba(80,120,180,.3);min-width:70px;text-align:center"><div style="font-family:Oswald;font-size:10px;font-weight:700;color:rgba(200,215,240,.8);letter-spacing:.5px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(cur.club||'—')+'</div></div>';
   h+='<div style="flex:1">';
@@ -4607,14 +4695,13 @@ function txMarcador(cur,evName){
   const parts=cur.name.split(' ');
   const lastName=parts.length>2?parts.slice(-2).join(' '):parts[parts.length-1];
   const firstName=parts.length>2?parts.slice(0,-2).join(' '):parts.slice(0,-1).join(' ');
-  const timerStr=DATA.timerOn?String(Math.floor(DATA.timer/60)).padStart(2,'0')+':'+String(DATA.timer%60).padStart(2,'0'):'';
   const divShort=(cur.div||'').replace('Sub Junior','SJR').replace('Junior','JR').replace('Open','OPN').replace('Master I','M1').replace('Master II','M2').replace('Master III','M3').replace('Master IV','M4');
   const catDiv=(cur.cat?'-'+cur.cat+'kg ':'')+divShort;
   h+='<div style="margin:0 30px 50px;max-width:760px">';
   h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 18px;background:linear-gradient(90deg,rgba(30,50,85,.94),rgba(35,55,95,.94));border-radius:7px 7px 0 0;border-bottom:1px solid rgba(80,120,180,.25)">';
   h+='<div style="font-family:Oswald;font-size:14px;color:rgba(180,200,230,.75);letter-spacing:1px">'+catDiv+'</div>';
   h+='<div style="font-family:Oswald;font-size:17px;color:#fff;letter-spacing:2px">RANK <span style="font-weight:700;color:#d4a843">'+(rk.pos||'')+'</span> <span style="color:rgba(180,200,230,.45)">de '+rk.of+'</span></div>';
-  h+='<div id="txTimer" style="font-family:Oswald;font-size:22px;font-weight:700;color:'+(DATA.timer<=10&&DATA.timerOn?'#ef4444':'#fff')+';letter-spacing:2px;min-width:60px;text-align:right">'+timerStr+'</div></div>';
+  h+='</div>';
   h+='<div style="display:flex;align-items:center;padding:8px 18px;background:linear-gradient(90deg,rgba(22,40,72,.96),rgba(28,46,80,.96));gap:14px">';
   h+='<div style="background:rgba(40,65,110,.8);padding:5px 10px;border-radius:4px;min-width:75px;text-align:center;border:1px solid rgba(70,110,170,.3)"><div style="font-family:Oswald;font-size:10px;color:rgba(180,200,230,.7);letter-spacing:.5px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(cur.club||'—')+'</div></div>';
   h+='<div style="flex:1">';

@@ -3467,7 +3467,11 @@ function renderFotos(){
       h += '</div>';
     }
     h += '<input type="file" id="fotoInput" accept="image/*" onchange="cargarFotoAtleta(this)" style="display:none">';
-    h += '<button onclick="document.getElementById(\'fotoInput\').click()" style="padding:12px 20px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600">📁 Elegir otra foto</button>';
+    h += '<input type="file" id="fotoInputRaw" accept="image/*" onchange="cargarFotoAtletaSinFondo(this)" style="display:none">';
+    h += '<div style="display:flex;gap:8px;flex-wrap:wrap">';
+    h += '<button onclick="document.getElementById(\'fotoInput\').click()" style="flex:1;padding:12px 16px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600">🪄 Elegir foto (quitar fondo)</button>';
+    h += '<button onclick="document.getElementById(\'fotoInputRaw\').click()" style="flex:1;padding:12px 16px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:13px;font-weight:600" title="Sube la foto tal cual, sin modificar. Ideal para fotos con fondo negro o diseño propio.">⚡ Sin procesar (tal cual)</button>';
+    h += '</div>';
     if(F.preview){
       h += '<div style="margin-top:12px"><div style="font-size:10px;color:var(--muted);margin-bottom:4px">PREVIEW (con fondo blanco — ajustá si hace falta)</div>';
       h += '<img id="fotoPreviewImg" src="'+F.preview+'" style="width:100%;max-width:300px;aspect-ratio:3/4;object-fit:cover;background:#fff;border-radius:8px;border:2px solid var(--green)"></div>';
@@ -3620,26 +3624,25 @@ function renderFotos(){
       h += '<button onclick="gifEditorMove(0,5)"  style="padding:8px;background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:4px;cursor:pointer">↓</button>';
       h += '<div></div>';
       h += '</div></div>';
-      // Trim
+      // ── Timeline Trimmer ─────────────────────────────────
       h += '<div>';
-      h += '<div style="font-size:11px;color:var(--muted);margin-bottom:6px">Recorte (segundos)</div>';
-      h += '<div style="display:flex;gap:8px;align-items:flex-end">';
-      h += '<div style="flex:1"><label style="font-size:9px;color:var(--muted);display:block;margin-bottom:3px;letter-spacing:1px">INICIO</label>';
-      h += '<input type="number" min="0" step="0.1" value="'+(E.startTime||0)+'" onchange="gifEditorSetStart(this.value)" style="width:100%;padding:7px 6px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:Oswald;font-size:14px;text-align:center"></div>';
-      h += '<span style="color:var(--muted);font-size:18px;margin-bottom:7px">→</span>';
-      h += '<div style="flex:1"><label style="font-size:9px;color:var(--muted);display:block;margin-bottom:3px;letter-spacing:1px">FIN</label>';
-      h += '<input type="number" min="0" step="0.1" value="'+(E.endTime!=null?E.endTime:'')+'" placeholder="final" onchange="gifEditorSetEnd(this.value)" style="width:100%;padding:7px 6px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:Oswald;font-size:14px;text-align:center"></div>';
-      h += '</div>';
-      h += '<div style="font-size:9px;color:var(--muted);margin-top:3px">Dejá "Fin" vacío para usar todo el video</div>';
-      h += '</div>';
-      // Save
-      // IA background removal
-      h += '<div style="padding-top:10px;border-top:1px solid rgba(139,92,246,.25)">';
-      h += '<button onclick="quitarFondoGif()" id="gifAIBtn" style="padding:11px;background:linear-gradient(135deg,rgba(139,92,246,.9),rgba(59,130,246,.9));color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;font-family:Oswald;letter-spacing:1px;width:100%;margin-bottom:6px">🪄 QUITAR FONDO CON IA</button>';
-      h += '<div style="font-size:9px;color:var(--muted);line-height:1.5;margin-bottom:6px">Procesa cada frame con IA (igual que las fotos). Genera un WebM con fondo transparente. Toma ~1-3 min según la duración.</div>';
-      h += '<div id="gifAIStatus" style="display:none;padding:8px;background:rgba(139,92,246,.1);border-left:3px solid #a78bfa;font-size:11px;color:#a78bfa;border-radius:4px;margin-bottom:6px"></div>';
-      h += '<div id="gifAIProgress" style="display:none;height:6px;background:rgba(139,92,246,.2);border-radius:3px;overflow:hidden;margin-bottom:6px"><div id="gifAIProgressBar" style="height:100%;background:linear-gradient(90deg,#a78bfa,#3b82f6);border-radius:3px;width:0%;transition:width .3s"></div></div>';
-      h += '</div>';
+      h += '<div style="font-size:11px;color:var(--muted);margin-bottom:10px;font-weight:700;letter-spacing:1px">✂️ RECORTE</div>';
+      h += '<div id="gifTimeline" style="position:relative;height:52px;margin:0 10px;cursor:pointer;touch-action:none">';
+      // track fondo
+      h += '<div style="position:absolute;top:50%;left:0;right:0;height:12px;transform:translateY(-50%);background:rgba(255,255,255,.07);border-radius:6px"></div>';
+      // región seleccionada
+      h += '<div id="gifTrimRegion" style="position:absolute;top:50%;height:12px;transform:translateY(-50%);background:rgba(212,168,67,.35);border:2px solid #D4A843;border-radius:4px;pointer-events:none;box-sizing:border-box"></div>';
+      // playhead
+      h += '<div id="gifPlayhead" style="position:absolute;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.85);border-radius:1px;pointer-events:none;transform:translateX(-50%)"></div>';
+      // handle izquierdo
+      h += '<div id="gifTrimLeft" style="position:absolute;top:50%;width:20px;height:44px;transform:translate(-50%,-50%);background:#D4A843;border-radius:5px;cursor:ew-resize;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.6);z-index:3;touch-action:none">';
+      h += '<span style="color:#000;font-size:8px;font-weight:900;letter-spacing:-2px">|||</span></div>';
+      // handle derecho
+      h += '<div id="gifTrimRight" style="position:absolute;top:50%;width:20px;height:44px;transform:translate(-50%,-50%);background:#D4A843;border-radius:5px;cursor:ew-resize;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.6);z-index:3;touch-action:none">';
+      h += '<span style="color:#000;font-size:8px;font-weight:900;letter-spacing:-2px">|||</span></div>';
+      h += '</div>'; // timeline
+      h += '<div id="gifTrimLabels" style="font-size:10px;text-align:center;margin-top:8px;font-family:Oswald;letter-spacing:1px;color:var(--muted)">cargando...</div>';
+      h += '</div>'; // trim section
       h += '<button onclick="guardarAjustesGif()" style="padding:11px;background:rgba(139,92,246,.9);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;font-family:Oswald;letter-spacing:1px;width:100%">💾 GUARDAR AJUSTES</button>';
       h += '</div>'; // controls
       h += '</div>'; // grid editor
@@ -3872,6 +3875,38 @@ window.cargarFotoAtleta = async function(input){
   }
 };
 
+// Sube la foto sin ningún procesamiento — tal cual, sin quitar fondo ni canvas blanco
+window.cargarFotoAtletaSinFondo = async function(input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const F = window._fotosState;
+  F.file = file;
+  F.status = 'Cargando imagen...';
+  F.error = '';
+  F.preview = null;
+  F.bgRemovedImg = null;
+  F.processing = true;
+  render();
+  try{
+    // Leer como data URL directamente — sin canvas, sin fondo blanco, sin imgly
+    const dataUrl = await new Promise((res,rej)=>{
+      const reader = new FileReader();
+      reader.onload = e => res(e.target.result);
+      reader.onerror = rej;
+      reader.readAsDataURL(file);
+    });
+    F.preview = dataUrl;
+    F.status = '✓ Lista para subir (foto sin modificar).';
+    F.processing = false;
+    render();
+  }catch(e){
+    F.error = 'Error cargando imagen: '+e.message;
+    F.processing = false;
+    F.status = '';
+    render();
+  }
+};
+
 window.guardarFotoAtleta = async function(){
   const F = window._fotosState;
   if(!F.preview || !F.selected) return;
@@ -4009,7 +4044,93 @@ window.gifEditorOnMeta = function(vid){
   const el = document.getElementById('gifDuration');
   if(el) el.textContent = 'Duración: '+dur.toFixed(2)+'s';
   vid.currentTime = F.gifEditor?.startTime || 0;
+  _setupGifTimeline();
 };
+
+// ── Timeline trimmer estilo reels ────────────────────────────────
+let _gifTimelineCleanup = null;
+function _setupGifTimeline(){
+  if(_gifTimelineCleanup){ _gifTimelineCleanup(); _gifTimelineCleanup=null; }
+  const tl   = document.getElementById('gifTimeline');
+  const lh   = document.getElementById('gifTrimLeft');
+  const rh   = document.getElementById('gifTrimRight');
+  const vid  = document.getElementById('gifPreviewVid');
+  if(!tl || !lh || !rh || !vid) return;
+
+  function E(){ return window._fotosState?.gifEditor; }
+  function dur(){ return E()?.duration || vid.duration || 1; }
+
+  function pctFromClientX(cx){
+    const r = tl.getBoundingClientRect();
+    return Math.max(0, Math.min(1, (cx - r.left) / r.width));
+  }
+
+  function refreshUI(){
+    const e=E(); if(!e) return;
+    const d=dur();
+    const s=e.startTime||0;
+    const en=e.endTime!=null?e.endTime:d;
+    const lp=(s/d*100).toFixed(3)+'%';
+    const rp=(en/d*100).toFixed(3)+'%';
+    lh.style.left=lp; rh.style.left=rp;
+    const reg=document.getElementById('gifTrimRegion');
+    if(reg){ reg.style.left=lp; reg.style.width=((en-s)/d*100).toFixed(3)+'%'; }
+    const lbl=document.getElementById('gifTrimLabels');
+    if(lbl){
+      const len=(en-s).toFixed(2);
+      lbl.innerHTML='<span style="color:#D4A843">'+s.toFixed(2)+'s</span>'
+        +' <span style="color:var(--muted)">→</span> '
+        +'<span style="color:#D4A843">'+en.toFixed(2)+'s</span>'
+        +' <span style="color:var(--muted);font-size:9px">('+len+'s seleccionados)</span>';
+    }
+  }
+
+  // Playhead mientras reproduce
+  vid.ontimeupdate=function(){
+    const d=dur();
+    const ph=document.getElementById('gifPlayhead');
+    if(ph) ph.style.left=(vid.currentTime/d*100).toFixed(3)+'%';
+    const e=E();
+    if(e){ const end=e.endTime!=null?e.endTime:Infinity; if(vid.currentTime>=end) vid.currentTime=e.startTime||0; }
+  };
+
+  // Click en la barra para saltar
+  tl.addEventListener('click', function(ev){
+    if(window._gifTlDrag) return;
+    vid.currentTime = pctFromClientX(ev.clientX) * dur();
+  });
+
+  // Drag con Pointer Events (mouse + touch)
+  function startDrag(which, ev){
+    ev.preventDefault(); ev.stopPropagation();
+    window._gifTlDrag = which;
+    ev.currentTarget.setPointerCapture(ev.pointerId);
+  }
+  function onMove(ev){
+    if(!window._gifTlDrag) return;
+    const t = pctFromClientX(ev.clientX) * dur();
+    const e = E(); if(!e) return;
+    const d = dur();
+    if(window._gifTlDrag==='left'){
+      e.startTime = Math.max(0, Math.min(t, (e.endTime!=null?e.endTime:d)-0.05));
+      vid.currentTime = e.startTime;
+    } else {
+      e.endTime = Math.min(d, Math.max(t, (e.startTime||0)+0.05));
+    }
+    refreshUI();
+  }
+  function endDrag(){ window._gifTlDrag=null; }
+
+  lh.addEventListener('pointerdown', ev=>startDrag('left',ev));
+  rh.addEventListener('pointerdown', ev=>startDrag('right',ev));
+  lh.addEventListener('pointermove', onMove);
+  rh.addEventListener('pointermove', onMove);
+  lh.addEventListener('pointerup', endDrag);
+  rh.addEventListener('pointerup', endDrag);
+
+  refreshUI();
+  _gifTimelineCleanup = ()=>{ window._gifTlDrag=null; };
+}
 
 window.quitarFondoGif = async function(){
   const F = window._fotosState;
