@@ -57,7 +57,7 @@ service cloud.firestore {
                     && request.resource.data.nombre.size() > 2
                     && request.resource.data.rut is string
                     && request.resource.data.evento is string
-                    && !request.resource.data.keys().hasAny(['pin','carnetURL','wadeURL'])
+                    && !request.resource.data.keys().hasAny(['pin','carnetURL','wadeURL','carnetPhotoURL'])
                   );
       allow update, delete: if isAdmin();
     }
@@ -68,7 +68,9 @@ service cloud.firestore {
     //    El ID debe coincidir con el de inscripciones/{id} (mismo evento_rut).
     match /inscripciones_private/{id} {
       allow read: if isAdmin();
-      allow create: if request.resource.data.keys().hasOnly(['pin','carnetURL','wadeURL','ts'])
+      // Crear: solo campos permitidos (pin obligatorio, URLs opcionales).
+      // Se permite carnetPhotoURL para la foto tipo carnet IPF (modalidades nuevas).
+      allow create: if request.resource.data.keys().hasOnly(['pin','carnetURL','wadeURL','carnetPhotoURL','ts'])
                     && request.resource.data.pin is string
                     && request.resource.data.pin.size() == 4;
       allow update, delete: if isAdmin();
@@ -151,6 +153,51 @@ service cloud.firestore {
     match /livecast_director/{id} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    // ── Fotos de perfil de atletas (procesadas con fondo blanco) ────
+    // Las URLs apuntan a Storage. Se mantienen aparte de data.json para
+    // que el admin pueda actualizar fotos sin re-deployar el sitio.
+    // Lectura pública (atleta.html, ranking.html, livecast.html las leen).
+    // Escritura solo admin.
+    match /atleta_fotos/{codigo} {
+      allow read: if true;
+      allow write, delete: if isAdmin();
+    }
+
+    // ── Resultados oficiales de competencias (cerradas) ──────────────
+    // Cada doc representa un atleta en una competencia (1 doc por modalidad
+    // si compite en classic+bench combinado).
+    // Doc ID: {eventoId}_{atletaCodigo}_{view: meet|bench}
+    // Estos resultados se publican en atleta.html y ranking.html en vivo.
+    // Lectura pública. Escritura solo admin (botón "Cerrar competencia").
+    match /competition_results/{docId} {
+      allow read: if true;
+      allow write, delete: if isAdmin();
+    }
+
+    // ── atletas_pending: debutantes que se inscribieron pero aún no
+    //    están en data.json. Se crea desde inscripcion.html al momento
+    //    del submit (público controlado) y desde admin al crear perfil
+    //    manual. Lectura pública para atleta.html y livecast.html.
+    //    El admin puede leer, escribir y marcar como incorporados.
+    match /atletas_pending/{rut} {
+      allow read: if true;
+      allow create: if isAdmin() || (
+                       request.resource.data.keys().hasAll(['nombre','rut','codigo','sexo','debut'])
+                    && request.resource.data.nombre is string
+                    && request.resource.data.nombre.size() > 2
+                    && request.resource.data.rut is string
+                    );
+      allow update, delete: if isAdmin();
+    }
+
+    // ── atleta_achievements: logros/medallas de atletas ─────────────
+    // Lectura pública (atleta.html los muestra en el perfil).
+    // Escritura solo admin (superadmin/owner agrega o quita desde panel).
+    match /atleta_achievements/{codigo} {
+      allow read: if true;
+      allow write, delete: if isAdmin();
     }
 
     // ── Default deny ────────────────────────────────────────────────
