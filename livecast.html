@@ -212,9 +212,11 @@ async function initFB(){
     const{initializeApp}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
     const fb=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
     const authMod=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const storageMod=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js');
     const app=initializeApp(FB_CFG);fbDB=fb.getFirestore(app);
     fbAuth=authMod.getAuth(app);
     window._fb=fb;window._fbAuth=authMod;fbReady=true;
+    window._fbSt=storageMod;window._fbStInst=storageMod.getStorage(app);
     _setupFotoListener(); // in case data.json already loaded before Firebase was ready
     // Keep LIVE_EVENTS in sync with Firestore eventos
     fb.onSnapshot(fb.collection(fbDB,'eventos'),(snap)=>{
@@ -3604,6 +3606,51 @@ if(_obsWsSettings.autoConnect){
 let _dirState=null;
 let _dirUnsub=null;
 let _dirBtDrag=null; // drag state para el editor visual del break timer
+// ── Video picker: lista dinámica desde Firebase Storage videos/break/ ──
+let _dirBtVideoList=null; // null=no cargado aún, []=cargado vacío, [{name,url},...]=ok
+let _dirBtVideoUploading=false;
+async function _dirLoadBtVideos(){
+  if(!window._fbSt||!window._fbStInst){alert('Storage no disponible todavía, esperá un momento');return;}
+  try{
+    const {ref,listAll,getDownloadURL}=window._fbSt;
+    const r=ref(window._fbStInst,'videos/break');
+    const res=await listAll(r);
+    const items=await Promise.all(res.items.map(item=>getDownloadURL(item).then(url=>({name:item.name,url}))));
+    _dirBtVideoList=items.sort((a,b)=>a.name.localeCompare(b.name));
+    R();
+  }catch(e){console.error('listAll error',e);alert('Error listando videos: '+e.message);}
+}
+window.dirBtLoadVideos=function(){_dirLoadBtVideos();};
+window.dirBtUploadVideo=async function(){
+  if(_dirBtVideoUploading)return;
+  const inp=document.createElement('input');inp.type='file';inp.accept='video/mp4,video/webm,video/mov,.mp4,.webm,.mov';inp.multiple=true;
+  inp.onchange=async()=>{
+    if(!inp.files||!inp.files.length)return;
+    if(!window._fbSt||!window._fbStInst){alert('Storage no disponible');return;}
+    _dirBtVideoUploading=true;R();
+    const {ref,uploadBytes}=window._fbSt;
+    const errs=[];
+    for(const f of inp.files){
+      try{
+        const r=ref(window._fbStInst,'videos/break/'+f.name);
+        await uploadBytes(r,f,{contentType:f.type||'video/mp4'});
+      }catch(e){errs.push(f.name+': '+e.message);}
+    }
+    _dirBtVideoUploading=false;
+    if(errs.length)alert('Errores:\n'+errs.join('\n'));
+    await _dirLoadBtVideos(); // refresh list
+  };
+  inp.click();
+};
+window.dirBtDeleteVideo=async function(name){
+  if(!confirm('¿Eliminar '+name+'?'))return;
+  if(!window._fbSt||!window._fbStInst)return;
+  try{
+    const {ref,deleteObject}=window._fbSt;
+    await deleteObject(ref(window._fbStInst,'videos/break/'+name));
+    await _dirLoadBtVideos();
+  }catch(e){alert('Error al eliminar: '+e.message);}
+};
 function _dirEnsureListener(){
   if(_dirUnsub||!fbReady||!window._fb)return;
   try{
@@ -3765,13 +3812,8 @@ window.dirBreakStart=async function(){
   const s=parseInt(document.getElementById('dirBreakSec')?.value||'0',10)||0;
   const label=(document.getElementById('dirBreakLabel')?.value||'').trim();
   const movement=(document.getElementById('dirBreakMovement')?.value||'').trim();
-  // Videos de fondo — hardcodeados, toggle on/off desde el panel
-  const useVideo=document.getElementById('dirBreakUseVideo')?.checked!==false;
-  // Solo videos de videos_recortados (clip01, clip02, ...)
-  const BREAK_VIDEOS=[
-    'https://firebasestorage.googleapis.com/v0/b/fechipo-db-13148.firebasestorage.app/o/videos%2Fbreak%2Fclip01.mp4?alt=media',
-  ];
-  const videos=useVideo?BREAK_VIDEOS:[];
+  // Videos seleccionados en la lista dinámica
+  const videos=(_dirBtVideoList||[]).filter((_,i)=>document.getElementById('dirBtVid_'+i)?.checked).map(v=>v.url);
   const durationSec=m*60+s;
   if(durationSec<=0){alert('Ingresá al menos 1 segundo');return}
   if(!_dirState)_dirState={};
@@ -4060,14 +4102,36 @@ function renderDirector(){
   h+='</div>';
   h+='<input type="hidden" id="dirBreakMovement" value="'+(bt.movement||'')+'">';
   h+='</div>';
-  // Toggle video de fondo
-  const videoOn=(bt.videos||[]).length>0;
-  h+='<div style="margin-top:10px;display:flex;align-items:center;gap:10px">';
-  h+='<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--text)">';
-  h+='<input type="checkbox" id="dirBreakUseVideo" '+(videoOn||!bt.active?'checked':'')+' style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">';
-  h+='<span>🎬 Video de fondo</span>';
-  h+='</label>';
-  h+='<span style="font-size:10px;color:var(--muted)">(videos en loop)</span>';
+  // ── Selector de videos dinámico ──────────────────────────────
+  h+='<div style="margin-top:10px;border:1px solid var(--border);border-radius:8px;overflow:hidden">';
+  h+='<div style="padding:8px 12px;background:var(--card);display:flex;align-items:center;justify-content:space-between;gap:8px">';
+  h+='<span style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text)">🎬 VIDEOS DE FONDO</span>';
+  h+='<div style="display:flex;gap:6px">';
+  if(_dirBtVideoUploading){
+    h+='<span style="font-size:10px;color:var(--muted);padding:4px 10px">⏳ Subiendo...</span>';
+  } else {
+    h+='<button onclick="window.dirBtUploadVideo()" style="padding:4px 10px;border-radius:5px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:10px;font-family:Oswald;letter-spacing:1px;cursor:pointer">⬆ SUBIR</button>';
+  }
+  h+='<button onclick="window.dirBtLoadVideos()" style="padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:10px;font-family:Oswald;letter-spacing:1px;cursor:pointer">🔄 CARGAR</button>';
+  h+='</div></div>';
+  if(_dirBtVideoList===null){
+    h+='<div style="padding:10px 12px;font-size:11px;color:var(--muted)">Hacé clic en 🔄 CARGAR para ver los videos disponibles.</div>';
+  } else if(_dirBtVideoList.length===0){
+    h+='<div style="padding:10px 12px;font-size:11px;color:var(--muted)">No hay videos en storage. Subí uno con ⬆ SUBIR.</div>';
+  } else {
+    h+='<div style="padding:8px 12px;display:flex;flex-direction:column;gap:6px">';
+    const activeUrls=new Set(bt.videos||[]);
+    _dirBtVideoList.forEach((v,i)=>{
+      const checked=activeUrls.has(v.url)||(!bt.active&&i===0&&_dirBtVideoList.length>0);
+      const fname=v.name.replace(/\.[^.]+$/,''); // sin extensión
+      h+='<div style="display:flex;align-items:center;gap:8px">';
+      h+='<input type="checkbox" id="dirBtVid_'+i+'" '+(checked?'checked':'')+' style="width:14px;height:14px;accent-color:var(--accent);cursor:pointer;flex-shrink:0">';
+      h+='<label for="dirBtVid_'+i+'" style="font-size:11px;color:var(--text);cursor:pointer;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+v.name+'">'+fname+'</label>';
+      h+='<button onclick="window.dirBtDeleteVideo(\''+v.name.replace(/'/g,"\\'")+'\')" title="Eliminar" style="padding:2px 7px;border-radius:4px;border:1px solid rgba(239,68,68,.4);background:transparent;color:#ef4444;font-size:10px;cursor:pointer;flex-shrink:0">🗑</button>';
+      h+='</div>';
+    });
+    h+='</div>';
+  }
   h+='</div>';
   // ── Editor visual de layout ──────────────────────────────────────────────
   const stl=bt.style||{};
