@@ -253,19 +253,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 215,
-          "bp": 160,
-          "dl": 210,
-          "total": 585,
-          "pesoCorporal": 101.25,
-          "categoria": "105",
-          "division": "Open",
-          "glp": 73.465
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -468,19 +455,6 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 180,
-          "bp": 122.5,
-          "dl": 217.5,
-          "total": 520,
-          "pesoCorporal": 64,
-          "categoria": "66",
-          "division": "Open",
-          "glp": 82.388
-        }
-      },
-      {
         "evento": "Campeonato Regional Centro FECHIPO 2026",
         "fecha": "2026-05-10",
         "sexo": "Hombre",
@@ -517,7 +491,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -768,19 +742,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 180,
-          "bp": 132.5,
-          "dl": 195,
-          "total": 507.5,
-          "pesoCorporal": 71.75,
-          "categoria": "74",
-          "division": "Sub Junior",
-          "glp": 75.709
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -1307,19 +1268,6 @@
         "sexo": "Hombre"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 187.5,
-          "bp": 105,
-          "dl": 220,
-          "total": 512.5,
-          "pesoCorporal": 71,
-          "categoria": "74",
-          "division": "Sub Junior",
-          "glp": 76.876
-        }
-      },
-      {
         "evento": "IPF World Men's Juniors and Sub-Juniors Classic Championships 2025",
         "fecha": "",
         "año": null,
@@ -1339,7 +1287,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -1909,19 +1857,6 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 200,
-          "bp": 110,
-          "dl": 235,
-          "total": 545,
-          "pesoCorporal": 80.5,
-          "categoria": "83",
-          "division": "Sub Junior",
-          "glp": 76.618
-        }
-      },
-      {
         "evento": "Campeonato Regional Centro FECHIPO 2026",
         "fecha": "2026-05-10",
         "sexo": "Hombre",
@@ -1958,7 +1893,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -2233,19 +2168,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 145,
-          "bp": 67.5,
-          "dl": 150,
-          "total": 362.5,
-          "pesoCorporal": 75.4,
-          "categoria": "76",
-          "division": "Junior",
-          "glp": 71.738
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -3075,19 +2997,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 265,
-          "bp": 170,
-          "dl": 265,
-          "total": 700,
-          "pesoCorporal": 115.6,
-          "categoria": "120",
-          "division": "Open",
-          "glp": 82.719
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -3297,19 +3206,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 190,
-          "bp": 102.5,
-          "dl": 192.5,
-          "total": 485,
-          "pesoCorporal": 102.45,
-          "categoria": "105",
-          "division": "Sub Junior",
-          "glp": 60.57
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -4121,19 +4017,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 235,
-          "bp": 170,
-          "dl": 230,
-          "total": 635,
-          "pesoCorporal": 113.9,
-          "categoria": "120",
-          "division": "Junior",
-          "glp": 75.535
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -4996,19 +4879,6 @@
         "source": "openipf"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 235,
-          "bp": 130,
-          "dl": 300,
-          "total": 665,
-          "pesoCorporal": 101.5,
-          "categoria": "120",
-          "division": "Junior",
-          "glp": 83.415
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -5028,7 +4898,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -5066,19 +4936,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 225,
-          "bp": 147.5,
-          "dl": 235,
-          "total": 607.5,
-          "pesoCorporal": 82.05,
-          "categoria": "83",
-          "division": "Junior",
-          "glp": 84.581
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -5706,19 +5563,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 67.5,
-          "bp": 40,
-          "dl": 102.5,
-          "total": 210,
-          "pesoCorporal": 54.65,
-          "categoria": "57",
-          "division": "Junior",
-          "glp": 50.89
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -6224,19 +6068,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 127.5,
-          "bp": 75,
-          "dl": 140,
-          "total": 342.5,
-          "pesoCorporal": 55.95,
-          "categoria": "57",
-          "division": "Open",
-          "glp": 81.482
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -6312,19 +6143,6 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 145,
-          "bp": 105,
-          "dl": 205,
-          "total": 455,
-          "pesoCorporal": 79.3,
-          "categoria": "83",
-          "division": "Sub Junior",
-          "glp": 64.457
-        }
-      },
-      {
         "evento": "Campeonato Regional Centro FECHIPO 2026",
         "fecha": "2026-05-10",
         "sexo": "Hombre",
@@ -6361,7 +6179,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -6522,19 +6340,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 182.5,
-          "bp": 107.5,
-          "dl": 235,
-          "total": 525,
-          "pesoCorporal": 73.3,
-          "categoria": "74",
-          "division": "Open",
-          "glp": 77.453
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -6572,19 +6377,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 145,
-          "bp": 60,
-          "dl": 145,
-          "total": 350,
-          "pesoCorporal": 67.9,
-          "categoria": "69",
-          "division": "Junior",
-          "glp": 73.17
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -7282,19 +7074,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 180,
-          "bp": 100,
-          "dl": 212.5,
-          "total": 492.5,
-          "pesoCorporal": 73.5,
-          "categoria": "74",
-          "division": "Sub Junior",
-          "glp": 72.555
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -7413,19 +7192,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 232.5,
-          "bp": 137.5,
-          "dl": 260,
-          "total": 630,
-          "pesoCorporal": 90.4,
-          "categoria": "93",
-          "division": "Open",
-          "glp": 83.567
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -8513,19 +8279,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 132.5,
-          "bp": 77.5,
-          "dl": 145,
-          "total": 355,
-          "pesoCorporal": 74.45,
-          "categoria": "76",
-          "division": "Open",
-          "glp": 70.686
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -8645,19 +8398,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 130,
-          "bp": 65,
-          "dl": 140,
-          "total": 335,
-          "pesoCorporal": 81.7,
-          "categoria": "84",
-          "division": "Open",
-          "glp": 63.973
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -8803,7 +8543,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -10183,19 +9923,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 180,
-          "bp": 117.5,
-          "dl": 207.5,
-          "total": 505,
-          "pesoCorporal": 71.25,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 75.612
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -11374,19 +11101,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 155,
-          "bp": 105,
-          "dl": 210,
-          "total": 470,
-          "pesoCorporal": 72.55,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 69.711
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -12242,19 +11956,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 175,
-          "bp": 110,
-          "dl": 210,
-          "total": 495,
-          "pesoCorporal": 70.25,
-          "categoria": "74",
-          "division": "Open",
-          "glp": 74.665
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -12348,19 +12049,6 @@
     "debut": "2023",
     "competencias": [
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 187.5,
-          "bp": 135,
-          "dl": 220,
-          "total": 542.5,
-          "pesoCorporal": 71.65,
-          "categoria": "74",
-          "division": "Open",
-          "glp": 80.989
-        }
-      },
-      {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "division": "Open",
         "categoria": "-74",
@@ -12377,7 +12065,7 @@
         }
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -13590,19 +13278,6 @@
         "source": "openipf"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 145,
-          "bp": 107.5,
-          "dl": 195,
-          "total": 447.5,
-          "pesoCorporal": 90.65,
-          "categoria": "93",
-          "division": "Master I",
-          "glp": 59.278
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -13622,7 +13297,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -13750,19 +13425,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 212.5,
-          "bp": 117.5,
-          "dl": 222.5,
-          "total": 552.5,
-          "pesoCorporal": 90.55,
-          "categoria": "93",
-          "division": "Open",
-          "glp": 73.227
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -13908,19 +13570,6 @@
         "sexo": "Hombre"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 197.5,
-          "bp": 117.5,
-          "dl": 232.5,
-          "total": 547.5,
-          "pesoCorporal": 78.6,
-          "categoria": "83",
-          "division": "Sub Junior",
-          "glp": 77.914
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -13940,7 +13589,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -14788,19 +14437,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 90,
-          "bp": 40,
-          "dl": 85,
-          "total": 215,
-          "pesoCorporal": 54.65,
-          "categoria": "57",
-          "division": "Sub Junior",
-          "glp": 52.101
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -15173,19 +14809,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 150,
-          "bp": 87.5,
-          "dl": 202.5,
-          "total": 440,
-          "pesoCorporal": 65.85,
-          "categoria": "66",
-          "division": "Junior",
-          "glp": 68.668
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -15515,19 +15138,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 205,
-          "bp": 125,
-          "dl": 230,
-          "total": 560,
-          "pesoCorporal": 79.9,
-          "categoria": "83",
-          "division": "Junior",
-          "glp": 79.027
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -16342,19 +15952,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 182.5,
-          "bp": 130,
-          "dl": 235,
-          "total": 547.5,
-          "pesoCorporal": 80.5,
-          "categoria": "83",
-          "division": "Open",
-          "glp": 76.969
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -16462,19 +16059,6 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 140,
-          "bp": 95,
-          "dl": 160,
-          "total": 395,
-          "pesoCorporal": 57.95,
-          "categoria": "59",
-          "division": "Sub Junior",
-          "glp": 65.99
-        }
-      },
-      {
         "evento": "Campeonato Regional Centro FECHIPO 2026",
         "fecha": "2026-05-10",
         "sexo": "Hombre",
@@ -16493,7 +16077,7 @@
         "source": "yourlift_livecast"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -16636,7 +16220,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -16670,19 +16254,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 170,
-          "bp": 107.5,
-          "dl": 215,
-          "total": 492.5,
-          "pesoCorporal": 78.6,
-          "categoria": "83",
-          "division": "Sub Junior",
-          "glp": 70.087
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -16862,19 +16433,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 135,
-          "bp": 60,
-          "dl": 135,
-          "total": 330,
-          "pesoCorporal": 101.05,
-          "categoria": "84+",
-          "division": "Open",
-          "glp": 58.69
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -17342,19 +16900,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 107.5,
-          "bp": 42.5,
-          "dl": 120,
-          "total": 270,
-          "pesoCorporal": 81.2,
-          "categoria": "84",
-          "division": "Junior",
-          "glp": 51.692
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -18561,19 +18106,6 @@
         "source": "openipf"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 260,
-          "bp": 157.5,
-          "dl": 280,
-          "total": 697.5,
-          "pesoCorporal": 90.3,
-          "categoria": "93",
-          "division": "Open",
-          "glp": 92.571
-        }
-      },
-      {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "division": "Open",
         "categoria": "-93",
@@ -18590,7 +18122,7 @@
         }
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -18881,19 +18413,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 100,
-          "bp": 65,
-          "dl": 120,
-          "total": 285,
-          "pesoCorporal": 97.1,
-          "categoria": "84+",
-          "division": "Master III",
-          "glp": 51.247
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -19468,19 +18987,6 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 175,
-          "bp": 105,
-          "dl": 215,
-          "total": 495,
-          "pesoCorporal": 80,
-          "categoria": "83",
-          "division": "Sub Junior",
-          "glp": 69.81
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -19500,7 +19006,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -20507,7 +20013,7 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -21752,19 +21258,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 150,
-          "bp": 65,
-          "dl": 167.5,
-          "total": 382.5,
-          "pesoCorporal": 72.2,
-          "categoria": "76",
-          "division": "Junior",
-          "glp": 77.343
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -22150,19 +21643,6 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 165,
-          "bp": 100,
-          "dl": 170,
-          "total": 435,
-          "pesoCorporal": 65.15,
-          "categoria": "66",
-          "division": "Open",
-          "glp": 68.273
-        }
-      },
-      {
         "evento": "V Campeonato Zona Centro Clausura FECHIPO 2024",
         "resultado": {
           "sq": 207.5,
@@ -22176,7 +21656,7 @@
         }
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -22221,19 +21701,6 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 190,
-          "bp": 107.5,
-          "dl": 210,
-          "total": 507.5,
-          "pesoCorporal": 71.5,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 75.847
-        }
-      },
-      {
         "evento": "Campeonato Regional Centro FECHIPO 2026",
         "fecha": "2026-05-10",
         "sexo": "Hombre",
@@ -22251,7 +21718,7 @@
         "source": "yourlift_livecast"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -22308,19 +21775,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 190,
-          "bp": 102.5,
-          "dl": 215,
-          "total": 507.5,
-          "pesoCorporal": 84.3,
-          "categoria": "93",
-          "division": "Junior",
-          "glp": 69.7
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -22440,19 +21894,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 265,
-          "bp": 160,
-          "dl": 275,
-          "total": 700,
-          "pesoCorporal": 90.35,
-          "categoria": "93",
-          "division": "Open",
-          "glp": 92.877
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -22802,7 +22243,7 @@
         }
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -23654,19 +23095,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 182.5,
-          "bp": 120,
-          "dl": 220,
-          "total": 522.5,
-          "pesoCorporal": 69.85,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 79.049
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -24015,19 +23443,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 140,
-          "bp": 65,
-          "dl": 187.5,
-          "total": 392.5,
-          "pesoCorporal": 71.35,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 58.724
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -24080,19 +23495,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 122.5,
-          "bp": 85,
-          "dl": 172.5,
-          "total": 380,
-          "pesoCorporal": 58.05,
-          "categoria": "59",
-          "division": "Sub Junior",
-          "glp": 63.426
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -25469,19 +24871,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 185,
-          "bp": 92.5,
-          "dl": 200,
-          "total": 477.5,
-          "pesoCorporal": 102.2,
-          "categoria": "105",
-          "division": "Junior",
-          "glp": 59.702
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -25864,19 +25253,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 110,
-          "bp": 55,
-          "dl": 130,
-          "total": 295,
-          "pesoCorporal": 65.6,
-          "categoria": "69",
-          "division": "Open",
-          "glp": 62.933
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -27388,19 +26764,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 120,
-          "bp": 57.5,
-          "dl": 155,
-          "total": 332.5,
-          "pesoCorporal": 68.35,
-          "categoria": "69",
-          "division": "Open",
-          "glp": 69.252
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -27622,19 +26985,6 @@
         "source": "openipf"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 252.5,
-          "bp": 180,
-          "dl": 300,
-          "total": 732.5,
-          "pesoCorporal": 102.15,
-          "categoria": "105",
-          "division": "Junior",
-          "glp": 91.606
-        }
-      },
-      {
         "evento": "VI Campeonato Nacional FECHIPO 2022",
         "division": "Junior",
         "categoria": "-105",
@@ -27670,7 +27020,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -28683,19 +28033,6 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 225,
-          "bp": 117.5,
-          "dl": 300,
-          "total": 642.5,
-          "pesoCorporal": 91.3,
-          "categoria": "93",
-          "division": "Open",
-          "glp": 84.811
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -28715,7 +28052,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -28894,19 +28231,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 167.5,
-          "bp": 90,
-          "dl": 205,
-          "total": 462.5,
-          "pesoCorporal": 65.6,
-          "categoria": "66",
-          "division": "Sub Junior",
-          "glp": 72.325
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -29042,19 +28366,6 @@
         "opl_meet": "fechipo/2101"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 220,
-          "bp": 165,
-          "dl": 250,
-          "total": 635,
-          "pesoCorporal": 106.85,
-          "categoria": "120",
-          "division": "Open",
-          "glp": 77.764
-        }
-      },
-      {
         "evento": "VI Campeonato Nacional FECHIPO 2022",
         "division": "Open",
         "categoria": "-120",
@@ -29071,7 +28382,7 @@
         }
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -29310,19 +28621,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 155,
-          "bp": 85,
-          "dl": 170,
-          "total": 410,
-          "pesoCorporal": 81.05,
-          "categoria": "84",
-          "division": "Open",
-          "glp": 78.556
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -30142,19 +29440,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 145,
-          "bp": 102.5,
-          "dl": 190,
-          "total": 437.5,
-          "pesoCorporal": 61.75,
-          "categoria": "66",
-          "division": "Sub Junior",
-          "glp": 70.65
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -30530,19 +29815,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 95,
-          "bp": 50,
-          "dl": 140,
-          "total": 285,
-          "pesoCorporal": 74.4,
-          "categoria": "76",
-          "division": "Open",
-          "glp": 56.766
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -31398,19 +30670,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 240,
-          "bp": 142.5,
-          "dl": 280,
-          "total": 662.5,
-          "pesoCorporal": 99.15,
-          "categoria": "105",
-          "division": "Open",
-          "glp": 84.03
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -32456,19 +31715,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 197.5,
-          "bp": 112.5,
-          "dl": 230,
-          "total": 540,
-          "pesoCorporal": 72.35,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 80.208
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -32660,19 +31906,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 115,
-          "bp": 45,
-          "dl": 125,
-          "total": 285,
-          "pesoCorporal": 62.3,
-          "categoria": "63",
-          "division": "Master I",
-          "glp": 62.807
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -33041,19 +32274,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 152.5,
-          "bp": 75,
-          "dl": 145,
-          "total": 372.5,
-          "pesoCorporal": 82.25,
-          "categoria": "84",
-          "division": "Junior",
-          "glp": 70.939
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -33947,19 +33167,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 200,
-          "bp": 90,
-          "dl": 235,
-          "total": 525,
-          "pesoCorporal": 81.7,
-          "categoria": "83",
-          "division": "Junior",
-          "glp": 73.253
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -34117,19 +33324,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 215,
-          "bp": 115,
-          "dl": 235,
-          "total": 565,
-          "pesoCorporal": 170.1,
-          "categoria": "120+",
-          "division": "Open",
-          "glp": 57.316
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -34331,7 +33525,7 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -34647,19 +33841,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 240,
-          "bp": 165,
-          "dl": 265,
-          "total": 670,
-          "pesoCorporal": 101.95,
-          "categoria": "105",
-          "division": "Open",
-          "glp": 83.867
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -34781,19 +33962,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 165,
-          "bp": 95,
-          "dl": 202.5,
-          "total": 462.5,
-          "pesoCorporal": 71.8,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 68.971
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -34831,19 +33999,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 90,
-          "bp": 50,
-          "dl": 120,
-          "total": 260,
-          "pesoCorporal": 67.75,
-          "categoria": "69",
-          "division": "Junior",
-          "glp": 54.424
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -35125,19 +34280,6 @@
         "sexo": "Hombre"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 175,
-          "bp": 110,
-          "dl": 205,
-          "total": 490,
-          "pesoCorporal": 65.85,
-          "categoria": "66",
-          "division": "Sub Junior",
-          "glp": 76.471
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -35157,7 +34299,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -35264,7 +34406,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -35659,19 +34801,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 115,
-          "bp": 62.5,
-          "dl": 127.5,
-          "total": 305,
-          "pesoCorporal": 56.15,
-          "categoria": "57",
-          "division": "Open",
-          "glp": 72.362
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -36166,19 +35295,6 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 172.5,
-          "bp": 97.5,
-          "dl": 217.5,
-          "total": 487.5,
-          "pesoCorporal": 65.6,
-          "categoria": "66",
-          "division": "Open",
-          "glp": 76.234
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -36198,7 +35314,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -36580,7 +35696,7 @@
         }
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -38048,19 +37164,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 232.5,
-          "bp": 127.5,
-          "dl": 255,
-          "total": 615,
-          "pesoCorporal": 81.25,
-          "categoria": "83",
-          "division": "Junior",
-          "glp": 86.052
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -38147,19 +37250,6 @@
     "debut": "2024",
     "competencias": [
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 182.5,
-          "bp": 100,
-          "dl": 210,
-          "total": 492.5,
-          "pesoCorporal": 75.05,
-          "categoria": "83",
-          "division": "Junior",
-          "glp": 71.774
-        }
-      },
-      {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "division": "Junior",
         "categoria": "-66",
@@ -38176,7 +37266,7 @@
         }
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -38271,19 +37361,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 160,
-          "bp": 92.5,
-          "dl": 192.5,
-          "total": 445,
-          "pesoCorporal": 65.6,
-          "categoria": "66",
-          "division": "Junior",
-          "glp": 69.588
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -38343,19 +37420,6 @@
         "sexo": "Hombre"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 157.5,
-          "bp": 87.5,
-          "dl": 165,
-          "total": 410,
-          "pesoCorporal": 118.45,
-          "categoria": "120",
-          "division": "Sub Junior",
-          "glp": 47.931
-        }
-      },
-      {
         "evento": "IX Campeonato Nacional 2025",
         "fecha": "",
         "año": 2025,
@@ -38375,7 +37439,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -38782,19 +37846,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 150,
-          "bp": 85,
-          "dl": 175,
-          "total": 410,
-          "pesoCorporal": 65.45,
-          "categoria": "69",
-          "division": "Open",
-          "glp": 87.588
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -39066,19 +38117,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 215,
-          "bp": 107.5,
-          "dl": 235,
-          "total": 557.5,
-          "pesoCorporal": 81.5,
-          "categoria": "83",
-          "division": "Sub Junior",
-          "glp": 77.885
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -39190,19 +38228,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 82.5,
-          "bp": 55,
-          "dl": 110,
-          "total": 247.5,
-          "pesoCorporal": 61.75,
-          "categoria": "63",
-          "division": "Open",
-          "glp": 54.863
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -39546,19 +38571,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 135,
-          "bp": 75,
-          "dl": 147.5,
-          "total": 357.5,
-          "pesoCorporal": 62.85,
-          "categoria": "63",
-          "division": "Open",
-          "glp": 78.335
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -39596,19 +38608,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 225,
-          "bp": 117.5,
-          "dl": 270,
-          "total": 612.5,
-          "pesoCorporal": 90.7,
-          "categoria": "93",
-          "division": "Junior",
-          "glp": 81.113
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -40029,19 +39028,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 185,
-          "bp": 100,
-          "dl": 210,
-          "total": 495,
-          "pesoCorporal": 103.2,
-          "categoria": "105",
-          "division": "Junior",
-          "glp": 61.607
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -40087,19 +39073,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 95,
-          "bp": 52.5,
-          "dl": 112.5,
-          "total": 260,
-          "pesoCorporal": 60.9,
-          "categoria": "63",
-          "division": "Junior",
-          "glp": 58.173
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -40482,19 +39455,6 @@
         "sexo": "Femenino"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 100,
-          "bp": 70,
-          "dl": 130,
-          "total": 300,
-          "pesoCorporal": 61.95,
-          "categoria": "63",
-          "division": "Open",
-          "glp": 66.359
-        }
-      },
-      {
         "evento": "Campeonato Regional Centro FECHIPO 2026",
         "fecha": "2026-05-10",
         "sexo": "Mujer",
@@ -40512,7 +39472,7 @@
         "source": "yourlift_livecast"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -40822,19 +39782,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 165,
-          "bp": 115,
-          "dl": 195,
-          "total": 475,
-          "pesoCorporal": 72.7,
-          "categoria": "74",
-          "division": "Open",
-          "glp": 70.376
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -42262,19 +41209,6 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 180,
-          "bp": 95,
-          "dl": 175,
-          "total": 450,
-          "pesoCorporal": 69.85,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 68.08
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -42294,7 +41228,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -43417,19 +42351,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 110,
-          "bp": 50,
-          "dl": 125,
-          "total": 285,
-          "pesoCorporal": 73.75,
-          "categoria": "76",
-          "division": "Junior",
-          "glp": 57.012
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -43575,19 +42496,6 @@
         "sexo": "Hombre"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 220,
-          "bp": 135,
-          "dl": 255,
-          "total": 610,
-          "pesoCorporal": 120.35,
-          "categoria": "120+",
-          "division": "Open",
-          "glp": 70.817
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -43607,7 +42515,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -44635,19 +43543,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 200,
-          "bp": 130,
-          "dl": 232.5,
-          "total": 562.5,
-          "pesoCorporal": 89.9,
-          "categoria": "93",
-          "division": "Junior",
-          "glp": 74.817
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -45078,19 +43973,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 132.5,
-          "bp": 65,
-          "dl": 137.5,
-          "total": 335,
-          "pesoCorporal": 59.65,
-          "categoria": "63",
-          "division": "Junior",
-          "glp": 76.033
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -45607,19 +44489,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 187.5,
-          "bp": 122.5,
-          "dl": 245,
-          "total": 555,
-          "pesoCorporal": 73.25,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 81.907
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -45810,19 +44679,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 135,
-          "bp": 65,
-          "dl": 147.5,
-          "total": 347.5,
-          "pesoCorporal": 73.7,
-          "categoria": "76",
-          "division": "Open",
-          "glp": 69.538
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -46411,19 +45267,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 120,
-          "bp": 52.5,
-          "dl": 135,
-          "total": 307.5,
-          "pesoCorporal": 56.5,
-          "categoria": "57",
-          "division": "Open",
-          "glp": 72.61
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -46862,19 +45705,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 117.5,
-          "bp": 60,
-          "dl": 112.5,
-          "total": 290,
-          "pesoCorporal": 70.25,
-          "categoria": "76",
-          "division": "Junior",
-          "glp": 59.492
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -48433,19 +47263,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 162.5,
-          "bp": 85,
-          "dl": 182.5,
-          "total": 430,
-          "pesoCorporal": 63.15,
-          "categoria": "66",
-          "division": "Sub Junior",
-          "glp": 68.615
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -48659,19 +47476,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 260,
-          "bp": 170,
-          "dl": 280,
-          "total": 710,
-          "pesoCorporal": 90.55,
-          "categoria": "93",
-          "division": "Open",
-          "glp": 94.101
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -48780,19 +47584,6 @@
         "sexo": "Hombre"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 200,
-          "bp": 130,
-          "dl": 252.5,
-          "total": 582.5,
-          "pesoCorporal": 142.65,
-          "categoria": "120+",
-          "division": "Open",
-          "glp": 63.027
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -48812,7 +47603,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -48921,19 +47712,6 @@
     "debut": "2024",
     "competencias": [
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 125,
-          "bp": 105,
-          "dl": 175,
-          "total": 405,
-          "pesoCorporal": 58.3,
-          "categoria": "59",
-          "division": "Junior",
-          "glp": 67.443
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -48953,7 +47731,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -48991,19 +47769,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 170,
-          "bp": 105,
-          "dl": 215,
-          "total": 490,
-          "pesoCorporal": 73.15,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 72.366
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -49144,19 +47909,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 142.5,
-          "bp": 62.5,
-          "dl": 145,
-          "total": 350,
-          "pesoCorporal": 66.55,
-          "categoria": "69",
-          "division": "Junior",
-          "glp": 74.029
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -49983,19 +48735,6 @@
         "source": "openipf"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 160,
-          "bp": 77.5,
-          "dl": 162.5,
-          "total": 400,
-          "pesoCorporal": 74.25,
-          "categoria": "76",
-          "division": "Open",
-          "glp": 79.751
-        }
-      },
-      {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "division": "Open",
         "categoria": "-76",
@@ -50012,7 +48751,7 @@
         }
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -50217,19 +48956,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 182.5,
-          "bp": 112.5,
-          "dl": 197.5,
-          "total": 492.5,
-          "pesoCorporal": 72.2,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 73.232
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -51130,19 +49856,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 275,
-          "bp": 160,
-          "dl": 270,
-          "total": 705,
-          "pesoCorporal": 115.45,
-          "categoria": "120",
-          "division": "Junior",
-          "glp": 83.358
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -52084,19 +50797,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 110,
-          "bp": 62.5,
-          "dl": 115,
-          "total": 287.5,
-          "pesoCorporal": 56.05,
-          "categoria": "57",
-          "division": "Sub Junior",
-          "glp": 68.304
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -52362,19 +51062,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 142.5,
-          "bp": 70,
-          "dl": 160,
-          "total": 372.5,
-          "pesoCorporal": 90.05,
-          "categoria": "84+",
-          "division": "Open",
-          "glp": 68.584
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -53084,19 +51771,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 210,
-          "bp": 110,
-          "dl": 245,
-          "total": 565,
-          "pesoCorporal": 72.2,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 84.012
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -53471,19 +52145,6 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 240,
-          "bp": 120,
-          "dl": 305,
-          "total": 665,
-          "pesoCorporal": 102.35,
-          "categoria": "105",
-          "division": "Open",
-          "glp": 83.088
-        }
-      },
-      {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "division": "Open",
         "categoria": "-105",
@@ -53500,7 +52161,7 @@
         }
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -53798,19 +52459,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 145,
-          "bp": 80,
-          "dl": 160,
-          "total": 385,
-          "pesoCorporal": 75.45,
-          "categoria": "76",
-          "division": "Master I",
-          "glp": 76.167
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -54012,19 +52660,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 112.5,
-          "bp": 55,
-          "dl": 125,
-          "total": 292.5,
-          "pesoCorporal": 59.9,
-          "categoria": "63",
-          "division": "Junior",
-          "glp": 66.193
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -54081,19 +52716,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 165,
-          "bp": 110,
-          "dl": 220,
-          "total": 495,
-          "pesoCorporal": 81.6,
-          "categoria": "83",
-          "division": "Open",
-          "glp": 69.11
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -54858,19 +53480,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 120,
-          "bp": 57.5,
-          "dl": 152.5,
-          "total": 330,
-          "pesoCorporal": 82.95,
-          "categoria": "84",
-          "division": "Open",
-          "glp": 62.631
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -55444,7 +54053,7 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -56041,19 +54650,6 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 130,
-          "bp": 50,
-          "dl": 145,
-          "total": 325,
-          "pesoCorporal": 66.8,
-          "categoria": "69",
-          "division": "Open",
-          "glp": 68.589
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -56073,7 +54669,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -56167,19 +54763,6 @@
         "sexo": "Hombre"
       },
       {
-        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 175,
-          "bp": 107.5,
-          "dl": 225,
-          "total": 507.5,
-          "pesoCorporal": 64.5,
-          "categoria": "66",
-          "division": "Sub Junior",
-          "glp": 80.076
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -56199,7 +54782,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VI Campeonato Zona Centro 2025",
+        "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -56386,19 +54969,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 100,
-          "bp": 52.5,
-          "dl": 122.5,
-          "total": 275,
-          "pesoCorporal": 93.7,
-          "categoria": "84+",
-          "division": "Junior",
-          "glp": 49.981
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -57111,19 +55681,6 @@
     "competencias": [
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "resultado": {
-          "sq": 122.5,
-          "bp": 55,
-          "dl": 132.5,
-          "total": 310,
-          "pesoCorporal": 73.55,
-          "categoria": "76",
-          "division": "Sub Junior",
-          "glp": 62.097
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -61430,22 +59987,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "division": "Sub Junior",
-        "categoria": "-66",
-        "modalidad": "classic",
-        "sexo": "Masculino",
-        "resultado": {
-          "sq": 147.5,
-          "bp": 80,
-          "dl": 180,
-          "total": 407.5,
-          "glp": 64.038,
-          "bw": 65,
-          "status": "OK"
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
@@ -61730,22 +60271,6 @@
       },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
-        "division": "Junior",
-        "categoria": "-69",
-        "modalidad": "classic",
-        "sexo": "Femenino",
-        "resultado": {
-          "sq": 115,
-          "bp": 65,
-          "dl": 155,
-          "total": 335,
-          "glp": 70.761,
-          "bw": 66.7,
-          "status": "OK"
-        }
-      },
-      {
-        "evento": "VI Campeonato Zona Centro 2025",
         "fecha": "2025-02-08",
         "año": 2025,
         "lugar": "Santiago, Chile",
