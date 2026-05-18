@@ -1614,10 +1614,7 @@ async function generateHojaEquipo(){
       cols.forEach((col,ci)=>{
         const ty=curY+rowH/2+1.5;
         if(col.check){
-          const bx=cx+col.w/2-BOX/2;
-          const by=curY+rowH/2-BOX/2;
-          doc.setDrawColor(...C.text);doc.setLineWidth(0.4);
-          doc.rect(bx,by,BOX,BOX,'S');
+          // celda vacía — se escribe a mano, sin recuadro interior
         } else {
           const cell=vals[ci];
           if(cell&&cell.t){
@@ -1658,6 +1655,191 @@ async function generateHojaEquipo(){
     alert('Error al generar hoja de equipo: '+err.message);
   }finally{
     if(btn){btn.disabled=false;btn.textContent='🏋️ Revisión Equipo PDF';}
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// PAPELETAS DE INTENTOS PDF
+// ═══════════════════════════════════════════════════════════
+async function generatePapeletas(){
+  const btn=document.getElementById('btnPapeletas');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Generando...';}
+  try{
+    if(!window.jspdf){
+      await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';s.onload=res;s.onerror=rej;document.head.appendChild(s);});
+    }
+    const {jsPDF}=window.jspdf;
+    const strip=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\x00-\x7F]/g,'?').trim();
+
+    // Preload logos
+    const loadImg=src=>new Promise(r=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src+'?t='+Date.now();});
+    const [fechipoImg,yourliftImg]=await Promise.all([
+      loadImg('promo/assets/fechipo_logo.png'),
+      loadImg('YourLift_logo.png'),
+    ]);
+
+    // Sort athletes by lot
+    const athletes=[...DATA.athletes].sort((a,b)=>(a.lot||0)-(b.lot||0));
+
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const PW=210,PH=297;
+
+    // Layout: 2 cols x 4 rows per A4 page
+    const COLS=2,ROWS=4;
+    const mX=8,mY=8,gX=6,gY=6;
+    const cardW=(PW-2*mX-(COLS-1)*gX)/COLS;   // ~94 mm
+    const cardH=(PH-2*mY-(ROWS-1)*gY)/ROWS;   // ~65.75 mm
+    const pad=3.5;
+
+    const drawCard=(a,ox,oy)=>{
+      // ── background & border ──────────────────────────────
+      doc.setFillColor(255,255,255);doc.rect(ox,oy,cardW,cardH,'F');
+      doc.setDrawColor(150,150,150);doc.setLineWidth(0.35);
+      doc.rect(ox,oy,cardW,cardH,'S');
+
+      // ── Name row ─────────────────────────────────────────
+      doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(0,0,0);
+      const nameLabel='Apellido, Nombre';
+      doc.text(nameLabel,ox+pad,oy+8.5);
+      const nlW=doc.getTextWidth(nameLabel);
+      // underline
+      doc.setDrawColor(0,0,0);doc.setLineWidth(0.35);
+      doc.line(ox+pad+nlW+1.5,oy+9,ox+cardW-pad,oy+9);
+      // pre-fill name
+      if(a&&a.name){
+        doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+        let nm=strip(a.name);
+        const maxW=cardW-2*pad-nlW-3;
+        while(nm.length>1&&doc.getTextWidth(nm)>maxW)nm=nm.slice(0,-1);
+        if(nm!==strip(a.name))nm+='.';
+        doc.text(nm,ox+pad+nlW+2,oy+8.5);
+      }
+
+      // ── Divider ───────────────────────────────────────────
+      doc.setDrawColor(200,200,200);doc.setLineWidth(0.2);
+      doc.line(ox+pad,oy+11,ox+cardW-pad,oy+11);
+
+      // ── FECHIPO logo (left) ───────────────────────────────
+      const lX=ox+pad,lY=oy+12.5,lW=28,lH=17;
+      if(fechipoImg){try{doc.addImage(fechipoImg,'PNG',lX,lY,lW,lH);}catch(e){
+        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(180,0,0);
+        doc.text('FECHIPO',lX+lW/2,lY+lH/2+1.5,{align:'center'});
+      }}else{
+        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(180,0,0);
+        doc.text('FECHIPO',lX+lW/2,lY+lH/2+1.5,{align:'center'});
+      }
+
+      // ── Discipline checkboxes (center) ────────────────────
+      const cbX=ox+pad+lW+5;
+      const discs=[{l:'Sentadilla',dy:0},{l:'Press de Banca',dy:7},{l:'Peso Muerto',dy:14}];
+      discs.forEach(d=>{
+        const bY=oy+14+d.dy;
+        doc.setDrawColor(0,0,0);doc.setLineWidth(0.5);
+        doc.rect(cbX,bY,5,5,'S');
+        doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(0,0,0);
+        doc.text(d.l,cbX+7,bY+4);
+      });
+
+      // ── Lot number box (right) ────────────────────────────
+      const lotW=20,lotH=16;
+      const lotX=ox+cardW-pad-lotW,lotY=oy+13;
+      doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(0,0,0);
+      doc.text('N° Lote',lotX+lotW/2,oy+12,{align:'center'});
+      doc.setDrawColor(0,0,0);doc.setLineWidth(0.7);
+      doc.rect(lotX,lotY,lotW,lotH,'S');
+      if(a&&a.lot){
+        doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(0,0,0);
+        doc.text(String(a.lot),lotX+lotW/2,lotY+lotH/2+2.5,{align:'center'});
+      }
+
+      // ── Divider ───────────────────────────────────────────
+      const divY=oy+33;
+      doc.setDrawColor(200,200,200);doc.setLineWidth(0.2);
+      doc.line(ox+pad,divY,ox+cardW-pad,divY);
+
+      // ── Attempt boxes ─────────────────────────────────────
+      const boxes=[{l:'1'},{l:'2'},{l:'3'},{l:'3-1'},{l:'3-2'}];
+      const bY=divY+2,bH=13;
+      const totalBW=cardW-2*pad;
+      const bW=(totalBW-4*1.5)/5;
+      boxes.forEach((b,i)=>{
+        const bX=ox+pad+i*(bW+1.5);
+        doc.setDrawColor(0,0,0);doc.setLineWidth(0.5);
+        doc.rect(bX,bY,bW,bH,'S');
+        doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(80,80,80);
+        doc.text(b.l,bX+bW/2,bY+bH+3.5,{align:'center'});
+      });
+
+      // ── Divider ───────────────────────────────────────────
+      const div2Y=bY+bH+5.5;
+      doc.setDrawColor(200,200,200);doc.setLineWidth(0.2);
+      doc.line(ox+pad,div2Y,ox+cardW-pad,div2Y);
+
+      // ── Cat. de Peso | Firma ──────────────────────────────
+      const botY=div2Y+5;
+      doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(0,0,0);
+      doc.text('Cat. de Peso',ox+pad,botY);
+      const cpW=doc.getTextWidth('Cat. de Peso');
+      doc.setDrawColor(0,0,0);doc.setLineWidth(0.3);
+      doc.line(ox+pad+cpW+1.5,botY+0.5,ox+cardW/2-3,botY+0.5);
+      if(a&&a.cat){
+        doc.setFont('helvetica','normal');doc.setFontSize(7);
+        doc.text(strip(a.cat),ox+pad+cpW+2.5,botY);
+      }
+      const firmaX=ox+cardW/2+1;
+      doc.setFont('helvetica','bold');doc.setFontSize(7);
+      doc.text('Firma',firmaX,botY);
+      const fW=doc.getTextWidth('Firma');
+      doc.line(firmaX+fW+1.5,botY+0.5,ox+cardW-pad,botY+0.5);
+
+      // ── YourLift logo (esquina inferior derecha) ──────────
+      const ylW=16,ylH=9;
+      const ylX=ox+cardW-pad-ylW,ylY=oy+cardH-pad-ylH;
+      if(yourliftImg){try{doc.addImage(yourliftImg,'PNG',ylX,ylY,ylW,ylH);}catch(e){
+        doc.setFont('helvetica','bold');doc.setFontSize(5);doc.setTextColor(80,80,80);
+        doc.text('YourLift',ylX+ylW/2,ylY+ylH/2+1.5,{align:'center'});
+      }}else{
+        doc.setFont('helvetica','bold');doc.setFontSize(5);doc.setTextColor(80,80,80);
+        doc.text('YourLift',ylX+ylW/2,ylY+ylH/2+1.5,{align:'center'});
+      }
+    };
+
+    // ── Render cards ──────────────────────────────────────
+    athletes.forEach((a,ai)=>{
+      const pos=ai%(COLS*ROWS);
+      if(pos===0&&ai>0)doc.addPage();
+      const col=pos%COLS;
+      const row=Math.floor(pos/COLS);
+      const ox=mX+col*(cardW+gX);
+      const oy=mY+row*(cardH+gY);
+      drawCard(a,ox,oy);
+    });
+
+    // ── Cut lines (dashed) on every page ─────────────────
+    const totalPg=doc.internal.getNumberOfPages();
+    for(let p=1;p<=totalPg;p++){
+      doc.setPage(p);
+      doc.setDrawColor(180,180,180);doc.setLineWidth(0.15);
+      doc.setLineDashPattern([1.5,2],0);
+      // vertical cut between columns
+      const cutX=mX+cardW+gX/2;
+      doc.line(cutX,4,cutX,PH-4);
+      // horizontal cuts between rows
+      for(let r=1;r<ROWS;r++){
+        const cutY=mY+r*(cardH+gY)-gY/2;
+        doc.line(4,cutY,PW-4,cutY);
+      }
+      doc.setLineDashPattern([],0);
+    }
+
+    const evShort=strip(DATA.event?.short||DATA.event?.name||'campeonato').replace(/\s+/g,'_');
+    doc.save('Papeletas_'+evShort+'.pdf');
+  }catch(err){
+    console.error('Papeletas error',err);
+    alert('Error al generar papeletas: '+err.message);
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='🎫 Papeletas de Intentos PDF';}
   }
 }
 
@@ -4818,7 +5000,7 @@ function renderDirector(){
 }
 
 function renderManage(){
-  const ath=DATA.athletes;let h='<div class="fade"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><h2 class="os" style="font-size:22px;letter-spacing:1px">ATLETAS & PESAJE</h2><p style="color:var(--muted);font-size:12px">'+ath.filter(a=>a.bw>0).length+'/'+ath.length+' pesados</p></div><div style="display:flex;gap:6px;flex-wrap:wrap">'+(DATA.lotsGenerated?'<button class="btn btn-o" onclick="generateLots()" title="Re-sortear todos los lotes al azar (reemplaza los actuales)">🎲 Re-sortear lotes</button>':'<button class="btn btn-r" onclick="generateLots()">🎲 Generar Lotes</button>')+'<button class="btn btn-o" onclick="resyncFromAdmin()" title="Re-sincronizar nómina con admin (trae cambios, borra eliminados sin datos)">🔄 Re-sincronizar con admin</button><button class="btn btn-o" onclick="sortByLot()">Ordenar por Lote ↑</button><button class="btn btn-o" onclick="sortByFlight()">Ordenar por Tanda ↑</button><button class="btn btn-o" onclick="sortByCat()">Ordenar por Categoría ↑</button><button id="btnHojaPesaje" class="btn" onclick="generateHojaPesaje()" style="background:rgba(59,130,246,.15);border-color:#3b82f6;color:#3b82f6">⚖️ Hoja de Pesaje PDF</button><button id="btnHojaRack" class="btn" onclick="generateHojaRack()" style="background:rgba(16,185,129,.15);border-color:#10b981;color:#10b981">📏 Altura de Rack PDF</button><button id="btnHojaEquipo" class="btn" onclick="generateHojaEquipo()" style="background:rgba(168,85,247,.15);border-color:#a855f7;color:#a855f7">🏋️ Revisión Equipo PDF</button><button class="btn btn-g" onclick="go(\'compete\')">Iniciar Competencia →</button></div></div>';
+  const ath=DATA.athletes;let h='<div class="fade"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><h2 class="os" style="font-size:22px;letter-spacing:1px">ATLETAS & PESAJE</h2><p style="color:var(--muted);font-size:12px">'+ath.filter(a=>a.bw>0).length+'/'+ath.length+' pesados</p></div><div style="display:flex;gap:6px;flex-wrap:wrap">'+(DATA.lotsGenerated?'<button class="btn btn-o" onclick="generateLots()" title="Re-sortear todos los lotes al azar (reemplaza los actuales)">🎲 Re-sortear lotes</button>':'<button class="btn btn-r" onclick="generateLots()">🎲 Generar Lotes</button>')+'<button class="btn btn-o" onclick="resyncFromAdmin()" title="Re-sincronizar nómina con admin (trae cambios, borra eliminados sin datos)">🔄 Re-sincronizar con admin</button><button class="btn btn-o" onclick="sortByLot()">Ordenar por Lote ↑</button><button class="btn btn-o" onclick="sortByFlight()">Ordenar por Tanda ↑</button><button class="btn btn-o" onclick="sortByCat()">Ordenar por Categoría ↑</button><button id="btnHojaPesaje" class="btn" onclick="generateHojaPesaje()" style="background:rgba(59,130,246,.15);border-color:#3b82f6;color:#3b82f6">⚖️ Hoja de Pesaje PDF</button><button id="btnHojaRack" class="btn" onclick="generateHojaRack()" style="background:rgba(16,185,129,.15);border-color:#10b981;color:#10b981">📏 Altura de Rack PDF</button><button id="btnHojaEquipo" class="btn" onclick="generateHojaEquipo()" style="background:rgba(168,85,247,.15);border-color:#a855f7;color:#a855f7">🏋️ Revisión Equipo PDF</button><button id="btnPapeletas" class="btn" onclick="generatePapeletas()" style="background:rgba(234,179,8,.15);border-color:#eab308;color:#ca8a04">🎫 Papeletas de Intentos PDF</button><button class="btn btn-g" onclick="go(\'compete\')">Iniciar Competencia →</button></div></div>';
   h+='<div class="card" style="padding:0;overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr style="border-bottom:2px solid var(--border)">';
   h+='<th class="os" style="padding:8px 4px;text-align:center;color:var(--muted);font-size:9px;width:28px">#</th><th style="padding:8px 4px;text-align:left;color:var(--muted);font-size:9px">ATLETA</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px;width:38px">VLO</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px;width:80px">BW + 1ros</th>';
   ['sq','bp','dl'].forEach(l=>{[1,2,3].forEach(r=>{h+='<th style="padding:8px 2px;text-align:center;color:'+LIFT_C[l]+';font-size:9px;width:62px">'+LIFT_S[l]+r+'</th>'})});
