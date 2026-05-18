@@ -817,25 +817,6 @@
     "debut": "2023",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
-        "fecha": "2023-02-04",
-        "division": "",
-        "categoria": "120",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 215,
-          "bp": 125,
-          "dl": 205,
-          "total": 545,
-          "bw": 114.3,
-          "glp": 64.73,
-          "rank": 37
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2301"
-      },
-      {
         "evento": "South American Classic Powerlifting Championships 2024",
         "fecha": "2024-09-17",
         "division": "",
@@ -1047,7 +1028,7 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "120+",
@@ -1692,7 +1673,7 @@
         "sexo": "Femenino"
       },
       {
-        "evento": "Campeonato Nacional 2023",
+        "evento": "VII Campeonato Nacional Fechipo 2023",
         "fecha": "2023-06-10",
         "division": "",
         "categoria": "57",
@@ -1705,7 +1686,7 @@
         }
       },
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "57",
@@ -2158,7 +2139,7 @@
         "opl_meet": "fechipo/2402"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "83",
@@ -2327,7 +2308,7 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "105",
@@ -2346,7 +2327,7 @@
         "opl_meet": "fechipo/2301"
       },
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "93",
@@ -2537,24 +2518,7 @@
         }
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 252.5,
-          "bp": 160,
-          "dl": 305,
-          "total": 717.5,
-          "bw": 73.9,
-          "glp": 105.41,
-          "rank": 1
-        }
-      },
-      {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "83",
@@ -2571,84 +2535,6 @@
         },
         "source": "openpowerlifting",
         "opl_meet": "fechipo/2301"
-      },
-      {
-        "evento": "Zona Centro Iron Forces 2022",
-        "fecha": "2022-03-12",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 241,
-          "bp": 165,
-          "dl": 290,
-          "total": 696,
-          "bw": 73.8,
-          "glp": 102.29,
-          "rank": 1
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2201"
-      },
-      {
-        "evento": "Nacional Chile 2021",
-        "fecha": "2021-10-30",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 230,
-          "bp": 160,
-          "dl": 260,
-          "total": 650,
-          "bw": 73.8,
-          "glp": 95.56,
-          "rank": 1
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2101"
-      },
-      {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 185,
-          "bp": 125,
-          "dl": 255,
-          "total": 565,
-          "bw": 72.8,
-          "glp": null,
-          "rank": 5,
-          "ipf": 611.87
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
-      },
-      {
-        "evento": "V Campeonato Osorno 2018",
-        "fecha": "2018-12-08",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 182.5,
-          "bp": 120,
-          "dl": 235,
-          "total": 537.5,
-          "bw": 72.8,
-          "glp": null,
-          "rank": 3,
-          "wilks": 391.19
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1802"
       },
       {
         "evento": "South American Classic Powerlifting Championships 2024",
@@ -2668,19 +2554,6 @@
         "source": "openipf",
         "opl_meet": "fesupo/2401",
         "internacional": true
-      },
-      {
-        "evento": "I Juegos Bolivarianos Bicentenario Ayacucho 2024",
-        "resultado": {
-          "sq": 270,
-          "bp": 190,
-          "dl": 320,
-          "total": 780,
-          "pesoCorporal": 81.65,
-          "categoria": "83",
-          "division": "Open",
-          "glp": 108.867
-        }
       },
       {
         "evento": "World Games 2025",
@@ -2782,7 +2655,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "World Open Classic Powerlifting Championships 2024",
+        "evento": "IPF World Open Classic Powerlifting Championships 2024",
         "fecha": "2024-06-15",
         "año": 2024,
         "lugar": "Lithuania",
@@ -2801,7 +2674,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "Juegos Bolivarianos Bicentenario Ayacucho 2024",
+        "evento": "I Juegos Bolivarianos Bicentenario Ayacucho 2024",
         "fecha": "2024-12-03",
         "año": 2024,
         "lugar": "Ayacucho, Perú",
@@ -3036,7 +2909,7 @@
         "opl_meet": "fechipo/2402"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "66",
@@ -3251,7 +3124,7 @@
     "debut": "2023",
     "competencias": [
       {
-        "evento": "Sudamericano FESUPO 2023",
+        "evento": "Campeonato Sudamericano de Powerlifting Classic 2023",
         "fecha": "2023-09-06",
         "division": "",
         "categoria": "69",
@@ -3511,7 +3384,7 @@
         "sexo": "Femenino"
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "57",
@@ -3638,7 +3511,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "V Campeonato Osorno 2018",
+        "evento": "Campeonato Powerlifting Raw y Equipado Osorno 2018",
         "fecha": "2018-12-08",
         "division": "",
         "categoria": "74",
@@ -3998,47 +3871,6 @@
           "glp": 101.2
         },
         "source": "openipf"
-      },
-      {
-        "evento": "Sudamericano FESUPO 2025",
-        "fecha": "2025-09-20",
-        "division": "Junior",
-        "categoria": "105",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 305,
-          "bp": 182.5,
-          "dl": 325.5,
-          "total": 813,
-          "bw": 103.2,
-          "glp": 101.19
-        },
-        "source": "openipf"
-      },
-      {
-        "evento": "World Junior and Sub-Juniors Powerlifting Championships",
-        "fecha": "2025-08-25",
-        "division": "",
-        "categoria": "105",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 300,
-          "bp": 185,
-          "dl": 325,
-          "total": 810,
-          "bw": 102.7,
-          "glp": 101.01
-        },
-        "source": "openipf"
-      },
-      {
-        "evento": "World Junior and Sub-Juniors Powerlifting Championships 2025",
-        "division": "",
-        "categoria": "-105",
-        "modalidad": "classic",
-        "sexo": "Masculino"
       },
       {
         "evento": "South American Classic Powerlifting Championships 2024",
@@ -4413,7 +4245,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
+        "evento": "VII Campeonato Nacional Fechipo 2023",
         "fecha": "2023-06-10",
         "division": "",
         "categoria": "63",
@@ -4447,7 +4279,7 @@
         "source": "openipf"
       },
       {
-        "evento": "Sudamericano FESUPO 2023",
+        "evento": "Campeonato Sudamericano de Powerlifting Classic 2023",
         "fecha": "2023-09-06",
         "division": "",
         "categoria": "63",
@@ -4653,7 +4485,7 @@
         "source": "openipf"
       },
       {
-        "evento": "Sudamericano FESUPO 2023",
+        "evento": "Campeonato Sudamericano de Powerlifting Classic 2023",
         "fecha": "2023-09-06",
         "division": "",
         "categoria": "66",
@@ -4710,7 +4542,7 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "66",
@@ -4928,7 +4760,7 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "93",
@@ -5604,19 +5436,6 @@
     "competencias": [
       {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 220,
-          "bp": 117.5,
-          "dl": 235,
-          "total": 572.5,
-          "pesoCorporal": 70.7,
-          "categoria": "74",
-          "division": "Junior",
-          "glp": 86.066
-        }
-      },
-      {
-        "evento": "VIII Campeonato Nacional 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -6260,7 +6079,7 @@
     "debut": "2017",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "83",
@@ -6279,27 +6098,7 @@
         "opl_meet": "fechipo/2301"
       },
       {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 155,
-          "bp": 117.5,
-          "dl": 207.5,
-          "total": 480,
-          "bw": 73.3,
-          "glp": null,
-          "rank": 33,
-          "ipf": 504.41
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
-      },
-      {
-        "evento": "V Campeonato Osorno 2018",
+        "evento": "Campeonato Powerlifting Raw y Equipado Osorno 2018",
         "fecha": "2018-12-08",
         "division": "",
         "categoria": "74",
@@ -6319,7 +6118,7 @@
         "opl_meet": "fechipo/1802"
       },
       {
-        "evento": "Nacional Chile 2017",
+        "evento": "II Campeonarto Nacional Classic Raw Chile 2017",
         "fecha": "2017-01-01",
         "division": "",
         "categoria": "66",
@@ -7074,46 +6873,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 202.5,
-          "bp": 105,
-          "dl": 270,
-          "total": 577.5,
-          "bw": 73.1,
-          "glp": null,
-          "rank": 2,
-          "ipf": 625.37
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
-      },
-      {
-        "evento": "Nacional Chile 2017",
-        "fecha": "2017-01-01",
-        "division": "",
-        "categoria": "66",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 160,
-          "bp": 102.5,
-          "dl": 220,
-          "total": 482.5,
-          "bw": 65,
-          "glp": null,
-          "rank": 8,
-          "wilks": 383.68
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1701"
-      },
-      {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "resultado": {
           "sq": 237.5,
@@ -7596,7 +7355,7 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "105",
@@ -7652,25 +7411,6 @@
     "club": "Hannya Strength",
     "debut": "2022",
     "competencias": [
-      {
-        "evento": "Zona Centro Iron Forces 2022",
-        "fecha": "2022-03-12",
-        "division": "",
-        "categoria": "93",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 187.5,
-          "bp": 127.5,
-          "dl": 225,
-          "total": 540,
-          "bw": 87.5,
-          "glp": 72.8,
-          "rank": 40
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2201"
-      },
       {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "resultado": {
@@ -8004,7 +7744,7 @@
     "debut": "2018",
     "competencias": [
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "83",
@@ -8023,7 +7763,7 @@
         "opl_meet": "fechipo/2101"
       },
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "83",
@@ -8491,7 +8231,7 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "66",
@@ -8582,38 +8322,6 @@
         "sexo": "Femenino"
       },
       {
-        "evento": "Zonal Sur 2023",
-        "fecha": "2023-02-04",
-        "division": "",
-        "categoria": "63",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 100,
-          "bp": 55,
-          "dl": 120,
-          "total": 275,
-          "bw": 59.6,
-          "glp": 62.45,
-          "rank": 40
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2301"
-      },
-      {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 120,
-          "bp": 70,
-          "dl": 145,
-          "total": 335,
-          "pesoCorporal": 59.8,
-          "categoria": "63",
-          "division": "Open",
-          "glp": 75.9
-        }
-      },
-      {
         "evento": "I Campeonato Zona Sur FECHIPO 2023",
         "division": "Open",
         "categoria": "-63",
@@ -8649,7 +8357,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -9003,7 +8711,7 @@
     "debut": "2019",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "69",
@@ -9022,7 +8730,7 @@
         "opl_meet": "fechipo/2201"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "69",
@@ -9039,19 +8747,6 @@
         },
         "source": "openpowerlifting",
         "opl_meet": "fechipo/2101"
-      },
-      {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 135,
-          "bp": 62.5,
-          "dl": 145,
-          "total": 342.5,
-          "pesoCorporal": 72.35,
-          "categoria": "76",
-          "division": "Open",
-          "glp": 69.181
-        }
       },
       {
         "evento": "I Campeonato Zona Norte FECHIPO 2022",
@@ -9089,7 +8784,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -9361,7 +9056,7 @@
     "debut": "2026",
     "competencias": [
       {
-        "evento": "Nacional Chile 2017",
+        "evento": "II Campeonarto Nacional Classic Raw Chile 2017",
         "fecha": "2017-01-01",
         "division": "",
         "categoria": "105",
@@ -9479,7 +9174,7 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "74",
@@ -9625,7 +9320,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "66",
@@ -9644,7 +9339,7 @@
         "opl_meet": "fechipo/2301"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "105",
@@ -9687,7 +9382,7 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Sudamericano FESUPO 2023",
+        "evento": "Campeonato Sudamericano de Powerlifting Classic 2023",
         "fecha": "2023-09-06",
         "division": "",
         "categoria": "105",
@@ -10105,7 +9800,7 @@
         "sexo": "Hombre"
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "83",
@@ -10277,23 +9972,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "66",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 205,
-          "bp": 105,
-          "dl": 225,
-          "total": 535,
-          "bw": 65.1,
-          "glp": 83.97,
-          "rank": 39
-        }
-      },
-      {
         "evento": "Campeonato Nacional FECHIPO 2025",
         "fecha": "2025-05-23",
         "division": "",
@@ -10311,7 +9989,7 @@
         "source": "openipf"
       },
       {
-        "evento": "Sudamericano FESUPO 2023",
+        "evento": "Campeonato Sudamericano de Powerlifting Classic 2023",
         "fecha": "2023-09-06",
         "division": "",
         "categoria": "66",
@@ -10788,7 +10466,7 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "74",
@@ -10929,19 +10607,6 @@
       },
       {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 137.5,
-          "bp": 67.5,
-          "dl": 142.5,
-          "total": 347.5,
-          "pesoCorporal": 82.55,
-          "categoria": "84",
-          "division": "Open",
-          "glp": 66.081
-        }
-      },
-      {
-        "evento": "VIII Campeonato Nacional 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -11100,7 +10765,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
+        "evento": "VII Campeonato Nacional Fechipo 2023",
         "fecha": "2023-06-10",
         "division": "",
         "categoria": "84",
@@ -11117,7 +10782,7 @@
         }
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "84",
@@ -11136,7 +10801,7 @@
         "opl_meet": "fechipo/2201"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "84",
@@ -11172,7 +10837,7 @@
         "source": "openipf"
       },
       {
-        "evento": "Sudamericano FESUPO 2023",
+        "evento": "Campeonato Sudamericano de Powerlifting Classic 2023",
         "fecha": "2023-09-06",
         "division": "",
         "categoria": "84",
@@ -11377,7 +11042,7 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "V Campeonato Osorno 2018",
+        "evento": "Campeonato Powerlifting Raw y Equipado Osorno 2018",
         "fecha": "2018-12-08",
         "division": "",
         "categoria": "93",
@@ -11397,7 +11062,7 @@
         "opl_meet": "fechipo/1802"
       },
       {
-        "evento": "Nacional Chile 2017",
+        "evento": "II Campeonarto Nacional Classic Raw Chile 2017",
         "fecha": "2017-01-01",
         "division": "",
         "categoria": "83",
@@ -11868,19 +11533,6 @@
       },
       {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 200,
-          "bp": 105,
-          "dl": 250.5,
-          "total": 555.5,
-          "pesoCorporal": 64.65,
-          "categoria": "66",
-          "division": "Junior",
-          "glp": 87.542
-        }
-      },
-      {
-        "evento": "VIII Campeonato Nacional 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -12001,7 +11653,7 @@
     "debut": "2022",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "93",
@@ -12504,25 +12156,6 @@
     "debut": "2021",
     "competencias": [
       {
-        "evento": "Nacional Chile 2021",
-        "fecha": "2021-10-30",
-        "division": "",
-        "categoria": "63",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 117.5,
-          "bp": 80.5,
-          "dl": 155,
-          "total": 353,
-          "bw": 59.6,
-          "glp": 80.12,
-          "rank": 18
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2101"
-      },
-      {
         "evento": "I Juegos Bolivarianos Bicentenario Ayacucho 2024",
         "resultado": {
           "sq": 145,
@@ -12940,7 +12573,7 @@
         "sexo": "Hombre"
       },
       {
-        "evento": "Campeonato Nacional 2023",
+        "evento": "VII Campeonato Nacional Fechipo 2023",
         "fecha": "2023-06-10",
         "division": "",
         "categoria": "83",
@@ -13013,19 +12646,6 @@
     "debut": "2022",
     "competencias": [
       {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 135,
-          "bp": 83,
-          "dl": 155,
-          "total": 373,
-          "pesoCorporal": 57.9,
-          "categoria": "74",
-          "division": "Sub Junior",
-          "glp": 62.344
-        }
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -13045,7 +12665,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -13191,19 +12811,6 @@
         "internacional": true
       },
       {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 175,
-          "bp": 101,
-          "dl": 195,
-          "total": 471,
-          "pesoCorporal": 81.7,
-          "categoria": "83",
-          "division": "Master II",
-          "glp": 65.719
-        }
-      },
-      {
         "evento": "I Campeonato Zona Norte FECHIPO 2022",
         "division": "Master 2",
         "categoria": "-83",
@@ -13239,7 +12846,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -14192,7 +13799,7 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "74",
@@ -14627,25 +14234,6 @@
     "debut": "2019",
     "competencias": [
       {
-        "evento": "Nacional Chile 2021",
-        "fecha": "2021-10-30",
-        "division": "",
-        "categoria": "93",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 175,
-          "bp": 102.5,
-          "dl": 200,
-          "total": 477.5,
-          "bw": 88,
-          "glp": 64.19,
-          "rank": 44
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2101"
-      },
-      {
         "evento": "Campeonato Zona Norte Atacama FECHIPO 2024",
         "resultado": {
           "sq": 180,
@@ -14859,45 +14447,6 @@
     "club": "Hannya Strength",
     "debut": "2018",
     "competencias": [
-      {
-        "evento": "Zona Centro Iron Forces 2022",
-        "fecha": "2022-03-12",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 190,
-          "bp": 115,
-          "dl": 202.5,
-          "total": 507.5,
-          "bw": 82.2,
-          "glp": 70.6,
-          "rank": 48
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2201"
-      },
-      {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "93",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 210,
-          "bp": 115,
-          "dl": 220,
-          "total": 545,
-          "bw": 91,
-          "glp": null,
-          "rank": 35,
-          "ipf": 501.5
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
-      },
       {
         "evento": "I Campeonato Zona Norte FECHIPO 2022",
         "division": "Open",
@@ -15418,7 +14967,7 @@
     "debut": "2024",
     "competencias": [
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "74",
@@ -15438,7 +14987,7 @@
         "opl_meet": "fechipo/1903"
       },
       {
-        "evento": "V Campeonato Osorno 2018",
+        "evento": "Campeonato Powerlifting Raw y Equipado Osorno 2018",
         "fecha": "2018-12-08",
         "division": "",
         "categoria": "120",
@@ -16304,23 +15853,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "66",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 200,
-          "bp": 125,
-          "dl": 252.5,
-          "total": 577.5,
-          "bw": 65.5,
-          "glp": 90.39,
-          "rank": 14
-        }
-      },
-      {
         "evento": "Campeonato Nacional FECHIPO 2025",
         "fecha": "2025-05-23",
         "division": "",
@@ -17065,7 +16597,7 @@
     "debut": "2024",
     "competencias": [
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "63",
@@ -17498,7 +17030,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "63",
@@ -17517,7 +17049,7 @@
         "opl_meet": "fechipo/2201"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "63",
@@ -17896,7 +17428,7 @@
     "debut": "2021",
     "competencias": [
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "83",
@@ -18077,93 +17609,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Sudamericano FESUPO 2025",
-        "fecha": "2025-09-20",
-        "division": "Open",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 290,
-          "bp": 196,
-          "dl": 292.5,
-          "total": 778.5,
-          "bw": 83,
-          "glp": 107.77
-        }
-      },
-      {
-        "evento": "World Classic Powerlifting Championships",
-        "fecha": "2025-06-08",
-        "division": "Open",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 290,
-          "bp": 195,
-          "dl": 300,
-          "total": 785,
-          "bw": 82.1,
-          "glp": 109.23
-        }
-      },
-      {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 262.5,
-          "bp": 180,
-          "dl": 277.5,
-          "total": 720,
-          "bw": 82.7,
-          "glp": 99.82,
-          "rank": 2
-        }
-      },
-      {
-        "evento": "Zonal Sur 2023",
-        "fecha": "2023-02-04",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 250,
-          "bp": 170,
-          "dl": 275,
-          "total": 695,
-          "bw": 81.6,
-          "glp": 97.04,
-          "rank": 2
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2301"
-      },
-      {
-        "evento": "Nacional Chile 2021",
-        "fecha": "2021-10-30",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 205,
-          "bp": 152.5,
-          "dl": 230,
-          "total": 587.5,
-          "bw": 82.8,
-          "glp": 81.42,
-          "rank": 15
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2101"
-      },
-      {
         "evento": "Campeonato Nacional FECHIPO 2025",
         "fecha": "2025-05-23",
         "division": "",
@@ -18179,19 +17624,6 @@
           "glp": 108.66
         },
         "source": "openipf"
-      },
-      {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 280.5,
-          "bp": 195,
-          "dl": 285,
-          "total": 760.5,
-          "pesoCorporal": 81.7,
-          "categoria": "83",
-          "division": "Open",
-          "glp": 106.113
-        }
       },
       {
         "evento": "World Classic Powerlifting Championships 2025",
@@ -18270,7 +17702,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "año": 2024,
         "lugar": "Santiago, Chile",
         "division": "Open",
@@ -18547,23 +17979,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "105",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 250,
-          "bp": 145,
-          "dl": 301.5,
-          "total": 696.5,
-          "bw": 104.9,
-          "glp": 86.03,
-          "rank": 31
-        }
-      },
-      {
         "evento": "Regional Centro 2026",
         "fecha": "2026-05-09",
         "division": "Open",
@@ -18589,19 +18004,6 @@
         "source": "openipf"
       },
       {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 290,
-          "bp": 160,
-          "dl": 305,
-          "total": 755,
-          "pesoCorporal": 104.65,
-          "categoria": "105",
-          "division": "Open",
-          "glp": 93.356
-        }
-      },
-      {
         "evento": "IX Campeonato Nacional 2025",
         "fecha": "",
         "año": 2025,
@@ -18621,7 +18023,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -19325,7 +18727,7 @@
         "sexo": "Mujer"
       },
       {
-        "evento": "Campeonato Nacional 2023",
+        "evento": "VII Campeonato Nacional Fechipo 2023",
         "fecha": "2023-06-10",
         "division": "",
         "categoria": "69",
@@ -19342,7 +18744,7 @@
         }
       },
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "69",
@@ -19665,7 +19067,7 @@
     "debut": "2021",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "66",
@@ -19684,7 +19086,7 @@
         "opl_meet": "fechipo/2201"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "59",
@@ -19873,25 +19275,6 @@
     "debut": "2022",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
-        "fecha": "2022-03-12",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 190,
-          "bp": 115,
-          "dl": 200,
-          "total": 505,
-          "bw": 80.8,
-          "glp": 70.86,
-          "rank": 45
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2201"
-      },
-      {
         "evento": "South American Classic Powerlifting Championships 2024",
         "fecha": "2024-09-17",
         "division": "",
@@ -20031,7 +19414,7 @@
         }
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -20538,7 +19921,7 @@
     "debut": "2019",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "93",
@@ -20555,45 +19938,6 @@
         },
         "source": "openpowerlifting",
         "opl_meet": "fechipo/2201"
-      },
-      {
-        "evento": "Nacional Chile 2021",
-        "fecha": "2021-10-30",
-        "division": "",
-        "categoria": "93",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 210,
-          "bp": 140,
-          "dl": 250,
-          "total": 600,
-          "bw": 90.1,
-          "glp": 79.72,
-          "rank": 20
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2101"
-      },
-      {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 140,
-          "bp": 90,
-          "dl": 180,
-          "total": 410,
-          "bw": 78.1,
-          "glp": null,
-          "rank": 53,
-          "ipf": 398.49
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
       },
       {
         "evento": "I Campeonato Zona Norte FECHIPO 2022",
@@ -21320,42 +20664,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 222.5,
-          "bp": 137.5,
-          "dl": 240,
-          "total": 600,
-          "bw": 80,
-          "glp": 84.62,
-          "rank": 36
-        }
-      },
-      {
-        "evento": "Zonal Sur 2023",
-        "fecha": "2023-02-04",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 215,
-          "bp": 130,
-          "dl": 250,
-          "total": 595,
-          "bw": 78.9,
-          "glp": 84.49,
-          "rank": 4
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2301"
-      },
-      {
         "evento": "Campeonato Nacional FECHIPO 2025",
         "fecha": "2025-05-23",
         "division": "",
@@ -21959,23 +21267,6 @@
         }
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "57",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 147.5,
-          "bp": 80,
-          "dl": 161,
-          "total": 388.5,
-          "bw": 56.7,
-          "glp": 91.49,
-          "rank": 13
-        }
-      },
-      {
         "evento": "VII Campeonato Nacional Fechipo 2023",
         "fecha": "2023-06-11",
         "año": 2023,
@@ -22509,65 +21800,6 @@
     "club": "Himalaya Powerlifting",
     "debut": "2016",
     "competencias": [
-      {
-        "evento": "Nacional Chile 2021",
-        "fecha": "2021-10-30",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 210,
-          "bp": 152.5,
-          "dl": 237.5,
-          "total": 600,
-          "bw": 82.7,
-          "glp": 83.21,
-          "rank": 10
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2101"
-      },
-      {
-        "evento": "V Campeonato Osorno 2018",
-        "fecha": "2018-12-08",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 182.5,
-          "bp": 132.5,
-          "dl": 195,
-          "total": 510,
-          "bw": 73.1,
-          "glp": null,
-          "rank": 4,
-          "wilks": 370.08
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1802"
-      },
-      {
-        "evento": "Nacional Chile 2017",
-        "fecha": "2017-01-01",
-        "division": "",
-        "categoria": "66",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 152.5,
-          "bp": 112.5,
-          "dl": 182.5,
-          "total": 447.5,
-          "bw": 65,
-          "glp": null,
-          "rank": 13,
-          "wilks": 355.85
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1701"
-      },
       {
         "evento": "V Campeonato Zona Centro Clausura FECHIPO 2024",
         "resultado": {
@@ -23190,42 +22422,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "93",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 255,
-          "bp": 157.5,
-          "dl": 275,
-          "total": 687.5,
-          "bw": 89.3,
-          "glp": 91.73,
-          "rank": 11
-        }
-      },
-      {
-        "evento": "Zona Centro Iron Forces 2022",
-        "fecha": "2022-03-12",
-        "division": "",
-        "categoria": "93",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 230,
-          "bp": 155,
-          "dl": 260,
-          "total": 645,
-          "bw": 85.2,
-          "glp": 88.12,
-          "rank": 7
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2201"
-      },
-      {
         "evento": "Campeonato Nacional FECHIPO 2025",
         "fecha": "2025-05-23",
         "division": "",
@@ -23727,7 +22923,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Nacional Chile 2017",
+        "evento": "II Campeonarto Nacional Classic Raw Chile 2017",
         "fecha": "2017-01-01",
         "division": "",
         "categoria": "57",
@@ -23891,25 +23087,6 @@
         },
         "source": "openipf",
         "opl_meet": "fesupo/2401",
-        "internacional": true
-      },
-      {
-        "evento": "Sudamericano FESUPO 2023",
-        "fecha": "2023-09-06",
-        "division": "",
-        "categoria": "84+",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 162.5,
-          "bp": 87.5,
-          "dl": 175,
-          "total": 425,
-          "bw": 95.5,
-          "glp": 76.8
-        },
-        "source": "openipf",
-        "opl_meet": "fesupo/2302",
         "internacional": true
       },
       {
@@ -24457,7 +23634,7 @@
         }
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "83",
@@ -24959,7 +24136,7 @@
         "sexo": "Hombre"
       },
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "74",
@@ -24979,7 +24156,7 @@
         "opl_meet": "fechipo/1903"
       },
       {
-        "evento": "Nacional Chile 2017",
+        "evento": "II Campeonarto Nacional Classic Raw Chile 2017",
         "fecha": "2017-01-01",
         "division": "",
         "categoria": "74",
@@ -25424,25 +24601,6 @@
     "debut": "2021",
     "competencias": [
       {
-        "evento": "Nacional Chile 2021",
-        "fecha": "2021-10-30",
-        "division": "",
-        "categoria": "120+",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 240,
-          "bp": 155,
-          "dl": 245,
-          "total": 640,
-          "bw": 126.5,
-          "glp": 72.73,
-          "rank": 34
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2101"
-      },
-      {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "division": "Master I Only Bench",
         "categoria": "+120",
@@ -25675,22 +24833,6 @@
         }
       },
       {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "division": "Sub Junior Only Bench",
-        "categoria": "-59",
-        "modalidad": "onlybench",
-        "sexo": "Masculino",
-        "resultado": {
-          "sq": 0,
-          "bp": 92.5,
-          "dl": 0,
-          "total": 92.5,
-          "glp": 55.815,
-          "bw": 59,
-          "status": "OK"
-        }
-      },
-      {
         "evento": "II Campeonato Zona Norte 2023",
         "fecha": "2023-12-02",
         "año": 2023,
@@ -25748,7 +24890,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -26153,7 +25295,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Sudamericano FESUPO 2023",
+        "evento": "Campeonato Sudamericano de Powerlifting Classic 2023",
         "fecha": "2023-09-06",
         "division": "",
         "categoria": "93",
@@ -26564,23 +25706,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "93",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 180,
-          "bp": 75,
-          "dl": 230,
-          "total": 485,
-          "bw": 88.9,
-          "glp": 64.87,
-          "rank": 108
-        }
-      },
-      {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "resultado": {
           "sq": 217.5,
@@ -26957,7 +26082,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "93",
@@ -27378,62 +26503,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Sudamericano FESUPO 2025",
-        "fecha": "2025-09-20",
-        "division": "Open",
-        "categoria": "105",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 315,
-          "bp": 197.5,
-          "dl": 295,
-          "total": 807.5,
-          "bw": 103.5,
-          "glp": 100.37
-        },
-        "source": "openpowerlifting"
-      },
-      {
-        "evento": "Nacional Chile 2021",
-        "fecha": "2021-10-30",
-        "division": "",
-        "categoria": "93",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 240,
-          "bp": 172.5,
-          "dl": 290,
-          "total": 702.5,
-          "bw": 90,
-          "glp": 93.39,
-          "rank": 3
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2101"
-      },
-      {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "93",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 210,
-          "bp": 150,
-          "dl": 270,
-          "total": 630,
-          "bw": 89.4,
-          "glp": null,
-          "rank": 9,
-          "ipf": 599.87
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
-      },
-      {
         "evento": "Campeonato Nacional FECHIPO 2025",
         "fecha": "2025-05-23",
         "division": "",
@@ -27449,19 +26518,6 @@
           "glp": 101.7
         },
         "source": "openipf"
-      },
-      {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 290,
-          "bp": 195,
-          "dl": 300,
-          "total": 785,
-          "pesoCorporal": 99.7,
-          "categoria": "105",
-          "division": "Open",
-          "glp": 99.305
-        }
       },
       {
         "evento": "VI Campeonato Nacional FECHIPO 2022",
@@ -27592,7 +26648,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "año": 2024,
         "lugar": "Santiago, Chile",
         "division": "Open",
@@ -27648,7 +26704,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "Juegos Bolivarianos Bicentenario Ayacucho 2024",
+        "evento": "I Juegos Bolivarianos Bicentenario Ayacucho 2024",
         "fecha": "2024-12-03",
         "año": 2024,
         "lugar": "Ayacucho, Perú",
@@ -27758,25 +26814,6 @@
     "club": "South Side Club",
     "debut": "2023",
     "competencias": [
-      {
-        "evento": "Zonal Sur 2023",
-        "fecha": "2023-02-04",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 187.5,
-          "bp": 122.5,
-          "dl": 215,
-          "total": 525,
-          "bw": 80.8,
-          "glp": 73.67,
-          "rank": 24
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2301"
-      },
       {
         "evento": "III Campeonato Zona Sur FECHIPO 2025",
         "resultado": {
@@ -27912,7 +26949,7 @@
     "debut": "2023",
     "competencias": [
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "63",
@@ -28049,7 +27086,7 @@
     "debut": "2022",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "52",
@@ -28585,25 +27622,6 @@
         "source": "openipf"
       },
       {
-        "evento": "Sudamericano FESUPO 2023",
-        "fecha": "2023-09-06",
-        "division": "",
-        "categoria": "105",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 260,
-          "bp": 165,
-          "dl": 252.5,
-          "total": 677.5,
-          "bw": 103.4,
-          "glp": 84.23
-        },
-        "source": "openipf",
-        "opl_meet": "fesupo/2302",
-        "internacional": true
-      },
-      {
         "evento": "VI Campeonato Zona Centro FECHIPO 2025",
         "resultado": {
           "sq": 252.5,
@@ -28883,7 +27901,7 @@
         }
       },
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "72",
@@ -29029,7 +28047,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "74",
@@ -29048,7 +28066,7 @@
         "opl_meet": "fechipo/2301"
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "66",
@@ -29190,19 +28208,6 @@
     "competencias": [
       {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 110,
-          "bp": 65,
-          "dl": 132.5,
-          "total": 307.5,
-          "pesoCorporal": 60.75,
-          "categoria": "63",
-          "division": "Open",
-          "glp": 68.916
-        }
-      },
-      {
-        "evento": "VIII Campeonato Nacional 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -29576,7 +28581,7 @@
     "debut": "2021",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "120",
@@ -29999,7 +29004,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "120",
@@ -30018,7 +29023,7 @@
         "opl_meet": "fechipo/2201"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "120+",
@@ -30456,7 +29461,7 @@
     "debut": "2022",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "57",
@@ -30885,7 +29890,7 @@
     "debut": "2024",
     "competencias": [
       {
-        "evento": "Sudamericano FESUPO 2025",
+        "evento": "South American Championships 2025",
         "fecha": "2025-09-20",
         "division": "Open",
         "categoria": "105",
@@ -31355,7 +30360,7 @@
     "debut": "2024",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "120",
@@ -31639,81 +30644,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "47",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 125,
-          "bp": 61.5,
-          "dl": 142.5,
-          "total": 329,
-          "bw": 45.3,
-          "glp": 94.57,
-          "rank": 7
-        }
-      },
-      {
-        "evento": "Zona Centro Iron Forces 2022",
-        "fecha": "2022-03-12",
-        "division": "",
-        "categoria": "47",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 114.5,
-          "bp": 60,
-          "dl": 140,
-          "total": 314.5,
-          "bw": 45.6,
-          "glp": 89.89,
-          "rank": 4
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2201"
-      },
-      {
-        "evento": "Nacional Chile 2021",
-        "fecha": "2021-10-30",
-        "division": "",
-        "categoria": "47",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 110,
-          "bp": 57.5,
-          "dl": 130,
-          "total": 297.5,
-          "bw": 45.1,
-          "glp": 85.92,
-          "rank": 8
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2101"
-      },
-      {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "47",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 90,
-          "bp": 47.5,
-          "dl": 115,
-          "total": 252.5,
-          "bw": 44.7,
-          "glp": null,
-          "rank": 29,
-          "ipf": 511.24
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
-      },
-      {
         "evento": "Campeonato Nacional FECHIPO 2025",
         "fecha": "2025-05-23",
         "division": "",
@@ -31729,38 +30659,6 @@
           "glp": 95.46
         },
         "source": "openipf"
-      },
-      {
-        "evento": "Sudamericano FESUPO 2023",
-        "fecha": "2023-09-06",
-        "division": "",
-        "categoria": "47",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 122.5,
-          "bp": 60,
-          "dl": 140,
-          "total": 322.5,
-          "bw": 45.6,
-          "glp": 92.07
-        },
-        "source": "openipf",
-        "opl_meet": "fesupo/2302",
-        "internacional": true
-      },
-      {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 120,
-          "bp": 62.5,
-          "dl": 150,
-          "total": 332.5,
-          "pesoCorporal": 46.1,
-          "categoria": "47",
-          "division": "Open",
-          "glp": 93.978
-        }
       },
       {
         "evento": "VI Campeonato Nacional FECHIPO 2022",
@@ -31817,7 +30715,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -32034,7 +30932,7 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "Nacional Chile 2017",
+        "evento": "II Campeonarto Nacional Classic Raw Chile 2017",
         "fecha": "2017-01-01",
         "division": "",
         "categoria": "93",
@@ -32604,7 +31502,7 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Campeonato Nacional 2023",
+        "evento": "VII Campeonato Nacional Fechipo 2023",
         "fecha": "2023-06-10",
         "division": "",
         "categoria": "105",
@@ -32621,7 +31519,7 @@
         }
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "93",
@@ -32895,45 +31793,6 @@
     "debut": "2018",
     "competencias": [
       {
-        "evento": "Nacional Chile 2021",
-        "fecha": "2021-10-30",
-        "division": "",
-        "categoria": "105",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 215,
-          "bp": 140,
-          "dl": 217.5,
-          "total": 572.5,
-          "bw": 103.4,
-          "glp": 71.19,
-          "rank": 40
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2101"
-      },
-      {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "93",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 205,
-          "bp": 125,
-          "dl": 215,
-          "total": 545,
-          "bw": 89.5,
-          "glp": null,
-          "rank": 31,
-          "ipf": 507.12
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
-      },
-      {
         "evento": "Regional Centro 2025",
         "fecha": "",
         "año": null,
@@ -33103,7 +31962,7 @@
     "debut": "2024",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "83",
@@ -33241,7 +32100,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "66",
@@ -33857,7 +32716,7 @@
         "sexo": "Femenino"
       },
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "72",
@@ -34430,7 +33289,7 @@
     "debut": "2022",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "66",
@@ -34527,7 +33386,7 @@
         }
       },
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "74",
@@ -35068,7 +33927,7 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "93",
@@ -35600,7 +34459,7 @@
     "debut": "2023",
     "competencias": [
       {
-        "evento": "Nacional Chile 2017",
+        "evento": "II Campeonarto Nacional Classic Raw Chile 2017",
         "fecha": "2017-01-01",
         "division": "",
         "categoria": "74",
@@ -36111,23 +34970,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Sudamericano FESUPO 2025",
-        "fecha": "2025-09-20",
-        "division": "Subjunior",
-        "categoria": "76",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 170,
-          "bp": 90,
-          "dl": 187,
-          "total": 440.5,
-          "bw": 75.9,
-          "glp": 86.9
-        }
-      },
-      {
-        "evento": "Campeonato Nacional 2023",
+        "evento": "VII Campeonato Nacional Fechipo 2023",
         "fecha": "2023-06-10",
         "division": "Subjunior",
         "categoria": "76",
@@ -36144,7 +34987,7 @@
         }
       },
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "Subjunior",
         "categoria": "76",
@@ -36388,44 +35231,6 @@
     "club": "Himalaya Powerlifting",
     "debut": "2019",
     "competencias": [
-      {
-        "evento": "Zona Centro Iron Forces 2022",
-        "fecha": "2022-03-12",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 200,
-          "bp": 115,
-          "dl": 250,
-          "total": 565,
-          "bw": 79.9,
-          "glp": 79.74,
-          "rank": 18
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2201"
-      },
-      {
-        "evento": "Nacional Chile 2021",
-        "fecha": "2021-10-30",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 190,
-          "bp": 120,
-          "dl": 245,
-          "total": 555,
-          "bw": 79.5,
-          "glp": 78.53,
-          "rank": 25
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2101"
-      },
       {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "resultado": {
@@ -36776,7 +35581,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "105",
@@ -36968,7 +35773,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "93",
@@ -37794,7 +36599,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -37933,7 +36738,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Nacional Chile 2017",
+        "evento": "II Campeonarto Nacional Classic Raw Chile 2017",
         "fecha": "2017-01-01",
         "division": "",
         "categoria": "83",
@@ -38779,19 +37584,6 @@
     "competencias": [
       {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 245,
-          "bp": 145,
-          "dl": 267.5,
-          "total": 657.5,
-          "pesoCorporal": 103.45,
-          "categoria": "105",
-          "division": "Junior",
-          "glp": 81.739
-        }
-      },
-      {
-        "evento": "VIII Campeonato Nacional 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -39428,7 +38220,7 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "120",
@@ -39787,7 +38579,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Sudamericano FESUPO 2025",
+        "evento": "South American Championships 2025",
         "fecha": "2025-09-20",
         "division": "Junior",
         "categoria": "93",
@@ -39804,7 +38596,7 @@
         "source": "openipf"
       },
       {
-        "evento": "World Junior and Sub-Juniors Powerlifting Championships",
+        "evento": "IPF World Men's Juniors and Sub-Juniors Classic Championships 2025",
         "fecha": "2025-08-25",
         "division": "Junior",
         "categoria": "93",
@@ -39850,13 +38642,6 @@
           "division": "Junior",
           "glp": 93.975
         }
-      },
-      {
-        "evento": "World Junior and Sub-Juniors Powerlifting Championships 2025",
-        "division": "Junior",
-        "categoria": "-93",
-        "modalidad": "classic",
-        "sexo": "Masculino"
       }
     ],
     "bestLifts": {
@@ -39959,7 +38744,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Nacional Chile 2017",
+        "evento": "II Campeonarto Nacional Classic Raw Chile 2017",
         "fecha": "2017-01-01",
         "division": "",
         "categoria": "63",
@@ -40867,7 +39652,7 @@
         "sexo": "Hombre"
       },
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "105",
@@ -40886,7 +39671,7 @@
         "opl_meet": "fechipo/2301"
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "105",
@@ -40903,26 +39688,6 @@
         },
         "source": "openpowerlifting",
         "opl_meet": "fechipo/2201"
-      },
-      {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 175,
-          "bp": 120,
-          "dl": 205,
-          "total": 500,
-          "bw": 81.7,
-          "glp": null,
-          "rank": 40,
-          "ipf": 488.41
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
       },
       {
         "evento": "III Campeonato Zona Sur FECHIPO 2025",
@@ -41642,7 +40407,7 @@
     "debut": "2024",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "74",
@@ -41901,7 +40666,7 @@
     "debut": "2023",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "74",
@@ -42123,7 +40888,7 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "83",
@@ -42342,7 +41107,7 @@
     "debut": "2023",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "120",
@@ -42395,7 +41160,7 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "93",
@@ -42414,7 +41179,7 @@
         "opl_meet": "fechipo/2201"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "93",
@@ -43110,25 +41875,6 @@
         "sexo": "Femenino"
       },
       {
-        "evento": "Sudamericano FESUPO 2023",
-        "fecha": "2023-09-06",
-        "division": "",
-        "categoria": "69",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 165.5,
-          "bp": 72.5,
-          "dl": 170,
-          "total": 408,
-          "bw": 66.6,
-          "glp": 86.22
-        },
-        "source": "openipf",
-        "opl_meet": "fesupo/2302",
-        "internacional": true
-      },
-      {
         "evento": "Campeonato Regional Centro FECHIPO 2026",
         "fecha": "2026-05-10",
         "sexo": "Mujer",
@@ -43650,23 +42396,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "93",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 212.5,
-          "bp": 140,
-          "dl": 255,
-          "total": 607.5,
-          "bw": 92.8,
-          "glp": 79.54,
-          "rank": 52
-        }
-      },
-      {
         "evento": "Campeonato Nacional FECHIPO 2025",
         "fecha": "2025-05-23",
         "division": "",
@@ -43882,7 +42611,7 @@
     "debut": "2018",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "63",
@@ -43899,78 +42628,6 @@
         },
         "source": "openpowerlifting",
         "opl_meet": "fechipo/2201"
-      },
-      {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "63",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 112.5,
-          "bp": 72.5,
-          "dl": 142.5,
-          "total": 327.5,
-          "bw": 61.8,
-          "glp": null,
-          "rank": 20,
-          "ipf": 571.02
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
-      },
-      {
-        "evento": "V Campeonato Osorno 2018",
-        "fecha": "2018-12-08",
-        "division": "",
-        "categoria": "63",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 107.5,
-          "bp": 65,
-          "dl": 132.5,
-          "total": 305,
-          "bw": 61.8,
-          "glp": null,
-          "rank": 6,
-          "wilks": 332.39
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1802"
-      },
-      {
-        "evento": "Sudamericano FESUPO 2023",
-        "fecha": "2023-09-06",
-        "division": "",
-        "categoria": "69",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 140,
-          "bp": 90,
-          "dl": 160,
-          "total": 390,
-          "bw": 67.1,
-          "glp": 82.06
-        },
-        "source": "openipf",
-        "opl_meet": "fesupo/2302",
-        "internacional": true
-      },
-      {
-        "evento": "I World Open Classic Powerlifting Championships 2024",
-        "resultado": {
-          "sq": 132.5,
-          "bp": 92.5,
-          "dl": 152.5,
-          "total": 377.5,
-          "pesoCorporal": 67.2,
-          "categoria": "69",
-          "division": "Open",
-          "glp": 79.392
-        }
       },
       {
         "evento": "World Classic Powerlifting Championships 2024",
@@ -43992,22 +42649,6 @@
           "total": 384,
           "glp": 80.55,
           "bw": 67.5,
-          "status": "OK"
-        }
-      },
-      {
-        "evento": "IPF World Open Classic Powerlifting Championships 2024",
-        "division": "Open",
-        "categoria": "-69",
-        "modalidad": "classic",
-        "sexo": "Femenino",
-        "resultado": {
-          "sq": 132.5,
-          "bp": 92.5,
-          "dl": 152.5,
-          "total": 377.5,
-          "glp": 79.39,
-          "bw": 67.2,
           "status": "OK"
         }
       },
@@ -44088,7 +42729,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "World Open Classic Powerlifting Championships 2024",
+        "evento": "IPF World Open Classic Powerlifting Championships 2024",
         "fecha": "2024-06-15",
         "año": 2024,
         "lugar": "Lithuania",
@@ -44188,45 +42829,6 @@
         },
         "place": "4",
         "source": "liftingcast"
-      },
-      {
-        "evento": "Nacional Chile 2021",
-        "fecha": "2021-10-30",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 225,
-          "bp": 122.5,
-          "dl": 270,
-          "total": 617.5,
-          "bw": 73.4,
-          "glp": 91.04,
-          "rank": 5
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2101"
-      },
-      {
-        "evento": "Nacional Chile 2019",
-        "fecha": "2019-07-01",
-        "division": "",
-        "categoria": "66",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 187.5,
-          "bp": 95,
-          "dl": 236,
-          "total": 518.5,
-          "bw": 65,
-          "glp": null,
-          "rank": 8,
-          "ipf": 605.82
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1903"
       },
       {
         "evento": "Campeonato Nacional FECHIPO 2025",
@@ -44355,26 +42957,6 @@
         "categoria": "93",
         "modalidad": "Only Bench Equipado IPF",
         "sexo": "Hombre"
-      },
-      {
-        "evento": "Nacional Chile 2017",
-        "fecha": "2017-01-01",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 220,
-          "bp": 125,
-          "dl": 262.5,
-          "total": 607.5,
-          "bw": 81.7,
-          "glp": null,
-          "rank": 2,
-          "wilks": 409.37
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1701"
       },
       {
         "evento": "II Campeonarto Nacional Classic Raw Chile 2017",
@@ -45295,25 +43877,6 @@
         "sexo": "Hombre"
       },
       {
-        "evento": "Zonal Sur 2023",
-        "fecha": "2023-02-04",
-        "division": "",
-        "categoria": "105",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 240,
-          "bp": 160,
-          "dl": 275,
-          "total": 675,
-          "bw": 104.5,
-          "glp": 83.52,
-          "rank": 6
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2301"
-      },
-      {
         "evento": "III Campeonato Zona Sur FECHIPO 2025",
         "resultado": {
           "sq": 275,
@@ -45763,7 +44326,7 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Campeonato Nacional 2023",
+        "evento": "VII Campeonato Nacional Fechipo 2023",
         "fecha": "2023-06-10",
         "division": "",
         "categoria": "74",
@@ -45780,7 +44343,7 @@
         }
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "83",
@@ -45799,7 +44362,7 @@
         "opl_meet": "fechipo/2101"
       },
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "74",
@@ -45819,7 +44382,7 @@
         "opl_meet": "fechipo/1903"
       },
       {
-        "evento": "Sudamericano FESUPO 2023",
+        "evento": "Campeonato Sudamericano de Powerlifting Classic 2023",
         "fecha": "2023-09-06",
         "division": "",
         "categoria": "74",
@@ -46140,7 +44703,7 @@
     "debut": "2017",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "74",
@@ -46157,46 +44720,6 @@
         },
         "source": "openpowerlifting",
         "opl_meet": "fechipo/2201"
-      },
-      {
-        "evento": "V Campeonato Osorno 2018",
-        "fecha": "2018-12-08",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 190,
-          "bp": 135,
-          "dl": 230,
-          "total": 555,
-          "bw": 70.2,
-          "glp": null,
-          "rank": 1,
-          "wilks": 415.01
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1802"
-      },
-      {
-        "evento": "Nacional Chile 2017",
-        "fecha": "2017-01-01",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 165,
-          "bp": 110,
-          "dl": 210,
-          "total": 485,
-          "bw": 69,
-          "glp": null,
-          "rank": 11,
-          "wilks": 367.51
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1701"
       },
       {
         "evento": "VIII Campeonato Nacional FECHIPO 2024",
@@ -46856,7 +45379,7 @@
         "sexo": "Mujer"
       },
       {
-        "evento": "Campeonato Nacional 2023",
+        "evento": "VII Campeonato Nacional Fechipo 2023",
         "fecha": "2023-06-10",
         "division": "",
         "categoria": "76",
@@ -46873,7 +45396,7 @@
         }
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "76",
@@ -46907,25 +45430,6 @@
           "glp": 70.43
         },
         "source": "openipf"
-      },
-      {
-        "evento": "Sudamericano FESUPO 2023",
-        "fecha": "2023-09-06",
-        "division": "",
-        "categoria": "84",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 130.5,
-          "bp": 67.5,
-          "dl": 132.5,
-          "total": 330.5,
-          "bw": 79.1,
-          "glp": 63.99
-        },
-        "source": "openipf",
-        "opl_meet": "fesupo/2302",
-        "internacional": true
       },
       {
         "evento": "V Campeonato Zona Centro Clausura FECHIPO 2024",
@@ -46994,7 +45498,7 @@
     "debut": "2023",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "52",
@@ -47028,19 +45532,6 @@
           "glp": 74.79
         },
         "source": "openipf"
-      },
-      {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 100,
-          "bp": 57.5,
-          "dl": 127.5,
-          "total": 285,
-          "pesoCorporal": 51,
-          "categoria": "52",
-          "division": "Open",
-          "glp": 73.19
-        }
       },
       {
         "evento": "I Campeonato Zona Sur FECHIPO 2023",
@@ -47078,7 +45569,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -47433,7 +45924,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "69",
@@ -47587,7 +46078,7 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Nacional Chile 2019",
+        "evento": "IV Campeonato Nacional Classic Fechipo 2019",
         "fecha": "2019-07-01",
         "division": "",
         "categoria": "93",
@@ -47607,7 +46098,7 @@
         "opl_meet": "fechipo/1903"
       },
       {
-        "evento": "Nacional Chile 2017",
+        "evento": "II Campeonarto Nacional Classic Raw Chile 2017",
         "fecha": "2017-01-01",
         "division": "",
         "categoria": "93",
@@ -47652,7 +46143,7 @@
         "sexo": "Masculino"
       },
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "74",
@@ -47844,19 +46335,6 @@
         "internacional": true
       },
       {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 120.5,
-          "bp": 62.5,
-          "dl": 145,
-          "total": 328,
-          "pesoCorporal": 51.4,
-          "categoria": "52",
-          "division": "Junior",
-          "glp": 83.658
-        }
-      },
-      {
         "evento": "IX Campeonato Nacional 2025",
         "fecha": "",
         "año": 2025,
@@ -47876,7 +46354,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -48212,24 +46690,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "66",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 210,
-          "bp": 145,
-          "dl": 200,
-          "total": 555,
-          "bw": 65.4,
-          "glp": 86.9,
-          "rank": 26
-        }
-      },
-      {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "66",
@@ -48953,7 +47414,7 @@
     "debut": "2021",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "76",
@@ -48972,7 +47433,7 @@
         "opl_meet": "fechipo/2201"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "69",
@@ -49321,7 +47782,7 @@
     "debut": "2025",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "83",
@@ -49423,7 +47884,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "World Junior and Sub-Juniors Powerlifting Championships",
+        "evento": "IPF World Men's Juniors and Sub-Juniors Classic Championships 2025",
         "fecha": "2025-08-25",
         "division": "Junior",
         "categoria": "57",
@@ -49467,13 +47928,6 @@
           "division": "Junior",
           "glp": 95.775
         }
-      },
-      {
-        "evento": "World Junior and Sub-Juniors Powerlifting Championships 2025",
-        "division": "Junior",
-        "categoria": "-57",
-        "modalidad": "classic",
-        "sexo": "Femenino"
       },
       {
         "evento": "VI Campeonato Nacional FECHIPO 2022",
@@ -49659,7 +48113,7 @@
     "debut": "2021",
     "competencias": [
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "74",
@@ -49877,7 +48331,7 @@
     "debut": "2024",
     "competencias": [
       {
-        "evento": "Nacional Chile 2017",
+        "evento": "II Campeonarto Nacional Classic Raw Chile 2017",
         "fecha": "2017-01-01",
         "division": "",
         "categoria": "93",
@@ -50168,7 +48622,7 @@
     "debut": "2021",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "93",
@@ -50739,7 +49193,7 @@
     "debut": "2022",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "93",
@@ -51812,7 +50266,7 @@
     "debut": "2021",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "74",
@@ -51831,7 +50285,7 @@
         "opl_meet": "fechipo/2201"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "74",
@@ -52086,7 +50540,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
+        "evento": "VII Campeonato Nacional Fechipo 2023",
         "fecha": "2023-06-10",
         "division": "",
         "categoria": "57",
@@ -52103,7 +50557,7 @@
         }
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "57",
@@ -52137,25 +50591,6 @@
           "glp": 95.83
         },
         "source": "openipf"
-      },
-      {
-        "evento": "Sudamericano FESUPO 2023",
-        "fecha": "2023-09-06",
-        "division": "",
-        "categoria": "57",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 150,
-          "bp": 75,
-          "dl": 145,
-          "total": 370,
-          "bw": 56.9,
-          "glp": 86.9
-        },
-        "source": "openipf",
-        "opl_meet": "fesupo/2302",
-        "internacional": true
       },
       {
         "evento": "V Campeonato Zona Centro Clausura FECHIPO 2024",
@@ -52375,7 +50810,7 @@
     "debut": "2022",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "76",
@@ -52409,25 +50844,6 @@
           "glp": 85.89
         },
         "source": "openipf"
-      },
-      {
-        "evento": "Sudamericano FESUPO 2023",
-        "fecha": "2023-09-06",
-        "division": "",
-        "categoria": "76",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Mujer",
-        "resultado": {
-          "sq": 150,
-          "bp": 70,
-          "dl": 160,
-          "total": 380,
-          "bw": 76,
-          "glp": 74.92
-        },
-        "source": "openipf",
-        "opl_meet": "fesupo/2302",
-        "internacional": true
       },
       {
         "evento": "V Campeonato Zona Centro Clausura FECHIPO 2024",
@@ -52886,7 +51302,7 @@
     "debut": "2019",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "83",
@@ -52905,7 +51321,7 @@
         "opl_meet": "fechipo/2201"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "83",
@@ -52943,19 +51359,6 @@
         "internacional": true
       },
       {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 210,
-          "bp": 133,
-          "dl": 247.5,
-          "total": 590.5,
-          "pesoCorporal": 90.85,
-          "categoria": "93",
-          "division": "Master I",
-          "glp": 78.136
-        }
-      },
-      {
         "evento": "I Campeonato Zona Norte FECHIPO 2022",
         "division": "Open",
         "categoria": "-93",
@@ -52972,7 +51375,7 @@
         }
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -53514,7 +51917,7 @@
     "debut": "2023",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "83",
@@ -53820,23 +52223,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 200,
-          "bp": 140,
-          "dl": 255,
-          "total": 595,
-          "bw": 74,
-          "glp": 87.35,
-          "rank": 23
-        }
-      },
-      {
         "evento": "Campeonato Nacional FECHIPO 2025",
         "fecha": "2025-05-23",
         "division": "",
@@ -54061,26 +52447,6 @@
     "club": "Potencia Muscular",
     "debut": "2017",
     "competencias": [
-      {
-        "evento": "Nacional Chile 2017",
-        "fecha": "2017-01-01",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 150,
-          "bp": 95,
-          "dl": 172.5,
-          "total": 417.5,
-          "bw": 73.6,
-          "glp": null,
-          "rank": 27,
-          "wilks": 301.47
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/1701"
-      },
       {
         "evento": "V Campeonato Zona Centro Clausura FECHIPO 2024",
         "resultado": {
@@ -54307,7 +52673,7 @@
     "debut": "2021",
     "competencias": [
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "93",
@@ -54870,19 +53236,6 @@
         "source": "openipf"
       },
       {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 205,
-          "bp": 115,
-          "dl": 215,
-          "total": 535,
-          "pesoCorporal": 64.4,
-          "categoria": "66",
-          "division": "Junior",
-          "glp": 84.485
-        }
-      },
-      {
         "evento": "IX Campeonato Nacional 2025",
         "fecha": "",
         "año": 2025,
@@ -54902,7 +53255,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -55408,7 +53761,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "69",
@@ -55777,7 +54130,7 @@
     "debut": "2024",
     "competencias": [
       {
-        "evento": "V Campeonato Osorno 2018",
+        "evento": "Campeonato Powerlifting Raw y Equipado Osorno 2018",
         "fecha": "2018-12-08",
         "division": "",
         "categoria": "66",
@@ -56124,23 +54477,6 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
-        "fecha": "2023-06-10",
-        "division": "",
-        "categoria": "74",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 200,
-          "bp": 125,
-          "dl": 210,
-          "total": 535,
-          "bw": 72.2,
-          "glp": 79.53,
-          "rank": 53
-        }
-      },
-      {
         "evento": "Campeonato Nacional FECHIPO 2025",
         "fecha": "2025-05-23",
         "division": "",
@@ -56187,22 +54523,6 @@
         }
       },
       {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "division": "Open Only Bench",
-        "categoria": "-74",
-        "modalidad": "onlybench",
-        "sexo": "Masculino",
-        "resultado": {
-          "sq": 0,
-          "bp": 130,
-          "dl": 0,
-          "total": 130,
-          "glp": 70.585,
-          "bw": 71.55,
-          "status": "OK"
-        }
-      },
-      {
         "evento": "IX Campeonato Nacional 2025",
         "fecha": "",
         "año": 2025,
@@ -56241,7 +54561,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -56618,7 +54938,7 @@
     "debut": "2021",
     "competencias": [
       {
-        "evento": "Zonal Sur 2023",
+        "evento": "I Campeonato Zona Sur 2023",
         "fecha": "2023-02-04",
         "division": "",
         "categoria": "63",
@@ -56637,7 +54957,7 @@
         "opl_meet": "fechipo/2301"
       },
       {
-        "evento": "Nacional Chile 2021",
+        "evento": "V Campeonato Nacional Classic FECHIPO 2021",
         "fecha": "2021-10-30",
         "division": "",
         "categoria": "69",
@@ -57013,19 +55333,6 @@
         }
       },
       {
-        "evento": "VIII Campeonato Nacional FECHIPO 2024",
-        "resultado": {
-          "sq": 125,
-          "bp": 67.5,
-          "dl": 155,
-          "total": 347.5,
-          "pesoCorporal": 65.25,
-          "categoria": "69",
-          "division": "Sub Junior",
-          "glp": 74.374
-        }
-      },
-      {
         "evento": "II Campeonato Zona Norte 2023",
         "fecha": "2023-12-02",
         "año": 2023,
@@ -57045,7 +55352,7 @@
         "source": "fechipo-historico"
       },
       {
-        "evento": "VIII Campeonato Nacional 2024",
+        "evento": "VIII Campeonato Nacional FECHIPO 2024",
         "fecha": "",
         "año": 2024,
         "lugar": "Santiago, Chile",
@@ -57239,7 +55546,7 @@
         "source": "liftingcast"
       },
       {
-        "evento": "Campeonato Nacional 2023",
+        "evento": "VII Campeonato Nacional Fechipo 2023",
         "fecha": "2023-06-10",
         "division": "",
         "categoria": "69",
@@ -57256,7 +55563,7 @@
         }
       },
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "63",
@@ -57377,7 +55684,7 @@
     "debut": "2017",
     "competencias": [
       {
-        "evento": "Zona Centro Iron Forces 2022",
+        "evento": "II Campeonato Oficial Zona Centro 2022",
         "fecha": "2022-03-12",
         "division": "",
         "categoria": "74",
@@ -58660,25 +56967,6 @@
         "categoria": "-83 kg (Hombre)",
         "modalidad": "Powerlifting Classic + Only Bench Classic",
         "sexo": "Masculino"
-      },
-      {
-        "evento": "Zonal Sur 2023",
-        "fecha": "2023-02-04",
-        "division": "",
-        "categoria": "83",
-        "modalidad": "Powerlifting Classic",
-        "sexo": "Hombre",
-        "resultado": {
-          "sq": 190,
-          "bp": 110,
-          "dl": 235,
-          "total": 535,
-          "bw": 79.9,
-          "glp": 75.48,
-          "rank": 17
-        },
-        "source": "openpowerlifting",
-        "opl_meet": "fechipo/2301"
       },
       {
         "evento": "III Campeonato Zona Sur FECHIPO 2025",
