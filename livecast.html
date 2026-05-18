@@ -1692,66 +1692,65 @@ async function generatePapeletas(){
     const cardH=(PH-2*mY-(ROWS-1)*gY)/ROWS;   // ~65.75 mm
     const pad=3.5;
 
-    const drawCard=(a,ox,oy)=>{
+    const drawCard=(ox,oy)=>{
       // ── background & border ──────────────────────────────
       doc.setFillColor(255,255,255);doc.rect(ox,oy,cardW,cardH,'F');
       doc.setDrawColor(150,150,150);doc.setLineWidth(0.35);
       doc.rect(ox,oy,cardW,cardH,'S');
 
-      // ── Name row ─────────────────────────────────────────
+      // ── Name row (solo línea, sin relleno) ────────────────
       doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(0,0,0);
-      const nameLabel='Apellido, Nombre';
+      const nameLabel='Nombre y Apellido';
       doc.text(nameLabel,ox+pad,oy+8.5);
       const nlW=doc.getTextWidth(nameLabel);
-      // underline
       doc.setDrawColor(0,0,0);doc.setLineWidth(0.35);
       doc.line(ox+pad+nlW+1.5,oy+9,ox+cardW-pad,oy+9);
-      // pre-fill name
-      if(a&&a.name){
-        doc.setFont('helvetica','normal');doc.setFontSize(7.5);
-        let nm=strip(a.name);
-        const maxW=cardW-2*pad-nlW-3;
-        while(nm.length>1&&doc.getTextWidth(nm)>maxW)nm=nm.slice(0,-1);
-        if(nm!==strip(a.name))nm+='.';
-        doc.text(nm,ox+pad+nlW+2,oy+8.5);
-      }
 
       // ── Divider ───────────────────────────────────────────
       doc.setDrawColor(200,200,200);doc.setLineWidth(0.2);
       doc.line(ox+pad,oy+11,ox+cardW-pad,oy+11);
 
-      // ── FECHIPO logo (left) ───────────────────────────────
-      const lX=ox+pad,lY=oy+12.5,lW=28,lH=17;
-      if(fechipoImg){try{doc.addImage(fechipoImg,'PNG',lX,lY,lW,lH);}catch(e){
-        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(180,0,0);
-        doc.text('FECHIPO',lX+lW/2,lY+lH/2+1.5,{align:'center'});
+      // ── Logos izquierda: FECHIPO arriba, YourLift abajo ───
+      const lX=ox+pad, lY=oy+12.5;
+      // FECHIPO logo (~4:1 ratio)
+      const fW2=30, fH2=8;
+      if(fechipoImg){try{doc.addImage(fechipoImg,'PNG',lX,lY,fW2,fH2);}catch(e){
+        doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(180,0,0);
+        doc.text('FECHIPO',lX+fW2/2,lY+fH2/2+1.5,{align:'center'});
       }}else{
-        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(180,0,0);
-        doc.text('FECHIPO',lX+lW/2,lY+lH/2+1.5,{align:'center'});
+        doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(180,0,0);
+        doc.text('FECHIPO',lX+fW2/2,lY+fH2/2+1.5,{align:'center'});
+      }
+      // YourLift logo debajo
+      const ylW=22, ylH=7;
+      const ylX=lX, ylY=lY+fH2+3;
+      if(yourliftImg){try{doc.addImage(yourliftImg,'PNG',ylX,ylY,ylW,ylH);}catch(e){
+        doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor(60,60,60);
+        doc.text('YourLift',ylX+ylW/2,ylY+ylH/2+1.5,{align:'center'});
+      }}else{
+        doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor(60,60,60);
+        doc.text('YourLift',ylX+ylW/2,ylY+ylH/2+1.5,{align:'center'});
       }
 
-      // ── Discipline checkboxes (center) ────────────────────
-      const cbX=ox+pad+lW+5;
+      // ── Discipline checkboxes (centro) ────────────────────
+      const logoZoneW=Math.max(fW2,ylW)+5;
+      const cbX=ox+pad+logoZoneW;
       const discs=[{l:'Sentadilla',dy:0},{l:'Press de Banca',dy:7},{l:'Peso Muerto',dy:14}];
       discs.forEach(d=>{
-        const bY=oy+14+d.dy;
+        const bY=oy+13.5+d.dy;
         doc.setDrawColor(0,0,0);doc.setLineWidth(0.5);
         doc.rect(cbX,bY,5,5,'S');
         doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(0,0,0);
         doc.text(d.l,cbX+7,bY+4);
       });
 
-      // ── Lot number box (right) ────────────────────────────
+      // ── Lot number box (derecha, sin relleno) ─────────────
       const lotW=20,lotH=16;
       const lotX=ox+cardW-pad-lotW,lotY=oy+13;
       doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(0,0,0);
       doc.text('N° Lote',lotX+lotW/2,oy+12,{align:'center'});
       doc.setDrawColor(0,0,0);doc.setLineWidth(0.7);
       doc.rect(lotX,lotY,lotW,lotH,'S');
-      if(a&&a.lot){
-        doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(0,0,0);
-        doc.text(String(a.lot),lotX+lotW/2,lotY+lotH/2+2.5,{align:'center'});
-      }
 
       // ── Divider ───────────────────────────────────────────
       const divY=oy+33;
@@ -1776,45 +1775,31 @@ async function generatePapeletas(){
       doc.setDrawColor(200,200,200);doc.setLineWidth(0.2);
       doc.line(ox+pad,div2Y,ox+cardW-pad,div2Y);
 
-      // ── Cat. de Peso | Firma ──────────────────────────────
+      // ── Cat. de Peso | Firma (solo líneas, sin relleno) ───
       const botY=div2Y+5;
       doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(0,0,0);
       doc.text('Cat. de Peso',ox+pad,botY);
       const cpW=doc.getTextWidth('Cat. de Peso');
       doc.setDrawColor(0,0,0);doc.setLineWidth(0.3);
       doc.line(ox+pad+cpW+1.5,botY+0.5,ox+cardW/2-3,botY+0.5);
-      if(a&&a.cat){
-        doc.setFont('helvetica','normal');doc.setFontSize(7);
-        doc.text(strip(a.cat),ox+pad+cpW+2.5,botY);
-      }
       const firmaX=ox+cardW/2+1;
       doc.setFont('helvetica','bold');doc.setFontSize(7);
       doc.text('Firma',firmaX,botY);
-      const fW=doc.getTextWidth('Firma');
-      doc.line(firmaX+fW+1.5,botY+0.5,ox+cardW-pad,botY+0.5);
-
-      // ── YourLift logo (esquina inferior derecha) ──────────
-      const ylW=16,ylH=9;
-      const ylX=ox+cardW-pad-ylW,ylY=oy+cardH-pad-ylH;
-      if(yourliftImg){try{doc.addImage(yourliftImg,'PNG',ylX,ylY,ylW,ylH);}catch(e){
-        doc.setFont('helvetica','bold');doc.setFontSize(5);doc.setTextColor(80,80,80);
-        doc.text('YourLift',ylX+ylW/2,ylY+ylH/2+1.5,{align:'center'});
-      }}else{
-        doc.setFont('helvetica','bold');doc.setFontSize(5);doc.setTextColor(80,80,80);
-        doc.text('YourLift',ylX+ylW/2,ylY+ylH/2+1.5,{align:'center'});
-      }
+      const firmW=doc.getTextWidth('Firma');
+      doc.line(firmaX+firmW+1.5,botY+0.5,ox+cardW-pad,botY+0.5);
     };
 
-    // ── Render cards ──────────────────────────────────────
-    athletes.forEach((a,ai)=>{
+    // ── Render cards (una por atleta, todas en blanco) ────
+    const total_cards=athletes.length||1;
+    for(let ai=0;ai<total_cards;ai++){
       const pos=ai%(COLS*ROWS);
       if(pos===0&&ai>0)doc.addPage();
       const col=pos%COLS;
       const row=Math.floor(pos/COLS);
       const ox=mX+col*(cardW+gX);
       const oy=mY+row*(cardH+gY);
-      drawCard(a,ox,oy);
-    });
+      drawCard(ox,oy);
+    }
 
     // ── Cut lines (dashed) on every page ─────────────────
     const totalPg=doc.internal.getNumberOfPages();
