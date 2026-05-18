@@ -3013,10 +3013,8 @@ function _renderTxBreakTimer(bt,scale){
   // barras verticales de 18px dado el ángulo (atan(90/54)≈59°, cos59°≈0.515,
   // 36×0.515≈18.5px visual ≈ 18px).
   const neoSvg='<svg viewBox="0 0 290 90" xmlns="http://www.w3.org/2000/svg" style="height:clamp(20px,3vh,40px);width:auto;display:block;fill:white">'
-    // N: barra izq | diagonal ancha | barra der
-    +'<rect x="0" y="0" width="18" height="90"/>'
-    +'<polygon points="18,0 54,0 72,90 36,90"/>'
-    +'<rect x="72" y="0" width="18" height="90"/>'
+    // N: trapecio — ancho completo arriba, baja hasta el ancho de la barra izq abajo
+    +'<polygon points="0,0 90,0 20,90 0,90"/>'
     // E: tres barras horizontales iguales
     +'<rect x="103" y="0" width="87" height="24"/>'
     +'<rect x="103" y="33" width="87" height="24"/>'
