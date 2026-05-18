@@ -1350,6 +1350,318 @@ function editAtt(id,l,r){
 }
 
 // ═══════════════════════════════════════════════════════════
+// PALETA IMPRESIÓN (blanco/negro — sin tinta de color)
+// ═══════════════════════════════════════════════════════════
+const CP={
+  bg:    [255,255,255],  // fondo blanco
+  hFill: [30,30,30],     // header negro
+  hText: [255,255,255],  // texto header blanco
+  sub:   [80,80,80],     // subheader gris oscuro
+  subTx: [255,255,255],  // texto subheader blanco
+  colH:  [210,210,210],  // fondo encabezados de columna
+  colTx: [0,0,0],        // texto encabezados
+  row0:  [255,255,255],  // fila par blanca
+  row1:  [242,242,242],  // fila impar gris muy claro
+  text:  [0,0,0],        // texto negro
+  muted: [80,80,80],     // texto secundario
+  line:  [160,160,160],  // líneas
+  bold:  [0,0,0],        // negrita
+  sep:   [200,200,200],  // separador de tanda
+  sepTx: [0,0,0],        // texto separador
+  uline: [0,0,0],        // subrayado escribible
+};
+
+// ═══════════════════════════════════════════════════════════
+// HOJA DE ALTURA DE RACK PDF  (portrait A4)
+// ═══════════════════════════════════════════════════════════
+async function generateHojaRack(){
+  const btn=document.getElementById('btnHojaRack');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Generando...';}
+  try{
+    if(!window.jspdf){
+      await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';s.onload=res;s.onerror=rej;document.head.appendChild(s);});
+    }
+    const {jsPDF}=window.jspdf;
+    const strip=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\x00-\x7F]/g,'?').trim();
+
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const PW=210,PH=297;
+    const C=CP;
+
+    // Sort by flight then lot
+    const athletes=[...DATA.athletes].sort((a,b)=>{
+      if(a.flight!==b.flight)return a.flight.localeCompare(b.flight);
+      return a.lot-b.lot;
+    });
+
+    // 5 cols — usable 194mm portrait
+    // Tanda|Nombre|Rack SQ|Rack BP|Firma
+    const cols=[
+      {h:'Tanda',   w:18,  align:'center', writable:false},
+      {h:'Nombre',  w:90,  align:'left',   writable:false},
+      {h:'Rack SQ', w:28,  align:'center', writable:true},
+      {h:'Rack BP', w:28,  align:'center', writable:true},
+      {h:'Firma',   w:30,  align:'center', writable:true},
+    ];
+    // 18+90+28+28+30 = 194 ✓
+    const totalW=cols.reduce((s,c)=>s+c.w,0);
+    const startX=(PW-totalW)/2;
+
+    const drawPageHeader=(cont=false)=>{
+      doc.setFillColor(...C.bg);doc.rect(0,0,PW,PH,'F');
+      doc.setFillColor(...C.hFill);doc.rect(0,0,PW,14,'F');
+      doc.setTextColor(...C.hText);doc.setFont('helvetica','bold');doc.setFontSize(12);
+      doc.text('FECHIPO',8,9.5);
+      doc.setFont('helvetica','normal');doc.setFontSize(9);
+      doc.text(strip(DATA.event?.name||'Campeonato').toUpperCase(),PW/2,9.5,{align:'center'});
+      doc.setFontSize(8);doc.text(new Date().toLocaleDateString('es-CL'),PW-8,9.5,{align:'right'});
+      doc.setFillColor(...C.sub);doc.rect(0,14,PW,8,'F');
+      doc.setTextColor(...C.subTx);doc.setFont('helvetica','bold');doc.setFontSize(9);
+      doc.text('ALTURA DE RACK'+(cont?' (cont.)':' — '+athletes.length+' atletas'),PW/2,19.5,{align:'center'});
+    };
+
+    const drawColHeaders=(y)=>{
+      doc.setFillColor(...C.colH);doc.rect(startX,y,totalW,7,'F');
+      doc.setTextColor(...C.colTx);doc.setFont('helvetica','bold');doc.setFontSize(7);
+      let cx=startX;
+      cols.forEach(col=>{
+        doc.text(col.h,cx+(col.align==='center'?col.w/2:3),y+4.5,{align:col.align==='center'?'center':'left'});
+        cx+=col.w;
+      });
+      doc.setDrawColor(...C.line);doc.setLineWidth(0.4);doc.line(startX,y+7,startX+totalW,y+7);
+    };
+
+    drawPageHeader(false);
+    drawColHeaders(26);
+    let curY=33;
+    let rowIndex=0;
+    let lastFlight='';
+
+    athletes.forEach(a=>{
+      const rowH=11;
+      if(curY+rowH>PH-12){
+        doc.addPage();
+        drawPageHeader(true);
+        drawColHeaders(26);
+        curY=33;rowIndex=0;lastFlight='';
+      }
+
+      // Flight separator band
+      if(a.flight!==lastFlight){
+        if(lastFlight!==''){curY+=2;}
+        doc.setFillColor(...C.sep);doc.rect(startX,curY,totalW,5,'F');
+        doc.setTextColor(...C.sepTx);doc.setFont('helvetica','bold');doc.setFontSize(7);
+        doc.text('TANDA '+a.flight,startX+4,curY+3.5);
+        curY+=5;
+        lastFlight=a.flight;
+      }
+
+      doc.setFillColor(...(rowIndex%2===0?C.row0:C.row1));
+      doc.rect(startX,curY,totalW,rowH,'F');
+
+      const vals=[
+        {t:a.flight||'', bold:true},
+        {t:strip(a.name||''), bold:false, align:'left'},
+        {t:a.rackSQ?String(a.rackSQ):'', bold:!!a.rackSQ},
+        {t:a.rackBP?String(a.rackBP):'', bold:!!a.rackBP},
+        {t:'', bold:false},
+      ];
+
+      let cx=startX;
+      cols.forEach((col,ci)=>{
+        const cell=vals[ci];
+        const ty=curY+rowH/2+2.5;
+        doc.setTextColor(...C.text);
+        doc.setFont('helvetica',cell.bold?'bold':'normal');
+        doc.setFontSize(cell.bold?9:8);
+        if(cell.t){
+          const al=(cell.align||col.align)==='center'?'center':'left';
+          const px=al==='center'?cx+col.w/2:cx+3;
+          let txt=cell.t;
+          if(ci===1){const maxW=col.w-6;while(txt.length>1&&doc.getTextWidth(txt)>maxW)txt=txt.slice(0,-1);if(txt!==cell.t)txt+='.';}
+          doc.text(txt,px,ty,{align:al});
+        }
+        if(col.writable&&!cell.t){
+          doc.setDrawColor(...C.uline);doc.setLineWidth(0.5);
+          doc.line(cx+4,curY+rowH-2.5,cx+col.w-4,curY+rowH-2.5);
+        }
+        doc.setDrawColor(...C.line);doc.setLineWidth(0.15);
+        doc.line(cx+col.w,curY,cx+col.w,curY+rowH);
+        cx+=col.w;
+      });
+
+      doc.setDrawColor(...C.line);doc.setLineWidth(0.2);
+      doc.line(startX,curY+rowH,startX+totalW,curY+rowH);
+      curY+=rowH;
+      rowIndex++;
+    });
+
+    const total=doc.internal.getNumberOfPages();
+    for(let i=1;i<=total;i++){
+      doc.setPage(i);
+      doc.setDrawColor(...C.line);doc.setLineWidth(0.3);doc.line(8,PH-8,PW-8,PH-8);
+      doc.setTextColor(...C.muted);doc.setFont('helvetica','normal');doc.setFontSize(6);
+      doc.text('FECHIPO — Federacion Chilena de Powerlifting',8,PH-3);
+      doc.text('Pag. '+i+'/'+total,PW-8,PH-3,{align:'right'});
+    }
+
+    const evShort=strip(DATA.event?.short||DATA.event?.name||'campeonato').replace(/\s+/g,'_');
+    doc.save('AlturaRack_'+evShort+'.pdf');
+  }catch(err){
+    console.error('HojaRack error',err);
+    alert('Error al generar hoja de rack: '+err.message);
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='📏 Altura de Rack PDF';}
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// HOJA DE REVISIÓN DE EQUIPO PDF  (landscape A4)
+// ═══════════════════════════════════════════════════════════
+async function generateHojaEquipo(){
+  const btn=document.getElementById('btnHojaEquipo');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Generando...';}
+  try{
+    if(!window.jspdf){
+      await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';s.onload=res;s.onerror=rej;document.head.appendChild(s);});
+    }
+    const {jsPDF}=window.jspdf;
+    const strip=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\x00-\x7F]/g,'?').trim();
+
+    // Landscape A4: 297 x 210mm — usable 281mm wide, 194mm tall
+    const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+    const PW=297,PH=210;
+    const C=CP;
+
+    // Sort: by flight then by category weight then by name
+    const athletes=[...DATA.athletes].sort((a,b)=>{
+      if(a.flight!==b.flight)return a.flight.localeCompare(b.flight);
+      const na=parseFloat((a.cat||'').replace(/[^0-9.]/g,''))||999;
+      const nb=parseFloat((b.cat||'').replace(/[^0-9.]/g,''))||999;
+      return na!==nb?na-nb:a.name.localeCompare(b.name);
+    });
+
+    // Cols: Tanda|Categoría|Nombre|Singlet|Polera|Cinturón|Rodilleras|Muñequeras|Calzado SQ|Calzado BP|Calzado DL|Calcetas
+    // Total usable: 297 - 2*8 = 281mm
+    const cols=[
+      {h:'Tanda',      w:15,  align:'center', check:false},
+      {h:'Cat.',       w:18,  align:'center', check:false},
+      {h:'Nombre',     w:58,  align:'left',   check:false},
+      {h:'Singlet',    w:20,  align:'center', check:true},
+      {h:'Polera',     w:20,  align:'center', check:true},
+      {h:'Cinturon',   w:20,  align:'center', check:true},
+      {h:'Rodilleras', w:22,  align:'center', check:true},
+      {h:'Munequeras', w:22,  align:'center', check:true},
+      {h:'Calz. SQ',   w:22,  align:'center', check:true},
+      {h:'Calz. BP',   w:22,  align:'center', check:true},
+      {h:'Calz. DL',   w:22,  align:'center', check:true},
+      {h:'Calcetas',   w:20,  align:'center', check:true},
+    ];
+    // total = 15+18+58+20+20+20+22+22+22+22+22+20 = 281 ✓
+    const totalW=cols.reduce((s,c)=>s+c.w,0);
+    const startX=(PW-totalW)/2;
+    const BOX=5; // checkbox size mm
+
+    const drawPageHeader=(cont=false)=>{
+      doc.setFillColor(...C.bg);doc.rect(0,0,PW,PH,'F');
+      doc.setFillColor(...C.hFill);doc.rect(0,0,PW,12,'F');
+      doc.setTextColor(...C.hText);doc.setFont('helvetica','bold');doc.setFontSize(11);
+      doc.text('FECHIPO',8,8.5);
+      doc.setFont('helvetica','normal');doc.setFontSize(9);
+      doc.text(strip(DATA.event?.name||'Campeonato').toUpperCase(),PW/2,8.5,{align:'center'});
+      doc.setFontSize(8);doc.text(new Date().toLocaleDateString('es-CL'),PW-8,8.5,{align:'right'});
+      doc.setFillColor(...C.sub);doc.rect(0,12,PW,7,'F');
+      doc.setTextColor(...C.subTx);doc.setFont('helvetica','bold');doc.setFontSize(8.5);
+      doc.text('REVISION DE EQUIPO'+(cont?' (cont.)':' — '+athletes.length+' atletas'),PW/2,17,{align:'center'});
+    };
+
+    const drawColHeaders=(y)=>{
+      doc.setFillColor(...C.colH);doc.rect(startX,y,totalW,7,'F');
+      doc.setTextColor(...C.colTx);doc.setFont('helvetica','bold');doc.setFontSize(6.5);
+      let cx=startX;
+      cols.forEach(col=>{
+        doc.text(col.h,cx+(col.align==='center'?col.w/2:2),y+4.5,{align:col.align==='center'?'center':'left'});
+        cx+=col.w;
+      });
+      doc.setDrawColor(...C.line);doc.setLineWidth(0.4);doc.line(startX,y+7,startX+totalW,y+7);
+    };
+
+    drawPageHeader(false);
+    drawColHeaders(22);
+    let curY=29;
+    let rowIndex=0;
+
+    athletes.forEach(a=>{
+      const rowH=9;
+      if(curY+rowH>PH-10){
+        doc.addPage();
+        drawPageHeader(true);
+        drawColHeaders(22);
+        curY=29;rowIndex=0;
+      }
+
+      doc.setFillColor(...(rowIndex%2===0?C.row0:C.row1));
+      doc.rect(startX,curY,totalW,rowH,'F');
+
+      const vals=[
+        {t:a.flight||'', bold:true},
+        {t:strip(a.cat||''), bold:false},
+        {t:strip(a.name||''),bold:false,align:'left'},
+        null,null,null,null,null,null,null,null,null,
+      ];
+
+      let cx=startX;
+      cols.forEach((col,ci)=>{
+        const ty=curY+rowH/2+2.5;
+        if(col.check){
+          const bx=cx+col.w/2-BOX/2;
+          const by=curY+rowH/2-BOX/2;
+          doc.setDrawColor(...C.text);doc.setLineWidth(0.4);
+          doc.rect(bx,by,BOX,BOX,'S');
+        } else {
+          const cell=vals[ci];
+          if(cell&&cell.t){
+            doc.setTextColor(...C.text);
+            doc.setFont('helvetica',cell.bold?'bold':'normal');
+            doc.setFontSize(cell.bold?8:7);
+            const al=(cell.align||col.align)==='center'?'center':'left';
+            const px=al==='center'?cx+col.w/2:cx+2;
+            let txt=cell.t;
+            if(ci===2){const maxW=col.w-4;while(txt.length>1&&doc.getTextWidth(txt)>maxW)txt=txt.slice(0,-1);if(txt!==cell.t)txt+='.';}
+            doc.text(txt,px,ty,{align:al});
+          }
+        }
+        doc.setDrawColor(...C.line);doc.setLineWidth(0.15);
+        doc.line(cx+col.w,curY,cx+col.w,curY+rowH);
+        cx+=col.w;
+      });
+
+      doc.setDrawColor(...C.line);doc.setLineWidth(0.2);
+      doc.line(startX,curY+rowH,startX+totalW,curY+rowH);
+      curY+=rowH;
+      rowIndex++;
+    });
+
+    const total=doc.internal.getNumberOfPages();
+    for(let i=1;i<=total;i++){
+      doc.setPage(i);
+      doc.setDrawColor(...C.line);doc.setLineWidth(0.3);doc.line(8,PH-7,PW-8,PH-7);
+      doc.setTextColor(...C.muted);doc.setFont('helvetica','normal');doc.setFontSize(6);
+      doc.text('FECHIPO — Federacion Chilena de Powerlifting',8,PH-2.5);
+      doc.text('Pag. '+i+'/'+total,PW-8,PH-2.5,{align:'right'});
+    }
+
+    const evShort=strip(DATA.event?.short||DATA.event?.name||'campeonato').replace(/\s+/g,'_');
+    doc.save('RevisionEquipo_'+evShort+'.pdf');
+  }catch(err){
+    console.error('HojaEquipo error',err);
+    alert('Error al generar hoja de equipo: '+err.message);
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='🏋️ Revisión Equipo PDF';}
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 // HOJA DE PESAJE PDF
 // ═══════════════════════════════════════════════════════════
 async function generateHojaPesaje(){
@@ -1366,7 +1678,7 @@ async function generateHojaPesaje(){
     const athletes=[...DATA.athletes].sort((a,b)=>a.lot-b.lot);
     const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
     const PW=210,PH=297;
-    const C={bg:[8,22,40],header:[196,30,58],gold:[212,168,67],muted:[120,143,166],border:[30,58,95],rowAlt:[13,30,54],white:[255,255,255],text:[220,230,242]};
+    const C=CP;
 
     // Cols: Tarima|Tanda|Lot#|Nombre|BW|Opener SQ|Opener BP|Opener DL|Ropa Int.|Firma
     // Total usable width: 210 - 2*8 = 194mm
@@ -1388,25 +1700,26 @@ async function generateHojaPesaje(){
 
     const drawPageHeader=(cont=false)=>{
       doc.setFillColor(...C.bg);doc.rect(0,0,PW,PH,'F');
-      doc.setFillColor(...C.header);doc.rect(0,0,PW,14,'F');
-      doc.setTextColor(...C.white);doc.setFont('helvetica','bold');doc.setFontSize(12);
+      doc.setFillColor(...C.hFill);doc.rect(0,0,PW,14,'F');
+      doc.setTextColor(...C.hText);doc.setFont('helvetica','bold');doc.setFontSize(12);
       doc.text('FECHIPO',8,9.5);
       doc.setFont('helvetica','normal');doc.setFontSize(9);
       doc.text(strip(DATA.event?.name||'Campeonato').toUpperCase(),PW/2,9.5,{align:'center'});
       doc.setFontSize(8);doc.text(new Date().toLocaleDateString('es-CL'),PW-8,9.5,{align:'right'});
-      doc.setFillColor(...C.border);doc.rect(0,14,PW,8,'F');
-      doc.setTextColor(...C.gold);doc.setFont('helvetica','bold');doc.setFontSize(9);
+      doc.setFillColor(...C.sub);doc.rect(0,14,PW,8,'F');
+      doc.setTextColor(...C.subTx);doc.setFont('helvetica','bold');doc.setFontSize(9);
       doc.text('HOJA DE PESAJE'+(cont?' (cont.)':' — '+athletes.length+' atletas'),PW/2,19.5,{align:'center'});
     };
 
     const drawColHeaders=(y)=>{
-      doc.setFillColor(20,38,68);doc.rect(startX,y,totalW,7,'F');
-      doc.setTextColor(...C.muted);doc.setFont('helvetica','bold');doc.setFontSize(6.5);
+      doc.setFillColor(...C.colH);doc.rect(startX,y,totalW,7,'F');
+      doc.setTextColor(...C.colTx);doc.setFont('helvetica','bold');doc.setFontSize(6.5);
       let cx=startX;
       cols.forEach(col=>{
         doc.text(col.h,cx+(col.align==='center'?col.w/2:2),y+4.5,{align:col.align==='center'?'center':'left'});
         cx+=col.w;
       });
+      doc.setDrawColor(...C.line);doc.setLineWidth(0.4);doc.line(startX,y+7,startX+totalW,y+7);
     };
 
     drawPageHeader(false);
@@ -1417,80 +1730,67 @@ async function generateHojaPesaje(){
     athletes.forEach(a=>{
       const rowH=10;
       if(curY+rowH>PH-12){
-        // Footer on current page then new page
-        doc.setFillColor(...C.bg);doc.rect(0,PH-8,PW,8,'F');
-        doc.setDrawColor(...C.border);doc.setLineWidth(0.3);doc.line(8,PH-8,PW-8,PH-8);
         doc.addPage();
         drawPageHeader(true);
         drawColHeaders(26);
-        curY=33;
-        rowIndex=0;
+        curY=33;rowIndex=0;
       }
 
-      doc.setFillColor(...(rowIndex%2===0?C.bg:C.rowAlt));
+      doc.setFillColor(...(rowIndex%2===0?C.row0:C.row1));
       doc.rect(startX,curY,totalW,rowH,'F');
 
-      // Cell values: writable = underline if empty
       const vals=[
-        {t:'',        bold:false, color:C.muted},        // Tarima — blank
-        {t:a.flight||'', bold:true,  color:C.gold},       // Tanda
-        {t:String(a.lot||'—'), bold:true, color:C.gold},  // Lot #
-        {t:strip(a.name||''),  bold:false,color:C.text, align:'left'}, // Nombre
-        {t:a.bw>0?String(a.bw):'',  bold:a.bw>0, color:a.bw>0?C.white:C.muted}, // BW
-        {t:a.att?.sq?.[0]?.w>0?String(a.att.sq[0].w):'', bold:false,color:C.muted}, // SQ1
-        {t:a.att?.bp?.[0]?.w>0?String(a.att.bp[0].w):'', bold:false,color:C.muted}, // BP1
-        {t:a.att?.dl?.[0]?.w>0?String(a.att.dl[0].w):'', bold:false,color:C.muted}, // DL1
-        {t:'', bold:false,color:C.muted},  // Ropa Int. — blank
-        {t:'', bold:false,color:C.muted},  // Firma — blank
+        {t:'',        bold:false},
+        {t:a.flight||'', bold:true},
+        {t:String(a.lot||'—'), bold:true},
+        {t:strip(a.name||''), bold:false, align:'left'},
+        {t:a.bw>0?String(a.bw):'', bold:a.bw>0},
+        {t:a.att?.sq?.[0]?.w>0?String(a.att.sq[0].w):'', bold:false},
+        {t:a.att?.bp?.[0]?.w>0?String(a.att.bp[0].w):'', bold:false},
+        {t:a.att?.dl?.[0]?.w>0?String(a.att.dl[0].w):'', bold:false},
+        {t:'', bold:false},
+        {t:'', bold:false},
       ];
 
       let cx=startX;
       vals.forEach((cell,ci)=>{
         const col=cols[ci];
         const ty=curY+rowH/2+2.5;
-        doc.setTextColor(...cell.color);
+        doc.setTextColor(...C.text);
         doc.setFont('helvetica',cell.bold?'bold':'normal');
         doc.setFontSize(cell.bold?8:7);
         if(cell.t){
           const al=(cell.align||col.align)==='center'?'center':'left';
           const px=al==='center'?cx+col.w/2:cx+2;
-          // Truncate nombre if needed
           let txt=cell.t;
           if(ci===3){const maxW=col.w-4;while(txt.length>1&&doc.getTextWidth(txt)>maxW)txt=txt.slice(0,-1);if(txt!==cell.t)txt+='.';}
           doc.text(txt,px,ty,{align:al});
         }
-        // Underline for writable empty cells
         if(col.writable&&!cell.t){
-          doc.setDrawColor(60,90,130);
-          doc.setLineWidth(0.4);
+          doc.setDrawColor(...C.uline);doc.setLineWidth(0.4);
           doc.line(cx+2,curY+rowH-2,cx+col.w-2,curY+rowH-2);
         }
-        // Vertical separator between columns
-        doc.setDrawColor(...C.border);doc.setLineWidth(0.1);
+        doc.setDrawColor(...C.line);doc.setLineWidth(0.1);
         doc.line(cx+col.w,curY,cx+col.w,curY+rowH);
         cx+=col.w;
       });
 
-      // Horizontal row separator
-      doc.setDrawColor(...C.border);doc.setLineWidth(0.2);
+      doc.setDrawColor(...C.line);doc.setLineWidth(0.2);
       doc.line(startX,curY+rowH,startX+totalW,curY+rowH);
       curY+=rowH;
       rowIndex++;
     });
 
-    // Footer note on last page
     curY+=4;
     if(curY<PH-16){
       doc.setTextColor(...C.muted);doc.setFont('helvetica','italic');doc.setFontSize(6);
       doc.text('La firma del atleta confirma conformidad con el pesaje y los primeros intentos declarados.',startX,curY);
     }
 
-    // Page numbers
     const total=doc.internal.getNumberOfPages();
     for(let i=1;i<=total;i++){
       doc.setPage(i);
-      doc.setFillColor(...C.bg);doc.rect(0,PH-8,PW,8,'F');
-      doc.setDrawColor(...C.border);doc.setLineWidth(0.3);doc.line(8,PH-8,PW-8,PH-8);
+      doc.setDrawColor(...C.line);doc.setLineWidth(0.3);doc.line(8,PH-8,PW-8,PH-8);
       doc.setTextColor(...C.muted);doc.setFont('helvetica','normal');doc.setFontSize(6);
       doc.text('FECHIPO — Federacion Chilena de Powerlifting',8,PH-3);
       doc.text('Pag. '+i+'/'+total,PW-8,PH-3,{align:'right'});
@@ -4506,7 +4806,7 @@ function renderDirector(){
 }
 
 function renderManage(){
-  const ath=DATA.athletes;let h='<div class="fade"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><h2 class="os" style="font-size:22px;letter-spacing:1px">ATLETAS & PESAJE</h2><p style="color:var(--muted);font-size:12px">'+ath.filter(a=>a.bw>0).length+'/'+ath.length+' pesados</p></div><div style="display:flex;gap:6px;flex-wrap:wrap">'+(DATA.lotsGenerated?'<button class="btn btn-o" onclick="generateLots()" title="Re-sortear todos los lotes al azar (reemplaza los actuales)">🎲 Re-sortear lotes</button>':'<button class="btn btn-r" onclick="generateLots()">🎲 Generar Lotes</button>')+'<button class="btn btn-o" onclick="resyncFromAdmin()" title="Re-sincronizar nómina con admin (trae cambios, borra eliminados sin datos)">🔄 Re-sincronizar con admin</button><button class="btn btn-o" onclick="sortByLot()">Ordenar por Lote ↑</button><button class="btn btn-o" onclick="sortByFlight()">Ordenar por Tanda ↑</button><button class="btn btn-o" onclick="sortByCat()">Ordenar por Categoría ↑</button><button id="btnHojaPesaje" class="btn" onclick="generateHojaPesaje()" style="background:rgba(59,130,246,.15);border-color:#3b82f6;color:#3b82f6">⚖️ Hoja de Pesaje PDF</button><button class="btn btn-g" onclick="go(\'compete\')">Iniciar Competencia →</button></div></div>';
+  const ath=DATA.athletes;let h='<div class="fade"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><h2 class="os" style="font-size:22px;letter-spacing:1px">ATLETAS & PESAJE</h2><p style="color:var(--muted);font-size:12px">'+ath.filter(a=>a.bw>0).length+'/'+ath.length+' pesados</p></div><div style="display:flex;gap:6px;flex-wrap:wrap">'+(DATA.lotsGenerated?'<button class="btn btn-o" onclick="generateLots()" title="Re-sortear todos los lotes al azar (reemplaza los actuales)">🎲 Re-sortear lotes</button>':'<button class="btn btn-r" onclick="generateLots()">🎲 Generar Lotes</button>')+'<button class="btn btn-o" onclick="resyncFromAdmin()" title="Re-sincronizar nómina con admin (trae cambios, borra eliminados sin datos)">🔄 Re-sincronizar con admin</button><button class="btn btn-o" onclick="sortByLot()">Ordenar por Lote ↑</button><button class="btn btn-o" onclick="sortByFlight()">Ordenar por Tanda ↑</button><button class="btn btn-o" onclick="sortByCat()">Ordenar por Categoría ↑</button><button id="btnHojaPesaje" class="btn" onclick="generateHojaPesaje()" style="background:rgba(59,130,246,.15);border-color:#3b82f6;color:#3b82f6">⚖️ Hoja de Pesaje PDF</button><button id="btnHojaRack" class="btn" onclick="generateHojaRack()" style="background:rgba(16,185,129,.15);border-color:#10b981;color:#10b981">📏 Altura de Rack PDF</button><button id="btnHojaEquipo" class="btn" onclick="generateHojaEquipo()" style="background:rgba(168,85,247,.15);border-color:#a855f7;color:#a855f7">🏋️ Revisión Equipo PDF</button><button class="btn btn-g" onclick="go(\'compete\')">Iniciar Competencia →</button></div></div>';
   h+='<div class="card" style="padding:0;overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr style="border-bottom:2px solid var(--border)">';
   h+='<th class="os" style="padding:8px 4px;text-align:center;color:var(--muted);font-size:9px;width:28px">#</th><th style="padding:8px 4px;text-align:left;color:var(--muted);font-size:9px">ATLETA</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px;width:38px">VLO</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px;width:80px">BW + 1ros</th>';
   ['sq','bp','dl'].forEach(l=>{[1,2,3].forEach(r=>{h+='<th style="padding:8px 2px;text-align:center;color:'+LIFT_C[l]+';font-size:9px;width:62px">'+LIFT_S[l]+r+'</th>'})});
