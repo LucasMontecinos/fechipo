@@ -1062,6 +1062,7 @@ window.submitInscripcionManual=async function(){
 // EXPORT / IMPORT
 // ═══════════════════════════════════════════
 window.exportData=function(){
+  if(ST.adminInfo?.role!=='owner'&&!ST.adminInfo?.bootstrap){showToast('🔒 Solo el Owner puede descargar data.json',null,true);return;}
   const clean=ST.data.map(({_isPending,...a})=>a);
   const blob=new Blob([JSON.stringify(clean,null,2)],{type:'application/json'});
   const u=URL.createObjectURL(blob);
@@ -1108,6 +1109,7 @@ window.crearPerfilDebutante=async function(sid){
 };
 
 window.publicarDataJson=async function(){
+  if(ST.adminInfo?.role!=='owner'&&!ST.adminInfo?.bootstrap){showToast('🔒 Solo el Owner puede publicar data.json',null,true);return;}
   const pendientes=(ST.data||[]).filter(a=>a._isPending);
   if(!pendientes.length){showToast('No hay debutantes pendientes',null,true);return;}
   if(!confirm(`¿Incorporar ${pendientes.length} debutante(s) al data.json?\n\n${pendientes.map(a=>a.nombre).join('\n')}\n\nSe descargará el archivo actualizado. Súbelo al servidor para publicarlo.`))return;
@@ -2088,6 +2090,7 @@ function renderAthletes(){
   }).slice(0,100);
   const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   const pendientes=(ST.data||[]).filter(a=>a._isPending);
+  const _isOwner=ST.adminInfo?.role==='owner'||ST.adminInfo?.bootstrap;
   let bannerPend='';
   if(pendientes.length>0){
     const rows=pendientes.map(a=>`
@@ -2098,13 +2101,16 @@ function renderAthletes(){
         </div>
         <span style="font-size:10px;color:var(--gold);font-weight:700">★ DEBUT</span>
       </div>`).join('');
+    const publishBtn=_isOwner
+      ?`<button onclick="publicarDataJson()" style="padding:10px 20px;background:var(--gold);color:#000;border:none;border-radius:8px;font-family:Oswald;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;white-space:nowrap;margin-left:16px">📤 Publicar data.json</button>`
+      :`<span style="font-size:10px;color:var(--muted);margin-left:16px;font-style:italic">🔒 Solo el Owner puede publicar</span>`;
     bannerPend=`<div style="background:rgba(212,168,67,.07);border:1px solid rgba(212,168,67,.4);border-radius:10px;margin-bottom:18px;overflow:hidden">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid rgba(212,168,67,.3)">
         <div>
           <div style="font-family:Oswald;font-size:14px;color:var(--gold);letter-spacing:1px">★ ${pendientes.length} ATLETA${pendientes.length>1?'S':''} DEBUTANTE${pendientes.length>1?'S':''} PENDIENTE${pendientes.length>1?'S':''}</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:3px">Se inscribieron pero aún no están en data.json. Sus perfiles ya son visibles en el sitio. Publicá para incorporarlos formalmente.</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">Se inscribieron pero aún no están en data.json. Sus perfiles ya son visibles en el sitio.${_isOwner?' Publicá para incorporarlos formalmente.':' Avisá al Owner para publicarlos.'}</div>
         </div>
-        <button onclick="publicarDataJson()" style="padding:10px 20px;background:var(--gold);color:#000;border:none;border-radius:8px;font-family:Oswald;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;white-space:nowrap;margin-left:16px">📤 Publicar data.json</button>
+        ${publishBtn}
       </div>
       ${rows}
     </div>`;
@@ -2360,13 +2366,17 @@ function renderLivecast(){
 }
 
 function renderExports(){
+  const isOwner=ST.adminInfo?.role==='owner'||ST.adminInfo?.bootstrap;
   return `
     <div class="h1">Exports / Backups</div>
     <p class="subtitle">Descargar respaldos de los datos</p>
     <div class="card">
       <div class="h2">Descargas disponibles</div>
       <div style="display:flex;flex-direction:column;gap:10px">
-        <button class="btn btn-b" onclick="exportData()" style="text-align:left;padding:14px">📥 data.json (${ST.data.length} atletas)</button>
+        ${isOwner
+          ?`<button class="btn btn-b" onclick="exportData()" style="text-align:left;padding:14px">📥 data.json (${ST.data.length} atletas)</button>`
+          :`<div style="padding:12px 14px;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:12px">🔒 <strong>data.json</strong> — Solo el Owner puede descargar la base de datos raw</div>`
+        }
         <div style="margin-top:8px;border-top:1px solid var(--border);padding-top:12px">
           <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-family:Oswald;letter-spacing:1px">OPL FORMAT (OPENPOWERLIFTING)</div>
           <div style="display:flex;flex-direction:column;gap:6px">

@@ -1350,6 +1350,181 @@ function editAtt(id,l,r){
 }
 
 // ═══════════════════════════════════════════════════════════
+// HOJA DE PESAJE PDF
+// ═══════════════════════════════════════════════════════════
+async function generateHojaPesaje(){
+  const btn=document.getElementById('btnHojaPesaje');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Generando...';}
+  try{
+    if(!window.jspdf){
+      await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';s.onload=res;s.onerror=rej;document.head.appendChild(s);});
+    }
+    const {jsPDF}=window.jspdf;
+    const strip=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\x00-\x7F]/g,'?').trim();
+
+    const flights=[...new Set(DATA.athletes.map(a=>a.flight))].sort();
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const PW=210,PH=297;
+    const C={bg:[8,22,40],header:[196,30,58],gold:[212,168,67],muted:[120,143,166],border:[30,58,95],rowAlt:[13,30,54],white:[255,255,255],text:[220,230,242]};
+    let firstPage=true;
+
+    flights.forEach(fl=>{
+      const athletes=[...DATA.athletes].filter(a=>a.flight===fl).sort((a,b)=>a.lot-b.lot);
+      if(!athletes.length)return;
+
+      if(!firstPage)doc.addPage();
+      firstPage=false;
+
+      // Background
+      doc.setFillColor(...C.bg);
+      doc.rect(0,0,PW,PH,'F');
+
+      // Header bar
+      doc.setFillColor(...C.header);
+      doc.rect(0,0,PW,14,'F');
+      doc.setTextColor(...C.white);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(12);
+      doc.text('FECHIPO',8,9.5);
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(9);
+      doc.text(strip(DATA.event?.name||'Campeonato').toUpperCase(),PW/2,9.5,{align:'center'});
+      doc.setFontSize(8);
+      doc.text(new Date().toLocaleDateString('es-CL'),PW-8,9.5,{align:'right'});
+
+      // Subtitle
+      doc.setFillColor(...C.border);
+      doc.rect(0,14,PW,8,'F');
+      doc.setTextColor(...C.gold);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(9);
+      doc.text('HOJA DE PESAJE — TANDA '+fl+' ('+athletes.length+' atletas)',PW/2,19.5,{align:'center'});
+
+      // Column definitions (portrait A4 = 210mm, margins 8mm each side = 194mm usable)
+      const cols=[
+        {h:'Lote',  w:14, align:'center'},
+        {h:'Nombre',w:55, align:'left'},
+        {h:'Cat.',  w:14, align:'center'},
+        {h:'Div.',  w:20, align:'center'},
+        {h:'Rack SQ',w:16,align:'center'},
+        {h:'Rack BP',w:16,align:'center'},
+        {h:'BW',    w:14, align:'center'},
+        {h:'SQ 1',  w:16, align:'center'},
+        {h:'BP 1',  w:16, align:'center'},
+        {h:'DL 1',  w:16, align:'center'},
+        {h:'Firma', w:17, align:'center'},
+      ];
+      const totalW=cols.reduce((s,c)=>s+c.w,0); // 194
+      const startX=(PW-totalW)/2;
+      let curY=26;
+
+      // Column headers
+      doc.setFillColor(20,38,68);
+      doc.rect(startX,curY,totalW,6,'F');
+      doc.setTextColor(...C.muted);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(6.5);
+      let cx=startX;
+      cols.forEach(col=>{
+        doc.text(col.h,cx+(col.align==='center'?col.w/2:2),curY+4,{align:col.align==='center'?'center':'left'});
+        cx+=col.w;
+      });
+      curY+=6;
+
+      // Athlete rows
+      athletes.forEach((a,ri)=>{
+        const rowH=9;
+        // Page break check
+        if(curY+rowH>PH-20){
+          doc.addPage();
+          doc.setFillColor(...C.bg);doc.rect(0,0,PW,PH,'F');
+          doc.setFillColor(...C.header);doc.rect(0,0,PW,14,'F');
+          doc.setTextColor(...C.white);doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('FECHIPO',8,9.5);
+          doc.setFont('helvetica','normal');doc.setFontSize(9);doc.text(strip(DATA.event?.name||'').toUpperCase(),PW/2,9.5,{align:'center'});
+          doc.setFillColor(...C.border);doc.rect(0,14,PW,8,'F');
+          doc.setTextColor(...C.gold);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text('HOJA DE PESAJE — TANDA '+fl+' (cont.)',PW/2,19.5,{align:'center'});
+          doc.setFillColor(20,38,68);doc.rect(startX,26,totalW,6,'F');
+          doc.setTextColor(...C.muted);doc.setFont('helvetica','bold');doc.setFontSize(6.5);
+          cx=startX;cols.forEach(col=>{doc.text(col.h,cx+(col.align==='center'?col.w/2:2),30,{align:col.align==='center'?'center':'left'});cx+=col.w;});
+          curY=32;
+        }
+
+        doc.setFillColor(...(ri%2===0?C.bg:C.rowAlt));
+        doc.rect(startX,curY,totalW,rowH,'F');
+
+        const cells=[
+          {t:String(a.lot||'—'),    bold:true, color:C.gold},
+          {t:strip(a.name||''),     bold:false,color:C.text,  align:'left'},
+          {t:strip(a.cat||''),      bold:false,color:C.muted},
+          {t:strip(a.div||''),      bold:false,color:C.muted},
+          {t:a.rackSQ?String(a.rackSQ):'',bold:false,color:C.muted},
+          {t:a.rackBP?String(a.rackBP):'',bold:false,color:C.muted},
+          {t:a.bw>0?String(a.bw):'', bold:a.bw>0,color:a.bw>0?C.white:C.muted},
+          {t:'',bold:false,color:C.muted},
+          {t:'',bold:false,color:C.muted},
+          {t:'',bold:false,color:C.muted},
+          {t:'',bold:false,color:C.muted},
+        ];
+
+        cx=startX;
+        cells.forEach((cell,ci)=>{
+          const col=cols[ci];
+          const ty=curY+rowH/2+2;
+          doc.setTextColor(...cell.color);
+          doc.setFont('helvetica',cell.bold?'bold':'normal');
+          doc.setFontSize(cell.bold?7.5:7);
+          if(cell.t){
+            const al=col.align==='center'?'center':'left';
+            const px=col.align==='center'?cx+col.w/2:cx+2;
+            doc.text(cell.t,px,ty,{align:al});
+          }
+          // Draw bottom line for writable cells (SQ1, BP1, DL1, Firma, BW)
+          if([6,7,8,9,10].includes(ci)&&!cell.t){
+            doc.setDrawColor(...C.muted);
+            doc.setLineWidth(0.3);
+            doc.line(cx+2,curY+rowH-2,cx+col.w-2,curY+rowH-2);
+          }
+          cx+=col.w;
+        });
+
+        // Row separator
+        doc.setDrawColor(...C.border);
+        doc.setLineWidth(0.15);
+        doc.line(startX,curY+rowH,startX+totalW,curY+rowH);
+        curY+=rowH;
+      });
+
+      // Footer note
+      curY+=6;
+      doc.setTextColor(...C.muted);
+      doc.setFont('helvetica','italic');
+      doc.setFontSize(6);
+      doc.text('Firma del atleta confirma conformidad con el pesaje y los primeros intentos declarados.',startX,curY);
+    });
+
+    // Page numbers
+    const total=doc.internal.getNumberOfPages();
+    for(let i=1;i<=total;i++){
+      doc.setPage(i);
+      doc.setFillColor(...C.bg);
+      doc.rect(0,PH-8,PW,8,'F');
+      doc.setDrawColor(...C.border);doc.setLineWidth(0.3);doc.line(8,PH-8,PW-8,PH-8);
+      doc.setTextColor(...C.muted);doc.setFont('helvetica','normal');doc.setFontSize(6);
+      doc.text('FECHIPO — Federacion Chilena de Powerlifting',8,PH-3);
+      doc.text('Pag. '+i+'/'+total,PW-8,PH-3,{align:'right'});
+    }
+
+    const evShort=strip(DATA.event?.short||DATA.event?.name||'campeonato').replace(/\s+/g,'_');
+    doc.save('HojaPesaje_'+evShort+'.pdf');
+  }catch(err){
+    console.error('HojaPesaje error',err);
+    alert('Error al generar hoja de pesaje: '+err.message);
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='⚖️ Hoja de Pesaje PDF';}
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 // ACTA PDF — jsPDF + autoTable (lazy loaded)
 // ═══════════════════════════════════════════════════════════
 // Helper: limpia el texto para jsPDF (que solo soporta ASCII / WinAnsi).
@@ -3459,17 +3634,18 @@ function sortByLot(){DATA.athletes.sort((a,b)=>a.lot-b.lot);save();R()}
 function generateLots(){
   const msg=DATA.lotsGenerated
     ? '⚠️ Los lotes YA fueron sorteados.\n\n¿Re-sortear y reemplazar todos los números actuales?\n\nLas ediciones manuales se perderán.'
-    : '¿Generar números de lote aleatorios?';
+    : '¿Generar números de lote aleatorios?\n\nTanda A → 110, 111, 112…\nTanda B → 210, 211, 212…\netc.';
   if(!confirm(msg))return;
-  // Shuffle within each flight
+  // Shuffle within each flight, assign lot = flightIndex*100 + 10 + position
   const flights=[...new Set(DATA.athletes.map(a=>a.flight))].sort();
-  let lotNum=1;
-  flights.forEach(fl=>{
+  flights.forEach((fl,fi)=>{
+    const flightNum=fl.charCodeAt(0)-64; // A=1, B=2, C=3…
+    const base=flightNum*100+10;
     const group=DATA.athletes.filter(a=>a.flight===fl);
     // Fisher-Yates shuffle
     for(let i=group.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[group[i]._rnd,group[j]._rnd]=[group[j]._rnd||Math.random(),group[i]._rnd||Math.random()]}
     group.sort((a,b)=>(a._rnd||0)-(b._rnd||0));
-    group.forEach(a=>{a.lot=lotNum++;delete a._rnd});
+    group.forEach((a,pos)=>{a.lot=base+pos;delete a._rnd});
   });
   DATA.lotsGenerated=true;save();R();
 }
@@ -4348,7 +4524,7 @@ function renderDirector(){
 }
 
 function renderManage(){
-  const ath=DATA.athletes;let h='<div class="fade"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><h2 class="os" style="font-size:22px;letter-spacing:1px">ATLETAS & PESAJE</h2><p style="color:var(--muted);font-size:12px">'+ath.filter(a=>a.bw>0).length+'/'+ath.length+' pesados</p></div><div style="display:flex;gap:6px">'+(DATA.lotsGenerated?'<button class="btn btn-o" onclick="generateLots()" title="Re-sortear todos los lotes al azar (reemplaza los actuales)">🎲 Re-sortear lotes</button>':'<button class="btn btn-r" onclick="generateLots()">🎲 Generar Lotes</button>')+'<button class="btn btn-o" onclick="resyncFromAdmin()" title="Re-sincronizar nómina con admin (trae cambios, borra eliminados sin datos)">🔄 Re-sincronizar con admin</button><button class="btn btn-o" onclick="sortByLot()">Ordenar por Lote ↑</button><button class="btn btn-o" onclick="sortByFlight()">Ordenar por Tanda ↑</button><button class="btn btn-o" onclick="sortByCat()">Ordenar por Categoría ↑</button><button class="btn btn-g" onclick="go(\'compete\')">Iniciar Competencia →</button></div></div>';
+  const ath=DATA.athletes;let h='<div class="fade"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><h2 class="os" style="font-size:22px;letter-spacing:1px">ATLETAS & PESAJE</h2><p style="color:var(--muted);font-size:12px">'+ath.filter(a=>a.bw>0).length+'/'+ath.length+' pesados</p></div><div style="display:flex;gap:6px;flex-wrap:wrap">'+(DATA.lotsGenerated?'<button class="btn btn-o" onclick="generateLots()" title="Re-sortear todos los lotes al azar (reemplaza los actuales)">🎲 Re-sortear lotes</button>':'<button class="btn btn-r" onclick="generateLots()">🎲 Generar Lotes</button>')+'<button class="btn btn-o" onclick="resyncFromAdmin()" title="Re-sincronizar nómina con admin (trae cambios, borra eliminados sin datos)">🔄 Re-sincronizar con admin</button><button class="btn btn-o" onclick="sortByLot()">Ordenar por Lote ↑</button><button class="btn btn-o" onclick="sortByFlight()">Ordenar por Tanda ↑</button><button class="btn btn-o" onclick="sortByCat()">Ordenar por Categoría ↑</button><button id="btnHojaPesaje" class="btn" onclick="generateHojaPesaje()" style="background:rgba(59,130,246,.15);border-color:#3b82f6;color:#3b82f6">⚖️ Hoja de Pesaje PDF</button><button class="btn btn-g" onclick="go(\'compete\')">Iniciar Competencia →</button></div></div>';
   h+='<div class="card" style="padding:0;overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr style="border-bottom:2px solid var(--border)">';
   h+='<th class="os" style="padding:8px 4px;text-align:center;color:var(--muted);font-size:9px;width:28px">#</th><th style="padding:8px 4px;text-align:left;color:var(--muted);font-size:9px">ATLETA</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px;width:38px">VLO</th><th style="padding:8px 3px;text-align:center;color:var(--muted);font-size:9px;width:80px">BW + 1ros</th>';
   ['sq','bp','dl'].forEach(l=>{[1,2,3].forEach(r=>{h+='<th style="padding:8px 2px;text-align:center;color:'+LIFT_C[l]+';font-size:9px;width:62px">'+LIFT_S[l]+r+'</th>'})});
