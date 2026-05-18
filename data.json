@@ -2780,6 +2780,120 @@
           "glp": 79.58
         },
         "source": "fechipo-historico"
+      },
+      {
+        "evento": "World Open Classic Powerlifting Championships 2024",
+        "fecha": "2024-06-15",
+        "año": 2024,
+        "lugar": "Lithuania",
+        "division": "Open",
+        "categoria": "74",
+        "modalidad": "RAW",
+        "sexo": "H",
+        "resultado": {
+          "bw": 73.3,
+          "sq": 252.5,
+          "bp": 175,
+          "dl": 312.5,
+          "total": 740,
+          "glp": 109.18
+        },
+        "source": "fechipo-historico"
+      },
+      {
+        "evento": "Juegos Bolivarianos Bicentenario Ayacucho 2024",
+        "fecha": "2024-12-03",
+        "año": 2024,
+        "lugar": "Ayacucho, Perú",
+        "division": "Open",
+        "categoria": "83",
+        "modalidad": "RAW",
+        "sexo": "H",
+        "resultado": {
+          "bw": 81.65,
+          "sq": 270,
+          "bp": 190,
+          "dl": 320,
+          "total": 780,
+          "glp": 108.872
+        },
+        "source": "fechipo-historico"
+      },
+      {
+        "evento": "Campeonato Sudamericano de Powerlifting Classic 2023",
+        "fecha": "2023-09-06",
+        "año": 2023,
+        "lugar": "Lima, Perú",
+        "division": "Open",
+        "categoria": "74",
+        "modalidad": "RAW",
+        "sexo": "H",
+        "resultado": {
+          "bw": 73.85,
+          "sq": 260,
+          "bp": 170,
+          "dl": 300.5,
+          "total": 730.5,
+          "glp": 107.358
+        },
+        "source": "fechipo-historico"
+      },
+      {
+        "evento": "VII Campeonato Nacional Fechipo 2023",
+        "fecha": "2023-06-11",
+        "año": 2023,
+        "lugar": "San Vicente de Tagua Tagua - Chile",
+        "division": "Open",
+        "categoria": "74",
+        "modalidad": "RAW",
+        "sexo": "H",
+        "resultado": {
+          "bw": 73.9,
+          "sq": 252.5,
+          "bp": 160,
+          "dl": 305,
+          "total": 717.5,
+          "glp": 105.41
+        },
+        "source": "fechipo-historico"
+      },
+      {
+        "evento": "II Campeonato Oficial Zona Centro 2022",
+        "fecha": "2022-03-12",
+        "año": 2022,
+        "lugar": "Santiago, Chile",
+        "division": "Open",
+        "categoria": "74",
+        "modalidad": "RAW",
+        "sexo": "H",
+        "resultado": {
+          "bw": 73.85,
+          "sq": 241,
+          "bp": 165,
+          "dl": 290,
+          "total": 696,
+          "glp": 102.28764000000001
+        },
+        "source": "fechipo-historico"
+      },
+      {
+        "evento": "II Campeonato Zona Sur 2024",
+        "fecha": "2024-02-24",
+        "año": 2024,
+        "lugar": "Chillán, Chile",
+        "division": "Open",
+        "categoria": "83",
+        "modalidad": "RAW",
+        "sexo": "H",
+        "resultado": {
+          "bw": 78.45,
+          "sq": 265,
+          "bp": 180,
+          "dl": 305,
+          "total": 750,
+          "glp": 10.68
+        },
+        "source": "fechipo-historico"
       }
     ],
     "bestLifts": {
@@ -2787,7 +2901,7 @@
       "bp": 190,
       "dl": 320,
       "total": 780,
-      "glp": 108.867,
+      "glp": 109.18,
       "dots": 517.8106507559493
     }
   },
