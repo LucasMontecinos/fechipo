@@ -241,7 +241,7 @@ async function initFB(){
         const recordsEnabled=(typeof e.recordsEnabled==='boolean')
           ? e.recordsEnabled
           : !/universitar/i.test(e.name||'');
-        window.LIVE_EVENT_META[d.id]={name:e.name,recordsEnabled};
+        window.LIVE_EVENT_META[d.id]={name:e.name,recordsEnabled,youtubeUrl:e.youtubeUrl||''};
         // Sync flag al evento activo
         if(DATA.event&&(DATA.event.id===d.id||DATA.event.name===e.name)){
           DATA.event.recordsEnabled=recordsEnabled;
@@ -6006,13 +6006,27 @@ async function doLogin(){showLogin();}
 // con el atleta en tarima destacado. Sin botones GOOD/NO LIFT.
 // Auto-scroll al atleta actual cuando se carga.
 // ═══════════════════════════════════════════════════════════════
+function _ytId(url){if(!url)return'';const m=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|live\/|embed\/))([A-Za-z0-9_-]{11})/);return m?m[1]:'';}
+
 function renderLiveView(){
   const allFlights = [...new Set(DATA.athletes.map(a=>a.flight))].filter(Boolean).sort();
   const currentFlight = DATA.flight;
   const liftN = LIFT_N[DATA.lift];
   const liftColor = LIFT_C[DATA.lift];
 
+  // YouTube embed — si el evento tiene URL configurada
+  const evMeta = DATA.event?.id ? (window.LIVE_EVENT_META||{})[DATA.event.id] : null;
+  const ytUrl = evMeta?.youtubeUrl || DATA.event?.youtubeUrl || '';
+  const ytVid = _ytId(ytUrl);
+
   let h = '<div class="fade">';
+
+  if(ytVid){
+    h += '<div style="margin-bottom:18px;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:16/9;max-height:420px">';
+    h += '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/'+ytVid+'?autoplay=1&mute=0" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="display:block;width:100%;height:100%"></iframe>';
+    h += '</div>';
+  }
+
   h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">';
   h += '<div><h2 class="os" style="font-size:24px;letter-spacing:2px">📺 COMPETENCIA EN VIVO</h2>';
   h += '<p style="color:var(--muted);font-size:12px">'+(DATA.event?.name||'')+' · '+liftN+' · Ronda '+(DATA.round+1)+'</p></div>';

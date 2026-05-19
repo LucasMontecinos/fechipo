@@ -260,6 +260,15 @@ function nom(){
     const lc=ev.liveCount||{};
     h+=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px"><div><h2 style="font-family:Oswald;font-size:clamp(16px,3.5vw,20px);letter-spacing:1px;text-transform:uppercase">${ev.name}${ev.fromFirebase?' <span style="font-size:10px;background:var(--green);color:#fff;padding:2px 8px;border-radius:10px;vertical-align:middle;animation:pulse 2s infinite">🔴 EN VIVO</span>':''} ${ev.hasJsonFallback?'<span style="font-size:10px;background:rgba(212,168,67,.2);color:var(--gold);padding:2px 8px;border-radius:10px;vertical-align:middle;border:1px solid rgba(212,168,67,.4)">📋 Nómina manual</span>':''}</h2><p style="font-size:12px;color:var(--muted);margin-top:2px">${ev.organizer||ev.org||''} · ${ev.location} · ${ev.days}</p>${ev.fromFirebase&&lc.pending>0?`<p style="font-size:11px;color:var(--gold);margin-top:2px">⏳ ${lc.pending} inscripción${lc.pending!==1?"es":""} pendiente${lc.pending!==1?"s":""} de aprobación</p>`:''}</div><div style="display:flex;gap:8px;align-items:center">${ev.fromFirebase&&lc.approved?`<span style="font-size:12px;background:rgba(34,197,94,.15);color:var(--green);padding:4px 10px;border-radius:8px;border:1px solid rgba(34,197,94,.3)">✓ ${lc.approved} confirmados</span>`:"" }<span class="bg" style="background:var(--accent);color:#fff;font-size:14px;padding:6px 14px">${ev.athletes.length} inscritos</span></div></div>`;
     if(ev.fromFirebase)h+=`<div style="display:flex;gap:14px;margin-bottom:10px;padding:8px 12px;background:rgba(30,58,95,.2);border-radius:8px;border:1px solid rgba(30,58,95,.4);flex-wrap:wrap;align-items:center"><span style="font-size:10px;color:var(--muted);font-family:Oswald;letter-spacing:1px">LEYENDA:</span><span style="font-size:11px;display:flex;align-items:center;gap:5px;color:var(--green)"><span style="width:10px;height:10px;border-radius:50%;background:var(--green);flex-shrink:0"></span>Confirmado — plaza asegurada</span><span style="font-size:11px;display:flex;align-items:center;gap:5px;color:var(--gold)"><span style="width:10px;height:10px;background:var(--gold);border-radius:2px;flex-shrink:0"></span>Pendiente — inscripción en revisión por el organizador</span></div>`;
+    // YouTube embed — si el evento tiene URL configurada
+    if(ev.youtubeUrl){
+      const ytM=ev.youtubeUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|live\/|embed\/))([A-Za-z0-9_-]{11})/);
+      if(ytM){
+        h+=`<div style="margin-bottom:16px;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:16/9">`;
+        h+=`<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${ytM[1]}?autoplay=0" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="display:block;width:100%;height:100%"></iframe>`;
+        h+=`</div>`;
+      }
+    }
     // Countdown cards
     h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">`;
     // Competition countdown

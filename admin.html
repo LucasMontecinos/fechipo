@@ -2663,6 +2663,11 @@ function renderCampeonatos(){
             <div style="font-size:11px;color:var(--muted);margin-top:2px">Si está activo, el campeonato aparece en el selector de eventos de <b>livecast.html</b>. <b>Desactivá para ocultarlo del LiveCast</b> (ej. campeonatos ya terminados que no querés mostrar).</div>
           </div>
         </label>
+        <label class="field" style="grid-column:span 2">
+          <span>▶️ URL YouTube en vivo <span style="font-weight:400;color:var(--muted)">(opcional)</span></span>
+          <input class="inp" id="ef_youtubeUrl" value="${editing.youtubeUrl||''}" placeholder="ej: https://www.youtube.com/live/abc123xyz">
+          <span style="font-size:10px;color:var(--muted);margin-top:2px">Cuando hay URL, se muestra un reproductor embebido en el livecast público y en la página principal — las visitas desde YourLift se suman al contador de YouTube.</span>
+        </label>
       </div>
       ${!isNew?`<div style="margin-top:14px;padding:10px 14px;background:rgba(30,58,95,.3);border-radius:8px;font-size:12px;color:var(--muted)">
         <span style="color:var(--text)">📊 Estado actual:</span>
@@ -2733,7 +2738,7 @@ function renderCampeonatos(){
 
 // ── CRUD helpers ────────────────────────────────────────────
 window.newEvento = function(){
-  ST.eventoForm = {id:'',name:'',date:'',closeDate:'',preNominaCloseAt:'',nominaCloseAt:'',location:'',org:'',days:'',status:'open',extraCols:['modalidad'],recordsEnabled:true,cronogramaPublic:true,requiereFoto:false,livecastVisible:true};
+  ST.eventoForm = {id:'',name:'',date:'',closeDate:'',preNominaCloseAt:'',nominaCloseAt:'',location:'',org:'',days:'',status:'open',extraCols:['modalidad'],recordsEnabled:true,cronogramaPublic:true,requiereFoto:false,livecastVisible:true,youtubeUrl:''};
   ST.eventoFormMode = 'create';
   render();
 };
@@ -2766,12 +2771,13 @@ window.saveEvento = async function(){
   const cronogramaPublic = document.getElementById('ef_cronogramaPublic')?.checked !== false;
   const requiereFoto = !!document.getElementById('ef_requiereFoto')?.checked;
   const livecastVisible = document.getElementById('ef_livecastVisible')?.checked !== false;
+  const youtubeUrl = (document.getElementById('ef_youtubeUrl')?.value||'').trim();
 
   if(!id || !name){ showToast('ID y nombre son obligatorios', null, true); return; }
   if(isNew && ST.eventos.find(e=>e.id===id)){ showToast('Ya existe un campeonato con ese ID', null, true); return; }
 
   const data = {id, name, date, closeDate, preNominaCloseAt, nominaCloseAt, location, org, days, status,
-    extraCols: [extra], recordsEnabled, cronogramaPublic, requiereFoto, livecastVisible,
+    extraCols: [extra], recordsEnabled, cronogramaPublic, requiereFoto, livecastVisible, youtubeUrl,
     updatedAt: serverTimestamp()};
   if(isNew) data.createdAt = serverTimestamp();
 
