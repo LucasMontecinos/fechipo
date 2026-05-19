@@ -307,18 +307,26 @@ function autoFillCode() {
       if (m) fn = `${m[3]}-${m[2]}-${m[1]}`;
       f.fechaNac = fn;
     }
-    // Sexo: tomar de la última competencia registrada
-    if (!f.sexo && Array.isArray(found.competencias) && found.competencias.length > 0) {
-      const lastComp = [...found.competencias]
-        .sort((a,b) => (b.fecha||'').localeCompare(a.fecha||''))[0];
-      const s = (lastComp?.sexo || '').toLowerCase();
-      if (s.includes('muj') || s === 'f' || s.includes('fem')) f.sexo = 'Femenino';
-      else if (s.includes('hom') || s === 'm' || s.includes('mas')) f.sexo = 'Masculino';
+    // Sexo: primero campo directo, luego de la última competencia
+    if (!f.sexo) {
+      if (found.sexo) {
+        const s = found.sexo.toLowerCase();
+        if (s.includes('muj') || s === 'f' || s.includes('fem')) f.sexo = 'Femenino';
+        else if (s.includes('hom') || s === 'm' || s.includes('mas')) f.sexo = 'Masculino';
+      }
+      if (!f.sexo && Array.isArray(found.competencias) && found.competencias.length > 0) {
+        const lastComp = [...found.competencias]
+          .sort((a,b) => (b.fecha||'').localeCompare(a.fecha||''))[0];
+        const s = (lastComp?.sexo || '').toLowerCase();
+        if (s.includes('muj') || s === 'f' || s.includes('fem')) f.sexo = 'Femenino';
+        else if (s.includes('hom') || s === 'm' || s.includes('mas')) f.sexo = 'Masculino';
+      }
     }
-    // Club (opcional: si el atleta no eligió uno, sugerir el último)
-    if (!f.club && found.club) {
-      f.club = found.club;
-    }
+    // Club
+    if (!f.club && found.club) f.club = found.club;
+    // Ciudad y Región — campo obligatorio, autocompletar desde DB
+    if (!f.zona && found.zona) f.zona = found.zona;
+    if (!f.comuna && found.comuna) f.comuna = found.comuna;
     // Re-renderizar para reflejar los datos autocompletados
     render();
     return;
@@ -578,7 +586,7 @@ function renderForm() {
     </div>
     <div style="display:flex;justify-content:space-between;margin-top:16px">
       <button class="btn btn-outline" onclick="prevStep()">← Atrás</button>
-      <button class="btn btn-accent" onclick="nextStep()" ${!(f.nombre&&f.rut&&f.sexo&&f.fechaNac&&f.club&&f.comuna&&f.pin&&f.pin.length===4)?'disabled':''}>Siguiente →</button>
+      <button id="step1NextBtn" class="btn btn-accent" onclick="nextStep()" ${!(f.nombre&&f.rut&&f.sexo&&f.fechaNac&&f.club&&f.comuna&&f.pin&&f.pin.length===4)?'disabled':''}>Siguiente →</button>
     </div></div>`;
   }
 
@@ -1078,7 +1086,18 @@ async function saveEdit() {
 // ══════════════════════════════════════════════
 // HANDLERS
 // ══════════════════════════════════════════════
-function upd(key, val) { state.form[key] = val; }
+function upd(key, val) {
+  state.form[key] = val;
+  // Actualiza el estado del botón Siguiente del paso 1 sin re-renderizar
+  // (re-renderizar perdería el foco del input mientras escribe)
+  if (state.step === 1) {
+    const btn = document.getElementById('step1NextBtn');
+    if (btn) {
+      const f = state.form;
+      btn.disabled = !(f.nombre && f.rut && f.sexo && f.fechaNac && f.club && f.comuna && f.pin && f.pin.length === 4);
+    }
+  }
+}
 function updR(key, val) { state.form[key] = val; render(); }
 
 function selectEvent(id) { state.form.evento = id; render(); }
